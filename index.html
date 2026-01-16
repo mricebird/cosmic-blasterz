@@ -7200,6 +7200,7 @@
         ];
 
         function startTutorial() {
+            stopSplashMusic();
             tutorialActive = true;
             tutorialStep = 0;
             document.getElementById('startScreen').classList.add('hidden');
@@ -12230,6 +12231,9 @@
 
         // Start game
         async function startGame(isEndless = false, isTwoPlayer = false) {
+            // Stop menu music before starting game music
+            stopSplashMusic();
+
             await initAudio();
             console.log('Audio ready, starting music...');
             initMusic();
@@ -12654,6 +12658,7 @@
         let aiDodgeDirection = 0;
 
         async function startAIDemo() {
+            stopSplashMusic();
             await initAudio();
             initMusic();
             initAmbientSounds();
@@ -12819,6 +12824,7 @@
         const bossRushBosses = ['guardian', 'guardian', 'destroyer', 'destroyer', 'mothership'];
 
         async function startBossRush() {
+            stopSplashMusic();
             await initAudio();
             initMusic();
             initAmbientSounds();
@@ -14269,8 +14275,7 @@
                     cancelAnimationFrame(scrollerAnimationId);
                     scrollerAnimationId = null;
                 }
-                // Stop splash music
-                stopSplashMusic();
+                // Keep menu music playing - it will stop when game starts
                 // Play a sound effect when entering
                 if (typeof initAudio === 'function') {
                     initAudio();
