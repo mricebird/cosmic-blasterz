@@ -3003,6 +3003,116 @@
             border: 1px solid rgba(100, 100, 100, 0.4);
         }
 
+        /* Daily Challenges */
+        .daily-challenge-panel {
+            background: linear-gradient(180deg, rgba(50, 20, 80, 0.8) 0%, rgba(30, 10, 50, 0.9) 100%);
+            border: 2px solid rgba(200, 100, 255, 0.4);
+            border-radius: 15px;
+            padding: 15px 20px;
+            margin: 15px 0;
+            max-width: 380px;
+        }
+
+        .daily-challenge-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .daily-challenge-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: #f0f;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .daily-challenge-timer {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .daily-challenge-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .daily-challenge-icon {
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+
+        .daily-challenge-info {
+            flex: 1;
+        }
+
+        .daily-challenge-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .daily-challenge-desc {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+        }
+
+        .daily-challenge-progress {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .daily-challenge-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #a0f, #f0f);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(200, 100, 255, 0.5);
+        }
+
+        .daily-challenge-progress-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            color: #f0f;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .daily-challenge-reward {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: #fc0;
+            margin-top: 8px;
+        }
+
+        .daily-challenge-complete {
+            background: linear-gradient(180deg, rgba(0, 150, 80, 0.8) 0%, rgba(0, 100, 50, 0.9) 100%);
+            border-color: rgba(0, 255, 100, 0.5);
+        }
+
+        .daily-challenge-complete .daily-challenge-title {
+            color: #0f8;
+        }
+
+        .daily-challenge-complete .daily-challenge-bar {
+            background: linear-gradient(90deg, #0f8, #0ff);
+        }
+
         /* Achievement list on game over */
         .achievements-section {
             margin-top: 18px;
@@ -4481,6 +4591,27 @@
                 </div>
             </div>
             <input type="text" id="playerName" class="name-input" placeholder="Enter your name" maxlength="15">
+
+            <!-- Daily Challenge -->
+            <div class="daily-challenge-panel" id="dailyChallenge">
+                <div class="daily-challenge-header">
+                    <div class="daily-challenge-title">🎯 Daily Challenge</div>
+                    <div class="daily-challenge-timer" id="challengeTimer">Resets in: --:--:--</div>
+                </div>
+                <div class="daily-challenge-content">
+                    <div class="daily-challenge-icon" id="challengeIcon">🎯</div>
+                    <div class="daily-challenge-info">
+                        <div class="daily-challenge-name" id="challengeName">Loading...</div>
+                        <div class="daily-challenge-desc" id="challengeDesc">Check back soon!</div>
+                        <div class="daily-challenge-progress">
+                            <div class="daily-challenge-bar" id="challengeBar" style="width: 0%"></div>
+                        </div>
+                        <div class="daily-challenge-progress-text" id="challengeProgressText">0 / 0</div>
+                        <div class="daily-challenge-reward">🪙 <span id="challengeReward">0</span> Coins</div>
+                    </div>
+                </div>
+            </div>
+
             <p class="select-mode-label">Select Game Mode</p>
             <div class="mode-buttons">
                 <div class="mode-card normal" onclick="startGame(false)">
@@ -6523,7 +6654,8 @@
             ufoKill: ['UFO destroyed!', 'Bonus points!'],
             lowHealth: ['Warning! Low health!', 'Watch out!'],
             gameOver: ['Game over!', 'Better luck next time!'],
-            newHighscore: ['New record!', 'Amazing score!']
+            newHighscore: ['New record!', 'Amazing score!'],
+            dailyChallenge: ['Daily challenge complete!', 'Challenge completed!', 'Bonus coins earned!']
         };
 
         function announce(type) {
@@ -8477,6 +8609,9 @@
         function activatePowerUp(type) {
             const pu = POWERUP_TYPES[type];
 
+            // Track power-up for daily challenge
+            updateDailyChallengeProgress('powerups', 1);
+
             // Instant effect power-ups (no duration)
             if (type === 'bomb') {
                 // Bomb kills all enemies on screen - each kill adds to combo
@@ -9059,6 +9194,8 @@
 
                 // Track boss kill for achievements
                 updateSessionStats('bossKill');
+                // Track for daily challenges
+                updateDailyChallengeProgress('bosses', 1);
 
                 // Handle Boss Rush mode differently
                 if (bossRushMode) {
@@ -11126,6 +11263,8 @@
                 playLevelUpSound();
                 announce('levelUp');
                 updateSessionStats('level', level);
+                // Track for daily challenge
+                updateDailyChallengeProgress('level', level);
 
                 // Trigger 3D warp effect for level transition
                 triggerWarpEffect(1200);
@@ -11233,8 +11372,9 @@
                             updateSessionStats('score', score);
 
                             // Track for daily challenges
-                            dailyChallengeStats.shotsHit++;
-                            dailyChallengeStats.killsInTime++;
+                            updateDailyChallengeProgress('kills', 1);
+                            updateDailyChallengeProgress('score', score);
+                            updateDailyChallengeProgress('combo', comboCount);
 
                             // Earn coins (more for special enemies)
                             addCoins(Math.floor(enemy.points / 2));
@@ -11526,6 +11666,7 @@
         }
 
         // Main game loop
+        let lastChallengeTimeUpdate = 0;
         function gameLoop() {
             if (!gameRunning || gamePaused) return;
 
@@ -11534,6 +11675,13 @@
 
             // Update AI if in demo mode
             updateAI();
+
+            // Track survival time for daily challenge (every second)
+            const survivalTime = Math.floor((Date.now() - gameStartTime) / 1000);
+            if (survivalTime > lastChallengeTimeUpdate) {
+                lastChallengeTimeUpdate = survivalTime;
+                updateDailyChallengeProgress('time', survivalTime);
+            }
 
             try {
                 // Clear canvas
@@ -13378,6 +13526,165 @@
 
         // Run particles init after a short delay
         setTimeout(initUIParticles, 500);
+
+        // ========================================
+        // Daily Challenge System
+        // ========================================
+        const DAILY_CHALLENGES = [
+            { id: 'kills50', icon: '💀', name: 'Enemy Hunter', desc: 'Kill 50 enemies', target: 50, type: 'kills', reward: 100 },
+            { id: 'kills100', icon: '☠️', name: 'Exterminator', desc: 'Kill 100 enemies', target: 100, type: 'kills', reward: 200 },
+            { id: 'score5000', icon: '🏆', name: 'Score Chaser', desc: 'Reach 5000 points', target: 5000, type: 'score', reward: 150 },
+            { id: 'score10000', icon: '🌟', name: 'High Scorer', desc: 'Reach 10000 points', target: 10000, type: 'score', reward: 250 },
+            { id: 'survive3min', icon: '⏱️', name: 'Survivor', desc: 'Survive for 3 minutes', target: 180, type: 'time', reward: 175 },
+            { id: 'survive5min', icon: '🛡️', name: 'Endurance', desc: 'Survive for 5 minutes', target: 300, type: 'time', reward: 300 },
+            { id: 'powerups10', icon: '⚡', name: 'Power Collector', desc: 'Collect 10 power-ups', target: 10, type: 'powerups', reward: 125 },
+            { id: 'powerups20', icon: '🔋', name: 'Power Hoarder', desc: 'Collect 20 power-ups', target: 20, type: 'powerups', reward: 225 },
+            { id: 'level5', icon: '📈', name: 'Level Climber', desc: 'Reach level 5', target: 5, type: 'level', reward: 150 },
+            { id: 'level10', icon: '🚀', name: 'Sky High', desc: 'Reach level 10', target: 10, type: 'level', reward: 350 },
+            { id: 'boss3', icon: '👹', name: 'Boss Slayer', desc: 'Defeat 3 bosses', target: 3, type: 'bosses', reward: 200 },
+            { id: 'nodamage1', icon: '💎', name: 'Untouchable', desc: 'Complete a level without damage', target: 1, type: 'perfect', reward: 400 },
+            { id: 'combo50', icon: '🔥', name: 'Combo Master', desc: 'Get a 50x combo', target: 50, type: 'combo', reward: 175 }
+        ];
+
+        let dailyChallenge = null;
+        let dailyChallengeProgress = 0;
+        let dailyChallengeCompleted = false;
+        let dailyChallengeDate = '';
+
+        function getDailyChallenge() {
+            const today = new Date().toISOString().split('T')[0];
+
+            // Check if we have a stored challenge for today
+            const stored = localStorage.getItem('dailyChallenge');
+            if (stored) {
+                const data = JSON.parse(stored);
+                if (data.date === today) {
+                    dailyChallenge = DAILY_CHALLENGES.find(c => c.id === data.challengeId);
+                    dailyChallengeProgress = data.progress || 0;
+                    dailyChallengeCompleted = data.completed || false;
+                    dailyChallengeDate = today;
+                    return;
+                }
+            }
+
+            // Generate new challenge based on date seed
+            const seed = parseInt(today.replace(/-/g, ''));
+            const challengeIndex = seed % DAILY_CHALLENGES.length;
+            dailyChallenge = DAILY_CHALLENGES[challengeIndex];
+            dailyChallengeProgress = 0;
+            dailyChallengeCompleted = false;
+            dailyChallengeDate = today;
+
+            saveDailyChallenge();
+        }
+
+        function saveDailyChallenge() {
+            if (!dailyChallenge) return;
+            localStorage.setItem('dailyChallenge', JSON.stringify({
+                date: dailyChallengeDate,
+                challengeId: dailyChallenge.id,
+                progress: dailyChallengeProgress,
+                completed: dailyChallengeCompleted
+            }));
+        }
+
+        function updateDailyChallengeUI() {
+            if (!dailyChallenge) return;
+
+            const panel = document.getElementById('dailyChallenge');
+            const icon = document.getElementById('challengeIcon');
+            const name = document.getElementById('challengeName');
+            const desc = document.getElementById('challengeDesc');
+            const bar = document.getElementById('challengeBar');
+            const progressText = document.getElementById('challengeProgressText');
+            const reward = document.getElementById('challengeReward');
+
+            if (icon) icon.textContent = dailyChallenge.icon;
+            if (name) name.textContent = dailyChallenge.name;
+            if (desc) desc.textContent = dailyChallenge.desc;
+            if (reward) reward.textContent = dailyChallenge.reward;
+
+            const progress = Math.min(dailyChallengeProgress, dailyChallenge.target);
+            const percent = (progress / dailyChallenge.target) * 100;
+
+            if (bar) bar.style.width = percent + '%';
+            if (progressText) progressText.textContent = `${progress} / ${dailyChallenge.target}`;
+
+            if (panel) {
+                if (dailyChallengeCompleted) {
+                    panel.classList.add('daily-challenge-complete');
+                    if (name) name.textContent = dailyChallenge.name + ' ✓';
+                } else {
+                    panel.classList.remove('daily-challenge-complete');
+                }
+            }
+        }
+
+        function updateChallengeTimer() {
+            const timer = document.getElementById('challengeTimer');
+            if (!timer) return;
+
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+
+            const diff = tomorrow - now;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            timer.textContent = `Resets in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateDailyChallengeProgress(type, value) {
+            if (!dailyChallenge || dailyChallengeCompleted) return;
+            if (dailyChallenge.type !== type) return;
+
+            if (type === 'kills' || type === 'powerups' || type === 'bosses') {
+                dailyChallengeProgress += value;
+            } else if (type === 'score' || type === 'time' || type === 'level' || type === 'combo') {
+                dailyChallengeProgress = Math.max(dailyChallengeProgress, value);
+            } else if (type === 'perfect') {
+                dailyChallengeProgress = value;
+            }
+
+            // Check completion
+            if (dailyChallengeProgress >= dailyChallenge.target && !dailyChallengeCompleted) {
+                completeDailyChallenge();
+            }
+
+            saveDailyChallenge();
+            updateDailyChallengeUI();
+        }
+
+        function completeDailyChallenge() {
+            if (!dailyChallenge || dailyChallengeCompleted) return;
+
+            dailyChallengeCompleted = true;
+            totalCoins += dailyChallenge.reward;
+            saveCoins();
+
+            // Show celebration
+            announce('dailyChallenge');
+            playLevelUpSound();
+
+            // Spawn particles
+            const panel = document.getElementById('dailyChallenge');
+            if (panel) {
+                const rect = panel.getBoundingClientRect();
+                spawnAchievementParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, dailyChallenge.icon);
+            }
+
+            saveDailyChallenge();
+            updateDailyChallengeUI();
+        }
+
+        // Initialize daily challenge
+        getDailyChallenge();
+        updateDailyChallengeUI();
+        updateChallengeTimer();
+        setInterval(updateChallengeTimer, 1000);
 
         // ========================================
         // Screen Transition System
