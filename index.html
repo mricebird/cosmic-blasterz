@@ -2112,6 +2112,146 @@
             flex-shrink: 0;
         }
 
+        /* Achievement detail modal */
+        .achievement-detail-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .achievement-detail-modal {
+            background: linear-gradient(135deg, rgba(10, 20, 40, 0.98) 0%, rgba(5, 10, 25, 0.98) 100%);
+            border: 3px solid rgba(255, 215, 0, 0.5);
+            border-radius: 20px;
+            padding: 30px 40px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.5);
+            animation: modalAppear 0.3s ease-out;
+        }
+
+        @keyframes modalAppear {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .achievement-detail-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .achievement-detail-close:hover {
+            color: #fff;
+        }
+
+        .achievement-detail-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+        }
+
+        .achievement-detail-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: #ffd700;
+            margin-bottom: 8px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .achievement-detail-rarity {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 15px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .achievement-detail-rarity.common { background: rgba(150, 150, 150, 0.3); color: #aaa; }
+        .achievement-detail-rarity.rare { background: rgba(0, 150, 255, 0.3); color: #0af; }
+        .achievement-detail-rarity.epic { background: rgba(150, 0, 255, 0.3); color: #a0f; }
+        .achievement-detail-rarity.legendary { background: rgba(255, 150, 0, 0.3); color: #fa0; }
+
+        .achievement-detail-desc {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            color: #0ff;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .achievement-detail-long {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .achievement-detail-tip {
+            background: rgba(0, 100, 150, 0.2);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .achievement-detail-tip .tip-label {
+            color: #0ff;
+            font-weight: 700;
+            margin-right: 5px;
+        }
+
+        .achievement-detail-reward {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            color: #fc0;
+            margin-bottom: 15px;
+        }
+
+        .achievement-detail-status {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .achievement-detail-status.unlocked {
+            background: rgba(0, 255, 100, 0.2);
+            color: #0f8;
+            border: 1px solid rgba(0, 255, 100, 0.4);
+        }
+
+        .achievement-detail-status.locked {
+            background: rgba(100, 100, 100, 0.2);
+            color: #888;
+            border: 1px solid rgba(100, 100, 100, 0.4);
+        }
+
         /* Achievement list on game over */
         .achievements-section {
             margin-top: 18px;
@@ -3604,6 +3744,27 @@
             <div class="achievement-icon" id="achievementIcon">🎯</div>
             <div class="achievement-name" id="achievementName">First Blood</div>
             <div class="achievement-desc" id="achievementDesc">Kill your first enemy</div>
+        </div>
+
+        <!-- Achievement detail modal -->
+        <div class="achievement-detail-overlay hidden" id="achievementDetailOverlay" onclick="closeAchievementDetail()">
+            <div class="achievement-detail-modal" onclick="event.stopPropagation()">
+                <button class="achievement-detail-close" onclick="closeAchievementDetail()">&times;</button>
+                <div class="achievement-detail-icon" id="detailIcon">🎯</div>
+                <h3 class="achievement-detail-name" id="detailName">First Blood</h3>
+                <div class="achievement-detail-rarity" id="detailRarity">COMMON</div>
+                <p class="achievement-detail-desc" id="detailDesc">Kill your first enemy</p>
+                <p class="achievement-detail-long" id="detailLong">Every journey begins with a single step...</p>
+                <div class="achievement-detail-tip">
+                    <span class="tip-label">💡 TIP:</span>
+                    <span id="detailTip">Just shoot any enemy to unlock this achievement.</span>
+                </div>
+                <div class="achievement-detail-reward">
+                    <span>🪙 REWARD:</span>
+                    <span id="detailReward">10 coins</span>
+                </div>
+                <div class="achievement-detail-status" id="detailStatus">✓ UNLOCKED</div>
+            </div>
         </div>
 
         <!-- Boss health bar -->
@@ -5615,18 +5776,90 @@
 
         // Achievement system
         const ACHIEVEMENTS = {
-            firstBlood: { icon: '🎯', name: 'First Blood', desc: 'Kill your first enemy', check: (stats) => stats.totalKills >= 1 },
-            killer: { icon: '💀', name: 'Killer', desc: 'Kill 50 enemies', check: (stats) => stats.totalKills >= 50 },
-            massacre: { icon: '☠️', name: 'Massacre', desc: 'Kill 200 enemies', check: (stats) => stats.totalKills >= 200 },
-            comboStarter: { icon: '🔥', name: 'Combo Starter', desc: 'Get a 3x combo', check: (stats) => stats.maxCombo >= 3 },
-            comboMaster: { icon: '⚡', name: 'Combo Master', desc: 'Get a 5x combo', check: (stats) => stats.maxCombo >= 5 },
-            survivor: { icon: '🛡️', name: 'Survivor', desc: 'Reach level 5', check: (stats) => stats.maxLevel >= 5 },
-            veteran: { icon: '🎖️', name: 'Veteran', desc: 'Reach level 10', check: (stats) => stats.maxLevel >= 10 },
-            bossSlayer: { icon: '👑', name: 'Boss Slayer', desc: 'Defeat your first boss', check: (stats) => stats.bossKills >= 1 },
-            untouchable: { icon: '✨', name: 'Untouchable', desc: 'Complete a level without getting hit', check: (stats) => stats.perfectLevels >= 1 },
-            powerPlayer: { icon: '💎', name: 'Power Player', desc: 'Collect 10 power-ups', check: (stats) => stats.powerUpsCollected >= 10 },
-            scoreHunter: { icon: '🏆', name: 'Score Hunter', desc: 'Achieve 5000 points', check: (stats) => stats.maxScore >= 5000 },
-            legend: { icon: '⭐', name: 'Legend', desc: 'Achieve 20000 points', check: (stats) => stats.maxScore >= 20000 }
+            firstBlood: {
+                icon: '🎯', name: 'First Blood', desc: 'Kill your first enemy',
+                longDesc: 'Every journey begins with a single step. You have taken down your first alien invader and begun your path to becoming a legendary space defender.',
+                tip: 'Just shoot any enemy to unlock this achievement.',
+                rarity: 'common', reward: 10,
+                check: (stats) => stats.totalKills >= 1
+            },
+            killer: {
+                icon: '💀', name: 'Killer', desc: 'Kill 50 enemies',
+                longDesc: 'You have proven yourself as a capable fighter. 50 alien invaders have fallen to your weapons. The invasion force is starting to fear you.',
+                tip: 'Keep playing and racking up kills. Use rapid-fire power-ups to speed this up.',
+                rarity: 'common', reward: 25,
+                check: (stats) => stats.totalKills >= 50
+            },
+            massacre: {
+                icon: '☠️', name: 'Massacre', desc: 'Kill 200 enemies',
+                longDesc: 'A true warrior emerges! 200 alien souls have been vanquished by your relentless assault. You are becoming a legend among the stars.',
+                tip: 'Endless mode is great for racking up large kill counts quickly.',
+                rarity: 'rare', reward: 50,
+                check: (stats) => stats.totalKills >= 200
+            },
+            comboStarter: {
+                icon: '🔥', name: 'Combo Starter', desc: 'Get a 3x combo',
+                longDesc: 'You discovered the power of chaining kills! Combo attacks deal bonus damage and earn extra points. Master this technique to dominate.',
+                tip: 'Kill enemies quickly in succession. The combo timer shows how long you have before it resets.',
+                rarity: 'common', reward: 15,
+                check: (stats) => stats.maxCombo >= 3
+            },
+            comboMaster: {
+                icon: '⚡', name: 'Combo Master', desc: 'Get a 5x combo',
+                longDesc: 'Your reflexes are lightning fast! A 5x combo requires precision timing and aggressive play. The aliens cannot keep up with your assault.',
+                tip: 'Use spread weapons like plasma to hit multiple enemies at once and build combos faster.',
+                rarity: 'rare', reward: 35,
+                check: (stats) => stats.maxCombo >= 5
+            },
+            survivor: {
+                icon: '🛡️', name: 'Survivor', desc: 'Reach level 5',
+                longDesc: 'You have survived the initial waves and reached level 5. The real challenge begins now as enemies become faster and more aggressive.',
+                tip: 'Use barriers for cover and collect shield power-ups when low on lives.',
+                rarity: 'common', reward: 20,
+                check: (stats) => stats.maxLevel >= 5
+            },
+            veteran: {
+                icon: '🎖️', name: 'Veteran', desc: 'Reach level 10',
+                longDesc: 'A decorated veteran of the cosmic war! Level 10 brings elite enemy formations and your first major boss encounter. You have earned your stripes.',
+                tip: 'Boss fights occur at levels 5, 10, 15, 20, and 25. Learn their attack patterns!',
+                rarity: 'rare', reward: 50,
+                check: (stats) => stats.maxLevel >= 10
+            },
+            bossSlayer: {
+                icon: '👑', name: 'Boss Slayer', desc: 'Defeat your first boss',
+                longDesc: 'You have faced a mighty alien commander and emerged victorious! Boss battles are the ultimate test of skill, requiring you to dodge complex attack patterns while dealing damage.',
+                tip: 'Focus on dodging first, shooting second. Bosses have predictable patterns - learn them!',
+                rarity: 'rare', reward: 75,
+                check: (stats) => stats.bossKills >= 1
+            },
+            untouchable: {
+                icon: '✨', name: 'Untouchable', desc: 'Complete a level without getting hit',
+                longDesc: 'Perfect performance! You cleared an entire level without taking a single hit. Your evasion skills are unmatched in the galaxy.',
+                tip: 'Focus on the early levels where enemies are slower. Stay mobile and watch for enemy bullets.',
+                rarity: 'epic', reward: 100,
+                check: (stats) => stats.perfectLevels >= 1
+            },
+            powerPlayer: {
+                icon: '💎', name: 'Power Player', desc: 'Collect 10 power-ups',
+                longDesc: 'You know the value of power-ups! These cosmic gifts provide shields, rapid fire, multi-shot, and slow-motion abilities. Collect them all to dominate.',
+                tip: 'Power-ups drop from destroyed enemies. Higher tier enemies have better drop rates.',
+                rarity: 'common', reward: 20,
+                check: (stats) => stats.powerUpsCollected >= 10
+            },
+            scoreHunter: {
+                icon: '🏆', name: 'Score Hunter', desc: 'Achieve 5000 points',
+                longDesc: 'Your name is climbing the leaderboards! 5000 points shows dedication and skill. Keep pushing for even higher scores.',
+                tip: 'Combos multiply your score. Also, defeating bosses and collecting power-ups gives bonus points.',
+                rarity: 'common', reward: 30,
+                check: (stats) => stats.maxScore >= 5000
+            },
+            legend: {
+                icon: '⭐', name: 'Legend', desc: 'Achieve 20000 points',
+                longDesc: 'You have achieved legendary status! 20000 points puts you among the elite defenders of the cosmos. Your name will be remembered forever.',
+                tip: 'Master combos, survive boss fights, and play consistently to reach this milestone.',
+                rarity: 'legendary', reward: 150,
+                check: (stats) => stats.maxScore >= 20000
+            }
         };
 
         const ACHIEVEMENTS_STORAGE_KEY = 'spaceInvadersAchievements';
@@ -5723,10 +5956,45 @@
             Object.keys(ACHIEVEMENTS).forEach(key => {
                 const achievement = ACHIEVEMENTS[key];
                 const unlocked = unlockedAchievements.includes(key);
-                html += `<div class="achievement-badge ${unlocked ? 'unlocked' : ''}" title="${achievement.name}: ${achievement.desc}">${achievement.icon}</div>`;
+                html += `<div class="achievement-badge ${unlocked ? 'unlocked' : ''}"
+                    title="${achievement.name}: ${achievement.desc}"
+                    onclick="showAchievementDetail('${key}')"
+                    style="cursor: pointer;">${achievement.icon}</div>`;
             });
 
             container.innerHTML = html;
+        }
+
+        function showAchievementDetail(key) {
+            const achievement = ACHIEVEMENTS[key];
+            const unlocked = unlockedAchievements.includes(key);
+
+            document.getElementById('detailIcon').textContent = achievement.icon;
+            document.getElementById('detailName').textContent = achievement.name;
+            document.getElementById('detailDesc').textContent = achievement.desc;
+            document.getElementById('detailLong').textContent = achievement.longDesc || '';
+            document.getElementById('detailTip').textContent = achievement.tip || '';
+            document.getElementById('detailReward').textContent = (achievement.reward || 0) + ' coins';
+
+            const rarityEl = document.getElementById('detailRarity');
+            rarityEl.textContent = (achievement.rarity || 'common').toUpperCase();
+            rarityEl.className = 'achievement-detail-rarity ' + (achievement.rarity || 'common');
+
+            const statusEl = document.getElementById('detailStatus');
+            if (unlocked) {
+                statusEl.textContent = '✓ UNLOCKED';
+                statusEl.className = 'achievement-detail-status unlocked';
+            } else {
+                statusEl.textContent = '🔒 LOCKED';
+                statusEl.className = 'achievement-detail-status locked';
+            }
+
+            document.getElementById('achievementDetailOverlay').classList.remove('hidden');
+            playSelectSound();
+        }
+
+        function closeAchievementDetail() {
+            document.getElementById('achievementDetailOverlay').classList.add('hidden');
         }
 
         function updateSessionStats(stat, value) {
