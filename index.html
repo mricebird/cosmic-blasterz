@@ -5464,6 +5464,9 @@
         }
 
         function applyWeaponUpgrades() {
+            // Check if WEAPONS is defined yet (called later in initialization)
+            if (typeof WEAPONS === 'undefined') return;
+
             // Apply all purchased weapon upgrades
             Object.keys(WEAPON_UPGRADES).forEach(weaponKey => {
                 const weapon = WEAPONS[weaponKey];
@@ -6001,6 +6004,9 @@
             }
         };
         let currentWeapon = 'laser';
+
+        // Apply weapon upgrades now that WEAPONS is defined
+        applyWeaponUpgrades();
 
         function selectWeapon(weapon) {
             if (!WEAPONS[weapon]) return;
