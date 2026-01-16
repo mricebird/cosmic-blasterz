@@ -1852,28 +1852,211 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: rgba(0, 5, 15, 0.9);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0, 5, 15, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: #0ff;
             border-radius: 10px;
             z-index: 100;
         }
 
-        .pause-screen h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 44px;
-            font-weight: 800;
-            margin-bottom: 18px;
-            text-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
-            letter-spacing: 4px;
+        .pause-container {
+            background: linear-gradient(180deg, rgba(0, 30, 60, 0.8) 0%, rgba(0, 15, 30, 0.9) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px 50px;
+            min-width: 350px;
+            max-width: 450px;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.2), inset 0 0 30px rgba(0, 0, 0, 0.5);
         }
 
-        .pause-screen p {
+        .pause-screen h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+            letter-spacing: 6px;
+            text-align: center;
+        }
+
+        .pause-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .pause-btn {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 14px 20px;
+            border: 2px solid rgba(0, 255, 255, 0.4);
+            border-radius: 10px;
+            background: linear-gradient(180deg, rgba(0, 100, 150, 0.3) 0%, rgba(0, 50, 100, 0.4) 100%);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .pause-btn:hover {
+            background: linear-gradient(180deg, rgba(0, 150, 200, 0.5) 0%, rgba(0, 100, 150, 0.6) 100%);
+            border-color: #0ff;
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .pause-btn.primary {
+            background: linear-gradient(180deg, rgba(0, 200, 100, 0.4) 0%, rgba(0, 150, 80, 0.5) 100%);
+            border-color: rgba(0, 255, 150, 0.5);
+        }
+
+        .pause-btn.primary:hover {
+            background: linear-gradient(180deg, rgba(0, 255, 100, 0.5) 0%, rgba(0, 200, 100, 0.6) 100%);
+            border-color: #0f8;
+            box-shadow: 0 0 20px rgba(0, 255, 150, 0.3);
+        }
+
+        .pause-btn.danger {
+            background: linear-gradient(180deg, rgba(150, 50, 50, 0.4) 0%, rgba(100, 30, 30, 0.5) 100%);
+            border-color: rgba(255, 100, 100, 0.4);
+        }
+
+        .pause-btn.danger:hover {
+            background: linear-gradient(180deg, rgba(200, 50, 50, 0.5) 0%, rgba(150, 30, 30, 0.6) 100%);
+            border-color: #f66;
+            box-shadow: 0 0 20px rgba(255, 100, 100, 0.3);
+        }
+
+        .pause-settings {
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+            padding-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pause-settings h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: rgba(0, 255, 255, 0.7);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .volume-label {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 18px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            min-width: 70px;
+        }
+
+        .volume-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(0, 50, 100, 0.5);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #0ff, #08f);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            transition: transform 0.1s ease;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #0ff, #08f);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .volume-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            color: #0ff;
+            min-width: 35px;
+            text-align: right;
+        }
+
+        .pause-controls-ref {
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+            padding-top: 15px;
+        }
+
+        .pause-controls-ref h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            color: rgba(0, 255, 255, 0.6);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 15px;
+        }
+
+        .control-item {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+        }
+
+        .control-key {
+            color: #0ff;
+            font-weight: 600;
+        }
+
+        .control-action {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 600px) {
+            .pause-container {
+                padding: 25px 20px;
+                min-width: 280px;
+                margin: 0 15px;
+            }
+            .pause-screen h2 {
+                font-size: 24px;
+            }
+            .pause-btn {
+                font-size: 14px;
+                padding: 12px 15px;
+            }
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* AI Demo overlay */
@@ -4158,8 +4341,51 @@
 
         <!-- Pause screen -->
         <div class="pause-screen hidden" id="pauseScreen">
-            <h2>PAUSED</h2>
-            <p>Press P to continue</p>
+            <div class="pause-container">
+                <h2>⏸️ PAUSED</h2>
+
+                <div class="pause-buttons">
+                    <button class="pause-btn primary" onclick="togglePause()">▶️ RESUME</button>
+                    <button class="pause-btn" onclick="restartFromPause()">🔄 RESTART LEVEL</button>
+                    <button class="pause-btn danger" onclick="quitToMenu()">🚪 QUIT TO MENU</button>
+                </div>
+
+                <div class="pause-settings">
+                    <h3>🔊 Audio Settings</h3>
+                    <div class="volume-control">
+                        <span class="volume-label">SFX</span>
+                        <input type="range" class="volume-slider" id="pauseSfxVolume" min="0" max="100" value="100" oninput="updateSfxVolume(this.value)">
+                        <span class="volume-value" id="pauseSfxValue">100%</span>
+                    </div>
+                    <div class="volume-control">
+                        <span class="volume-label">Music</span>
+                        <input type="range" class="volume-slider" id="pauseMusicVolume" min="0" max="100" value="100" oninput="updateMusicVolume(this.value)">
+                        <span class="volume-value" id="pauseMusicValue">100%</span>
+                    </div>
+                </div>
+
+                <div class="pause-controls-ref">
+                    <h3>🎮 Controls</h3>
+                    <div class="controls-grid">
+                        <div class="control-item">
+                            <span class="control-key">← →</span>
+                            <span class="control-action">Move</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-key">SPACE</span>
+                            <span class="control-action">Shoot</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-key">P</span>
+                            <span class="control-action">Pause</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-key">M</span>
+                            <span class="control-action">Mute</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- AI Demo overlay -->
@@ -7835,9 +8061,105 @@
             document.getElementById('pauseBtn').textContent = gamePaused ? '▶️' : '⏸️';
             // Update mobile controls visibility based on pause state
             updateMobileControlsVisibility();
+
+            // Sync volume sliders when opening pause menu
+            if (gamePaused) {
+                syncPauseVolumeSliders();
+            }
+
             if (!gamePaused) {
                 requestAnimationFrame(gameLoop);
             }
+        }
+
+        function syncPauseVolumeSliders() {
+            const sfxSlider = document.getElementById('pauseSfxVolume');
+            const musicSlider = document.getElementById('pauseMusicVolume');
+            const sfxValue = document.getElementById('pauseSfxValue');
+            const musicValue = document.getElementById('pauseMusicValue');
+
+            if (sfxSlider) {
+                sfxSlider.value = sfxVolume;
+                if (sfxValue) sfxValue.textContent = sfxVolume + '%';
+            }
+            if (musicSlider) {
+                musicSlider.value = musicVolumeLevel;
+                if (musicValue) musicValue.textContent = musicVolumeLevel + '%';
+            }
+        }
+
+        function updateSfxVolume(value) {
+            sfxVolume = parseInt(value);
+            const sfxValue = document.getElementById('pauseSfxValue');
+            if (sfxValue) sfxValue.textContent = sfxVolume + '%';
+            // Play a sample sound to preview volume
+            playSelectSound();
+        }
+
+        function updateMusicVolume(value) {
+            musicVolumeLevel = parseInt(value);
+            const musicValue = document.getElementById('pauseMusicValue');
+            if (musicValue) musicValue.textContent = musicVolumeLevel + '%';
+            // Update current music volume
+            if (gameMusic && gameMusic.gain) {
+                gameMusic.gain.gain.setValueAtTime(musicVolumeLevel / 100, audioContext.currentTime);
+            }
+        }
+
+        function restartFromPause() {
+            // Close pause menu
+            gamePaused = false;
+            document.getElementById('pauseScreen').classList.add('hidden');
+            document.getElementById('pauseBtn').textContent = '⏸️';
+
+            // Reset current level state but keep the level number
+            enemies = [];
+            bullets = [];
+            enemyBullets = [];
+            powerUps = [];
+            explosions = [];
+            currentBoss = null;
+
+            // Reset player position
+            player.x = canvas.width / 2 - player.width / 2;
+            player.y = canvas.height - 100;
+
+            // Reset player 2 if active
+            if (twoPlayerMode && player2) {
+                player2.x = canvas.width / 2 - player2.width / 2 + 50;
+                player2.y = canvas.height - 100;
+            }
+
+            // Respawn enemies for current level
+            spawnEnemies();
+
+            // Continue game
+            requestAnimationFrame(gameLoop);
+            playSelectSound();
+        }
+
+        function quitToMenu() {
+            // Stop the game
+            gameRunning = false;
+            gamePaused = false;
+
+            // Hide pause screen
+            document.getElementById('pauseScreen').classList.add('hidden');
+
+            // Stop game music
+            stopGameMusic();
+
+            // Reset game state
+            enemies = [];
+            bullets = [];
+            enemyBullets = [];
+            powerUps = [];
+            explosions = [];
+            currentBoss = null;
+
+            // Show start screen
+            backToMenu();
+            playSelectSound();
         }
 
         function toggleMute() {
