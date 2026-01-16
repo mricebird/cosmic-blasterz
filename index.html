@@ -1044,23 +1044,18 @@
 
         /* Weapon selector */
         .weapon-selector {
-            position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
             display: flex;
-            gap: 8px;
-            z-index: 50;
+            gap: 4px;
         }
 
         .weapon-btn {
-            width: 52px;
-            height: 52px;
+            width: 36px;
+            height: 36px;
             background: rgba(0, 15, 30, 0.85);
             border: 1px solid rgba(100, 100, 120, 0.3);
-            border-radius: 10px;
+            border-radius: 8px;
             color: rgba(150, 150, 170, 0.7);
-            font-size: 11px;
+            font-size: 10px;
             cursor: pointer;
             display: flex;
             flex-direction: column;
@@ -1080,17 +1075,17 @@
             border-color: rgba(0, 255, 255, 0.6);
             color: #0ff;
             background: rgba(0, 40, 60, 0.9);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
         }
 
         .weapon-btn .weapon-icon {
-            font-size: 20px;
-            margin-bottom: 2px;
+            font-size: 14px;
+            line-height: 1;
         }
 
         .weapon-btn .weapon-key {
             font-family: 'Orbitron', sans-serif;
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 600;
             opacity: 0.6;
         }
@@ -1706,6 +1701,20 @@
                 <button class="shop-btn" id="shopBtn" onclick="toggleShop()">🛒 SHOP</button>
                 <div class="coins-display" id="coinsDisplay">🪙 0</div>
                 <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">⚙️ SETTINGS</button>
+                <div class="weapon-selector" id="weaponSelector">
+                    <button class="weapon-btn active" id="weapon1" onclick="selectWeapon('laser')" title="Laser (1)">
+                        <span class="weapon-icon">⚡</span>
+                        <span class="weapon-key">1</span>
+                    </button>
+                    <button class="weapon-btn" id="weapon2" onclick="selectWeapon('missile')" title="Missile (2)">
+                        <span class="weapon-icon">🚀</span>
+                        <span class="weapon-key">2</span>
+                    </button>
+                    <button class="weapon-btn" id="weapon3" onclick="selectWeapon('plasma')" title="Plasma (3)">
+                        <span class="weapon-icon">🔮</span>
+                        <span class="weapon-key">3</span>
+                    </button>
+                </div>
             </div>
             <div class="toolbar-right">
                 <button class="share-btn" onclick="shareGame()" title="Share with friends">📤 SHARE</button>
@@ -1745,22 +1754,6 @@
                 <button class="mobile-btn" id="rightBtn">▶</button>
             </div>
             <button class="mobile-btn" id="fireBtn">🔥</button>
-        </div>
-
-        <!-- Weapon selector -->
-        <div class="weapon-selector" id="weaponSelector">
-            <button class="weapon-btn active" id="weapon1" onclick="selectWeapon('laser')">
-                <span class="weapon-icon">⚡</span>
-                <span class="weapon-key">1</span>
-            </button>
-            <button class="weapon-btn" id="weapon2" onclick="selectWeapon('missile')">
-                <span class="weapon-icon">🚀</span>
-                <span class="weapon-key">2</span>
-            </button>
-            <button class="weapon-btn" id="weapon3" onclick="selectWeapon('plasma')">
-                <span class="weapon-icon">🔮</span>
-                <span class="weapon-key">3</span>
-            </button>
         </div>
 
         <!-- Shop panel -->
