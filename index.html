@@ -903,6 +903,24 @@
             border-color: rgba(107, 207, 107, 0.6);
         }
 
+        .game-over-buttons .menu-btn {
+            padding: 10px 20px;
+            font-size: 12px;
+            font-weight: 500;
+            background: transparent;
+            color: #f0a030;
+            border: 1px solid rgba(240, 160, 48, 0.4);
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .game-over-buttons .menu-btn:hover {
+            background: rgba(240, 160, 48, 0.15);
+            border-color: rgba(240, 160, 48, 0.6);
+        }
+
         .share-options {
             margin-top: 15px;
             display: flex;
@@ -3380,6 +3398,7 @@
             </div>
             <div class="game-over-buttons">
                 <button class="restart-btn" onclick="restartGame()">PLAY AGAIN</button>
+                <button class="menu-btn" onclick="backToMenu()">🏠 MAIN MENU</button>
                 <button class="share-btn" onclick="shareScore()">📤 SHARE SCORE</button>
             </div>
             <div class="share-options hidden" id="shareOptions">
@@ -9739,6 +9758,31 @@
             initMusic();
             updateMobileControlsVisibility();
             requestAnimationFrame(gameLoop);
+        }
+
+        // Back to main menu
+        async function backToMenu() {
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+
+            // Stop any running game
+            gameRunning = false;
+            stopMusic();
+
+            // Reset modes
+            aiDemoMode = false;
+            endlessMode = false;
+            twoPlayerMode = false;
+
+            // Refresh highscores
+            await fetchHighscores();
+            renderHighscores('startHighscores');
+
+            // Focus on name input
+            const nameInput = document.getElementById('playerName');
+            if (nameInput) {
+                nameInput.focus();
+            }
         }
 
         // AI Demo Mode
