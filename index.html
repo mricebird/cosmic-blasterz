@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Invaders</title>
+    <title>Cosmic Blasterz</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -2397,7 +2397,7 @@
             <!-- Scroll text -->
             <div class="scroll-text-container">
                 <div class="scroll-text">
-                    ★★★ WELCOME TO SPACE INVADERS ★★★ PROGRAMMED WITH ♥ IN 2026 ★★★ USE ARROW KEYS TO MOVE AND SPACE TO SHOOT ★★★ COLLECT POWER-UPS FOR SPECIAL ABILITIES ★★★ DEFEAT THE BOSS AT THE END OF EACH LEVEL ★★★ CAN YOU BEAT THE HIGHSCORE? ★★★ GREETINGS TO ALL RETRO GAMERS OUT THERE ★★★
+                    ★★★ WELCOME TO COSMIC BLASTERZ ★★★ PROGRAMMED WITH ♥ IN 2026 ★★★ USE ARROW KEYS TO MOVE AND SPACE TO SHOOT ★★★ COLLECT POWER-UPS FOR SPECIAL ABILITIES ★★★ DEFEAT THE BOSS AT THE END OF EACH LEVEL ★★★ CAN YOU BEAT THE HIGHSCORE? ★★★ GREETINGS TO ALL RETRO GAMERS OUT THERE ★★★
                 </div>
             </div>
             <input type="text" id="playerName" class="name-input" placeholder="Enter your name" maxlength="15">
@@ -2611,7 +2611,7 @@
             <div class="tutorial-box">
                 <div class="tutorial-progress" id="tutorialProgress"></div>
                 <div class="tutorial-title" id="tutorialTitle">Welcome!</div>
-                <div class="tutorial-text" id="tutorialText">Learn to play Space Invaders!</div>
+                <div class="tutorial-text" id="tutorialText">Learn to play Cosmic Blasterz!</div>
                 <div>
                     <button class="tutorial-btn-next" onclick="nextTutorialStep()">Next</button>
                     <button class="tutorial-btn-skip" onclick="skipTutorial()">Skip</button>
@@ -3294,9 +3294,9 @@
         // Share game with friends
         function shareGame() {
             const shareData = {
-                title: 'Space Invaders',
-                text: 'Play Space Invaders - Defend Earth from the alien invasion!',
-                url: 'https://mricebird.github.io/space-invaders/'
+                title: 'Cosmic Blasterz',
+                text: 'Play Cosmic Blasterz - Defend Earth from the alien invasion!',
+                url: 'https://mricebird.github.io/cosmic-blasterz/'
             };
 
             if (navigator.share) {
@@ -3797,7 +3797,7 @@
         let tutorialStep = 0;
         const TUTORIAL_STEPS = [
             {
-                title: '🚀 Welcome to Space Invaders!',
+                title: '🚀 Welcome to Cosmic Blasterz!',
                 text: 'In this game you must defend Earth against waves of aliens. Let\'s learn the basic controls!'
             },
             {
@@ -3930,7 +3930,7 @@
         }
 
         function getShareText() {
-            let text = `🚀 I scored ${score} points in Space Invaders! 👾`;
+            let text = `🚀 I scored ${score} points in Cosmic Blasterz! 👾`;
             if (endlessMode) {
                 const elapsed = Math.floor((Date.now() - endlessStartTime) / 1000);
                 const minutes = Math.floor(elapsed / 60);
