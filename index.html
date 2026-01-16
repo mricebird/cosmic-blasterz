@@ -175,14 +175,72 @@
 
         .mode-buttons {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             justify-content: center;
             flex-wrap: wrap;
+            margin-bottom: 10px;
         }
 
-        .mode-buttons .start-btn {
-            padding: 12px 22px;
+        .mode-card {
+            background: rgba(0, 20, 40, 0.6);
+            border: 1px solid rgba(100, 100, 120, 0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            width: 160px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-card:hover {
+            background: rgba(0, 40, 80, 0.7);
+            border-color: rgba(0, 255, 255, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .mode-card.normal:hover {
+            border-color: rgba(0, 255, 255, 0.6);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+
+        .mode-card.endless:hover {
+            border-color: rgba(255, 136, 0, 0.6);
+            box-shadow: 0 0 20px rgba(255, 136, 0, 0.2);
+        }
+
+        .mode-card.tutorial:hover {
+            border-color: rgba(0, 255, 0, 0.6);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+
+        .mode-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .mode-title {
+            font-family: 'Orbitron', sans-serif;
             font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #0ff;
+        }
+
+        .mode-card.endless .mode-title {
+            color: #f80;
+        }
+
+        .mode-card.tutorial .mode-title {
+            color: #0f0;
+        }
+
+        .mode-desc {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.4;
         }
 
         .endless-btn {
@@ -1369,9 +1427,21 @@
             <p style="font-size: 18px; margin-bottom: 20px; opacity: 0.8;">Defend Earth from the alien invasion!</p>
             <input type="text" id="playerName" class="name-input" placeholder="Enter your name" maxlength="15">
             <div class="mode-buttons">
-                <button class="start-btn" onclick="startGame(false)">NORMAL MODE</button>
-                <button class="start-btn endless-btn" onclick="startGame(true)">♾️ ENDLESS MODE</button>
-                <button class="start-btn tutorial-btn" onclick="startTutorial()">📖 TUTORIAL</button>
+                <div class="mode-card normal" onclick="startGame(false)">
+                    <div class="mode-icon">🎮</div>
+                    <div class="mode-title">NORMAL</div>
+                    <div class="mode-desc">Classic mode with levels and bosses. Beat all waves to win!</div>
+                </div>
+                <div class="mode-card endless" onclick="startGame(true)">
+                    <div class="mode-icon">♾️</div>
+                    <div class="mode-title">ENDLESS</div>
+                    <div class="mode-desc">Survive infinite waves. How long can you last?</div>
+                </div>
+                <div class="mode-card tutorial" onclick="startTutorial()">
+                    <div class="mode-icon">📖</div>
+                    <div class="mode-title">TUTORIAL</div>
+                    <div class="mode-desc">Learn the controls and game mechanics step by step.</div>
+                </div>
             </div>
             <div class="controls-info">
                 <p>← → Arrow keys to move</p>
