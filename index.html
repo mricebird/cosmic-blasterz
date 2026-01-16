@@ -1411,6 +1411,28 @@
                 padding: 3px 8px;
             }
         }
+
+        /* Footer */
+        .game-footer {
+            text-align: center;
+            padding: 15px 20px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        .game-footer a {
+            color: rgba(0, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .game-footer a:hover {
+            color: #0ff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -1595,6 +1617,10 @@
             </div>
         </div>
     </div>
+
+    <footer class="game-footer">
+        Copyright © 2026 | <a href="https://invincible.as" target="_blank">Invincible.as</a> | All Rights Reserved.
+    </footer>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
