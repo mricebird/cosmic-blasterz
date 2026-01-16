@@ -947,10 +947,51 @@
             border-bottom: 1px solid rgba(0, 255, 255, 0.15);
         }
 
-        .controls-info p:last-child {
-            margin-bottom: 0;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.4);
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+
+        .control-player {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .control-player p {
+            margin: 4px 0 !important;
+            font-size: 13px !important;
+        }
+
+        .player-label {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .player-label.p1 {
+            background: linear-gradient(135deg, #0ff, #0aa);
+            color: #000;
+        }
+
+        .player-label.p2 {
+            background: linear-gradient(135deg, #f0f, #a0a);
+            color: #000;
+        }
+
+        .controls-extra {
+            margin-top: 10px !important;
+            font-size: 12px !important;
+            color: rgba(255, 255, 255, 0.4) !important;
+            text-align: center;
         }
 
         /* Invite Friend Button */
@@ -3079,9 +3120,19 @@
             </div>
             <div class="controls-info">
                 <p class="controls-title">⌨️ Controls</p>
-                <p><strong>P1:</strong> ← → Arrow keys · SPACE shoot</p>
-                <p><strong>P2:</strong> A D keys · Q shoot</p>
-                <p>1-2-3 Switch weapon · P Pause · M Mute</p>
+                <div class="controls-grid">
+                    <div class="control-player">
+                        <span class="player-label p1">PLAYER 1</span>
+                        <p>← ↑ ↓ → Move</p>
+                        <p>SPACE Shoot</p>
+                    </div>
+                    <div class="control-player">
+                        <span class="player-label p2">PLAYER 2</span>
+                        <p>W A S D Move</p>
+                        <p>Q Shoot</p>
+                    </div>
+                </div>
+                <p class="controls-extra">1-2-3 Switch weapon · P Pause · M Mute</p>
             </div>
             <div class="invite-friend-container">
                 <button class="invite-friend-btn" onclick="openInviteModal()">
