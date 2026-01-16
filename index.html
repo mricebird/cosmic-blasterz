@@ -3113,6 +3113,194 @@
             background: linear-gradient(90deg, #0f8, #0ff);
         }
 
+        /* Statistics Screen */
+        .stats-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, #0a0a2a 0%, #000 70%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1500;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .stats-container {
+            background: linear-gradient(180deg, rgba(0, 40, 80, 0.8) 0%, rgba(0, 20, 50, 0.9) 100%);
+            border: 2px solid rgba(0, 200, 255, 0.4);
+            border-radius: 20px;
+            padding: 30px 40px;
+            max-width: 500px;
+            width: 95%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .stats-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .stats-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: #0ff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .stats-close-btn {
+            background: rgba(255, 100, 100, 0.2);
+            border: 2px solid rgba(255, 100, 100, 0.4);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #f88;
+            transition: all 0.2s ease;
+        }
+
+        .stats-close-btn:hover {
+            background: rgba(255, 100, 100, 0.4);
+            transform: scale(1.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: rgba(0, 50, 100, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(0, 80, 150, 0.4);
+            border-color: rgba(0, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .stat-card.highlight {
+            background: linear-gradient(180deg, rgba(255, 200, 0, 0.2) 0%, rgba(200, 150, 0, 0.15) 100%);
+            border-color: rgba(255, 200, 0, 0.4);
+        }
+
+        .stat-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .stat-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stats-section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: rgba(0, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 20px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .stats-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .stats-reset-btn {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            color: rgba(255, 100, 100, 0.7);
+            background: none;
+            border: 1px solid rgba(255, 100, 100, 0.3);
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .stats-reset-btn:hover {
+            color: #f88;
+            border-color: rgba(255, 100, 100, 0.6);
+            background: rgba(255, 100, 100, 0.1);
+        }
+
+        /* Stats button on start screen */
+        .stats-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(180deg, rgba(0, 100, 150, 0.4) 0%, rgba(0, 60, 100, 0.5) 100%);
+            border: 2px solid rgba(0, 200, 255, 0.4);
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            color: #0ff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+        }
+
+        .stats-btn:hover {
+            background: linear-gradient(180deg, rgba(0, 150, 200, 0.5) 0%, rgba(0, 100, 150, 0.6) 100%);
+            border-color: #0ff;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 500px) {
+            .stats-container {
+                padding: 20px 15px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .stat-card {
+                padding: 10px;
+            }
+            .stat-value {
+                font-size: 18px;
+            }
+            .stat-icon {
+                font-size: 22px;
+            }
+        }
+
         /* Achievement list on game over */
         .achievements-section {
             margin-top: 18px;
@@ -4574,6 +4762,9 @@
         </div>
 
         <div class="start-screen" id="startScreen">
+            <!-- Stats button -->
+            <button class="stats-btn" onclick="openStats()">📊 Stats</button>
+
             <!-- Amiga-style effects -->
             <div class="copper-bars"></div>
             <div class="raster-bar"></div>
@@ -4862,6 +5053,82 @@
                         <span class="equipped-label">WEAPON</span>
                         <span class="equipped-value" id="equippedWeapon">Laser</span>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Screen -->
+        <div class="stats-screen hidden" id="statsScreen">
+            <div class="stats-container">
+                <div class="stats-header">
+                    <h2 class="stats-title">📊 Statistics</h2>
+                    <button class="stats-close-btn" onclick="closeStats()">✕</button>
+                </div>
+
+                <div class="stats-section-title">🎮 Gameplay</div>
+                <div class="stats-grid">
+                    <div class="stat-card highlight">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value" id="statHighScore">0</div>
+                        <div class="stat-label">High Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎮</div>
+                        <div class="stat-value" id="statGamesPlayed">0</div>
+                        <div class="stat-label">Games Played</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-value" id="statHighLevel">0</div>
+                        <div class="stat-label">Highest Level</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value" id="statTotalTime">0h</div>
+                        <div class="stat-label">Time Played</div>
+                    </div>
+                </div>
+
+                <div class="stats-section-title">💀 Combat</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👾</div>
+                        <div class="stat-value" id="statTotalKills">0</div>
+                        <div class="stat-label">Enemies Killed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👹</div>
+                        <div class="stat-value" id="statBossKills">0</div>
+                        <div class="stat-label">Bosses Defeated</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value" id="statBestCombo">0</div>
+                        <div class="stat-label">Best Combo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-value" id="statPowerUps">0</div>
+                        <div class="stat-label">Power-Ups</div>
+                    </div>
+                </div>
+
+                <div class="stats-section-title">💰 Economy</div>
+                <div class="stats-grid">
+                    <div class="stat-card highlight">
+                        <div class="stat-icon">🪙</div>
+                        <div class="stat-value" id="statTotalCoins">0</div>
+                        <div class="stat-label">Coins Earned</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value" id="statChallenges">0</div>
+                        <div class="stat-label">Challenges Done</div>
+                    </div>
+                </div>
+
+                <div class="stats-footer">
+                    <button class="stats-reset-btn" onclick="confirmResetStats()">Reset Statistics</button>
                 </div>
             </div>
         </div>
@@ -7555,6 +7822,8 @@
             totalCoins += amount;
             updateCoinsDisplay();
             saveShopData();
+            // Track lifetime stats
+            updateLifetimeStat('totalCoinsEarned', amount, 'add');
         }
 
         function updateCoinsDisplay() {
@@ -8611,6 +8880,8 @@
 
             // Track power-up for daily challenge
             updateDailyChallengeProgress('powerups', 1);
+            // Track lifetime stats
+            updateLifetimeStat('powerUpsCollected', 1, 'add');
 
             // Instant effect power-ups (no duration)
             if (type === 'bomb') {
@@ -9196,6 +9467,8 @@
                 updateSessionStats('bossKill');
                 // Track for daily challenges
                 updateDailyChallengeProgress('bosses', 1);
+                // Track lifetime stats
+                updateLifetimeStat('bossKills', 1, 'add');
 
                 // Handle Boss Rush mode differently
                 if (bossRushMode) {
@@ -11376,6 +11649,10 @@
                             updateDailyChallengeProgress('score', score);
                             updateDailyChallengeProgress('combo', comboCount);
 
+                            // Track lifetime stats
+                            updateLifetimeStat('totalKills', 1, 'add');
+                            updateLifetimeStat('bestCombo', comboCount, 'max');
+
                             // Earn coins (more for special enemies)
                             addCoins(Math.floor(enemy.points / 2));
 
@@ -11576,6 +11853,12 @@
 
             // Final score update for achievements
             updateSessionStats('score', score);
+
+            // Track lifetime stats at game end
+            const playTime = Math.floor((Date.now() - gameStartTime) / 1000);
+            updateLifetimeStat('highScore', score, 'max');
+            updateLifetimeStat('highLevel', level, 'max');
+            updateLifetimeStat('totalPlayTime', playTime, 'add');
 
             // Check accuracy challenge at game over
             if (dailyChallenge && dailyChallenge.id === 'accuracy' &&
@@ -11793,6 +12076,9 @@
             gameRunning = true;
             gameStartTime = Date.now();
             announce('gameStart');
+
+            // Track lifetime stats
+            updateLifetimeStat('gamesPlayed', 1, 'add');
 
             // Show/hide endless mode UI
             if (endlessMode) {
@@ -13665,6 +13951,9 @@
             totalCoins += dailyChallenge.reward;
             saveCoins();
 
+            // Track lifetime stats
+            updateLifetimeStat('challengesCompleted', 1, 'add');
+
             // Show celebration
             announce('dailyChallenge');
             playLevelUpSound();
@@ -13685,6 +13974,110 @@
         updateDailyChallengeUI();
         updateChallengeTimer();
         setInterval(updateChallengeTimer, 1000);
+
+        // ========================================
+        // Lifetime Statistics System
+        // ========================================
+        let lifetimeStats = {
+            gamesPlayed: 0,
+            highScore: 0,
+            highLevel: 0,
+            totalKills: 0,
+            bossKills: 0,
+            bestCombo: 0,
+            powerUpsCollected: 0,
+            totalCoinsEarned: 0,
+            challengesCompleted: 0,
+            totalPlayTime: 0 // in seconds
+        };
+
+        function loadLifetimeStats() {
+            const stored = localStorage.getItem('lifetimeStats');
+            if (stored) {
+                lifetimeStats = { ...lifetimeStats, ...JSON.parse(stored) };
+            }
+        }
+
+        function saveLifetimeStats() {
+            localStorage.setItem('lifetimeStats', JSON.stringify(lifetimeStats));
+        }
+
+        function updateLifetimeStat(stat, value, mode = 'add') {
+            if (mode === 'add') {
+                lifetimeStats[stat] = (lifetimeStats[stat] || 0) + value;
+            } else if (mode === 'max') {
+                lifetimeStats[stat] = Math.max(lifetimeStats[stat] || 0, value);
+            } else if (mode === 'set') {
+                lifetimeStats[stat] = value;
+            }
+            saveLifetimeStats();
+        }
+
+        function formatPlayTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            if (hours > 0) {
+                return `${hours}h ${mins}m`;
+            }
+            return `${mins}m`;
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        function updateStatsUI() {
+            document.getElementById('statHighScore').textContent = formatNumber(lifetimeStats.highScore);
+            document.getElementById('statGamesPlayed').textContent = formatNumber(lifetimeStats.gamesPlayed);
+            document.getElementById('statHighLevel').textContent = lifetimeStats.highLevel;
+            document.getElementById('statTotalTime').textContent = formatPlayTime(lifetimeStats.totalPlayTime);
+            document.getElementById('statTotalKills').textContent = formatNumber(lifetimeStats.totalKills);
+            document.getElementById('statBossKills').textContent = lifetimeStats.bossKills;
+            document.getElementById('statBestCombo').textContent = lifetimeStats.bestCombo + 'x';
+            document.getElementById('statPowerUps').textContent = formatNumber(lifetimeStats.powerUpsCollected);
+            document.getElementById('statTotalCoins').textContent = formatNumber(lifetimeStats.totalCoinsEarned);
+            document.getElementById('statChallenges').textContent = lifetimeStats.challengesCompleted;
+        }
+
+        function openStats() {
+            updateStatsUI();
+            document.getElementById('statsScreen').classList.remove('hidden');
+            playSelectSound();
+        }
+
+        function closeStats() {
+            document.getElementById('statsScreen').classList.add('hidden');
+            playSelectSound();
+        }
+
+        function confirmResetStats() {
+            if (confirm('Are you sure you want to reset all statistics? This cannot be undone!')) {
+                lifetimeStats = {
+                    gamesPlayed: 0,
+                    highScore: 0,
+                    highLevel: 0,
+                    totalKills: 0,
+                    bossKills: 0,
+                    bestCombo: 0,
+                    powerUpsCollected: 0,
+                    totalCoinsEarned: 0,
+                    challengesCompleted: 0,
+                    totalPlayTime: 0
+                };
+                saveLifetimeStats();
+                updateStatsUI();
+                playSelectSound();
+            }
+        }
+
+        // Load stats on startup
+        loadLifetimeStats();
 
         // ========================================
         // Screen Transition System
