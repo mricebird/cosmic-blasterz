@@ -3778,11 +3778,203 @@
             color: #0ff;
             text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, #0a0a2a 0%, #000 70%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loading-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            color: #0ff;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 60px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            animation: loadingPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loadingPulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        .loading-ship-container {
+            position: relative;
+            width: 300px;
+            height: 80px;
+            margin-bottom: 40px;
+        }
+
+        .loading-ship {
+            position: absolute;
+            font-size: 40px;
+            animation: loadingShipMove 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+        }
+
+        @keyframes loadingShipMove {
+            0% { left: 0; transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(-5deg); }
+            50% { left: calc(100% - 50px); transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(10px) rotate(5deg); }
+            100% { left: 0; transform: translateY(0) rotate(0deg); }
+        }
+
+        .loading-ship-trail {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            right: 20px;
+            height: 4px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(0, 255, 255, 0.3) 20%,
+                rgba(0, 255, 255, 0.1) 80%,
+                transparent 100%);
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+
+        .loading-stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .loading-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: loadingStarTwinkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loadingStarTwinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        .loading-bar-container {
+            width: 300px;
+            height: 20px;
+            background: rgba(0, 50, 100, 0.3);
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #0ff, #00f, #0ff);
+            background-size: 200% 100%;
+            animation: loadingBarShine 1s linear infinite;
+            border-radius: 8px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        @keyframes loadingBarShine {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .loading-percent {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            color: #0ff;
+            margin-top: 10px;
+            letter-spacing: 4px;
+        }
+
+        .loading-tips {
+            position: absolute;
+            bottom: 80px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            max-width: 400px;
+            animation: tipFade 4s ease-in-out infinite;
+        }
+
+        @keyframes tipFade {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        @media (max-width: 600px) {
+            .loading-title {
+                font-size: 18px;
+                letter-spacing: 4px;
+            }
+            .loading-ship-container {
+                width: 200px;
+            }
+            .loading-bar-container {
+                width: 200px;
+            }
+            .loading-tips {
+                font-size: 14px;
+                max-width: 280px;
+                padding: 0 20px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-stars" id="loadingStars"></div>
+        <div class="loading-title">Cosmic Blasterz</div>
+        <div class="loading-ship-container">
+            <div class="loading-ship-trail"></div>
+            <div class="loading-ship">🚀</div>
+        </div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loadingBar"></div>
+        </div>
+        <div class="loading-text" id="loadingText">Initializing...</div>
+        <div class="loading-percent" id="loadingPercent">0%</div>
+        <div class="loading-tips" id="loadingTips">Use arrow keys to move and SPACE to shoot</div>
+    </div>
+
     <!-- Splash Screen -->
-    <div class="splash-screen" id="splashScreen">
+    <div class="splash-screen hidden" id="splashScreen">
         <div class="splash-stars" id="splashStars"></div>
         <img src="logo.png" alt="Cosmic Blasterz" class="splash-logo">
         <div class="splash-prompt">Press Any Button to Continue</div>
@@ -12337,6 +12529,121 @@
                 initScrollerCanvas();
             }
         });
+
+        // ========================================
+        // Loading Screen System
+        // ========================================
+        const loadingTips = [
+            'Use arrow keys to move and SPACE to shoot',
+            'Collect power-ups for special abilities',
+            'Defeat the boss at the end of each level',
+            'Combos multiply your score',
+            'Visit the shop to upgrade your ship',
+            'Try different game modes for variety',
+            'Triple Shot and Laser are powerful upgrades',
+            'Shields can save your life in tough spots',
+            'Boss attacks have patterns - learn them!',
+            'The garage lets you customize your ship'
+        ];
+
+        function initLoadingStars() {
+            const container = document.getElementById('loadingStars');
+            if (!container) return;
+
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'loading-star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 1.5 + 's';
+                const size = Math.random() * 2 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                container.appendChild(star);
+            }
+        }
+
+        function updateLoadingProgress(percent, text) {
+            const bar = document.getElementById('loadingBar');
+            const percentText = document.getElementById('loadingPercent');
+            const loadingText = document.getElementById('loadingText');
+
+            if (bar) bar.style.width = percent + '%';
+            if (percentText) percentText.textContent = Math.round(percent) + '%';
+            if (loadingText && text) loadingText.textContent = text;
+        }
+
+        function cycleTips() {
+            const tipsEl = document.getElementById('loadingTips');
+            if (!tipsEl) return;
+
+            let tipIndex = 0;
+            tipsEl.textContent = loadingTips[tipIndex];
+
+            return setInterval(() => {
+                tipIndex = (tipIndex + 1) % loadingTips.length;
+                tipsEl.style.opacity = '0';
+                setTimeout(() => {
+                    tipsEl.textContent = loadingTips[tipIndex];
+                    tipsEl.style.opacity = '1';
+                }, 300);
+            }, 3000);
+        }
+
+        function runLoadingSequence() {
+            return new Promise((resolve) => {
+                initLoadingStars();
+                const tipInterval = cycleTips();
+
+                const stages = [
+                    { percent: 10, text: 'Loading assets...', delay: 200 },
+                    { percent: 25, text: 'Initializing audio...', delay: 300 },
+                    { percent: 40, text: 'Setting up graphics...', delay: 250 },
+                    { percent: 55, text: 'Loading enemies...', delay: 300 },
+                    { percent: 70, text: 'Preparing weapons...', delay: 250 },
+                    { percent: 85, text: 'Calibrating shields...', delay: 200 },
+                    { percent: 95, text: 'Almost ready...', delay: 300 },
+                    { percent: 100, text: 'Launch ready!', delay: 400 }
+                ];
+
+                let stageIndex = 0;
+
+                function nextStage() {
+                    if (stageIndex < stages.length) {
+                        const stage = stages[stageIndex];
+                        updateLoadingProgress(stage.percent, stage.text);
+                        stageIndex++;
+                        setTimeout(nextStage, stage.delay);
+                    } else {
+                        clearInterval(tipInterval);
+                        setTimeout(() => {
+                            const loadingScreen = document.getElementById('loadingScreen');
+                            const splashScreen = document.getElementById('splashScreen');
+
+                            if (loadingScreen) {
+                                loadingScreen.classList.add('hidden');
+                            }
+                            if (splashScreen) {
+                                splashScreen.classList.remove('hidden');
+                            }
+                            resolve();
+                        }, 500);
+                    }
+                }
+
+                setTimeout(nextStage, 300);
+            });
+        }
+
+        // Start loading sequence immediately
+        runLoadingSequence().then(() => {
+            // Splash screen will be shown after loading
+            console.log('Loading complete, showing splash screen');
+        });
+
+        // ========================================
+        // Splash Screen System
+        // ========================================
 
         // Create stars for splash screen
         function initSplashStars() {
