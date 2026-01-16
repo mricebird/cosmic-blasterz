@@ -346,6 +346,156 @@
             font-weight: bold;
         }
 
+        /* Combo indicator */
+        .combo-display {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff0;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff0, 0 0 20px #f80;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 45;
+        }
+
+        .combo-display.active {
+            opacity: 1;
+            animation: comboPulse 0.3s ease-out;
+        }
+
+        @keyframes comboPulse {
+            0% { transform: translateX(-50%) scale(1.5); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        /* Achievement popup */
+        .achievement-popup {
+            position: absolute;
+            top: 120px;
+            right: -300px;
+            width: 280px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(50,50,0,0.9));
+            border: 2px solid #ff0;
+            border-radius: 10px;
+            padding: 15px;
+            color: #fff;
+            z-index: 100;
+            transition: right 0.5s ease-out;
+            box-shadow: 0 0 20px rgba(255,255,0,0.5);
+        }
+
+        .achievement-popup.show {
+            right: 10px;
+        }
+
+        .achievement-popup h4 {
+            color: #ff0;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .achievement-popup .achievement-name {
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .achievement-popup .achievement-desc {
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .achievement-popup .achievement-icon {
+            float: left;
+            font-size: 36px;
+            margin-right: 10px;
+        }
+
+        /* Achievement list on game over */
+        .achievements-section {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .achievements-section h4 {
+            color: #ff0;
+            margin-bottom: 10px;
+        }
+
+        .achievement-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .achievement-badge {
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            opacity: 0.3;
+            cursor: help;
+        }
+
+        .achievement-badge.unlocked {
+            opacity: 1;
+            border-color: #ff0;
+            box-shadow: 0 0 10px rgba(255,255,0,0.5);
+        }
+
+        /* Weapon selector */
+        .weapon-selector {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .weapon-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #555;
+            border-radius: 8px;
+            color: #aaa;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .weapon-btn.active {
+            border-color: #0ff;
+            color: #0ff;
+            box-shadow: 0 0 10px rgba(0,255,255,0.5);
+        }
+
+        .weapon-btn .weapon-icon {
+            font-size: 20px;
+        }
+
+        .weapon-btn .weapon-key {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
         /* Responsive */
         @media (max-width: 850px) {
             .game-container {
@@ -386,7 +536,7 @@
             <div class="controls-info">
                 <p>← → Piletaster for at bevæge dig</p>
                 <p>MELLEMRUM for at skyde</p>
-                <p>P = Pause | M = Mute</p>
+                <p>1-2-3 = Skift våben | P = Pause | M = Mute</p>
             </div>
             <div class="highscore-list" id="startHighscores"></div>
         </div>
@@ -396,6 +546,10 @@
             <div id="newHighscoreMsg" class="new-highscore hidden">NY HIGHSCORE!</div>
             <div class="final-score"><span id="playerNameDisplay"></span> score: <span id="finalScore">0</span></div>
             <div class="highscore-list" id="gameOverHighscores"></div>
+            <div class="achievements-section">
+                <h4>🏆 ACHIEVEMENTS</h4>
+                <div class="achievement-badges" id="achievementBadges"></div>
+            </div>
             <button class="restart-btn" onclick="restartGame()">SPIL IGEN</button>
         </div>
 
@@ -414,6 +568,17 @@
         <!-- Power-up indicator -->
         <div class="powerup-indicator hidden" id="powerupIndicator"></div>
 
+        <!-- Combo display -->
+        <div class="combo-display" id="comboDisplay"></div>
+
+        <!-- Achievement popup -->
+        <div class="achievement-popup" id="achievementPopup">
+            <h4>🏆 ACHIEVEMENT UNLOCKED!</h4>
+            <div class="achievement-icon" id="achievementIcon">🎯</div>
+            <div class="achievement-name" id="achievementName">First Blood</div>
+            <div class="achievement-desc" id="achievementDesc">Dræb din første fjende</div>
+        </div>
+
         <!-- Boss health bar -->
         <div class="boss-health hidden" id="bossHealth">
             <div class="boss-health-fill" id="bossHealthFill"></div>
@@ -427,6 +592,22 @@
                 <button class="mobile-btn" id="rightBtn">▶</button>
             </div>
             <button class="mobile-btn" id="fireBtn">🔥</button>
+        </div>
+
+        <!-- Weapon selector -->
+        <div class="weapon-selector" id="weaponSelector">
+            <button class="weapon-btn active" id="weapon1" onclick="selectWeapon('laser')">
+                <span class="weapon-icon">⚡</span>
+                <span class="weapon-key">1</span>
+            </button>
+            <button class="weapon-btn" id="weapon2" onclick="selectWeapon('missile')">
+                <span class="weapon-icon">🚀</span>
+                <span class="weapon-key">2</span>
+            </button>
+            <button class="weapon-btn" id="weapon3" onclick="selectWeapon('plasma')">
+                <span class="weapon-icon">🔮</span>
+                <span class="weapon-key">3</span>
+            </button>
         </div>
     </div>
 
@@ -631,6 +812,285 @@
         let level = 1;
         let playerName = 'Spiller';
 
+        // Combo system
+        let comboCount = 0;
+        let comboTimer = 0;
+        const COMBO_TIMEOUT = 1500; // ms to maintain combo
+        const COMBO_MULTIPLIERS = [1, 1.5, 2, 2.5, 3, 4, 5]; // Multiplier based on combo count
+        let comboDisplayTimer = null;
+
+        function getComboMultiplier() {
+            const index = Math.min(comboCount - 1, COMBO_MULTIPLIERS.length - 1);
+            return index >= 0 ? COMBO_MULTIPLIERS[index] : 1;
+        }
+
+        function addComboKill(basePoints) {
+            comboCount++;
+            comboTimer = Date.now();
+
+            const multiplier = getComboMultiplier();
+            const bonusPoints = Math.floor(basePoints * multiplier);
+
+            // Update combo display
+            const comboEl = document.getElementById('comboDisplay');
+            if (comboCount >= 2) {
+                comboEl.textContent = `${comboCount}x COMBO! +${bonusPoints}`;
+                comboEl.classList.add('active');
+
+                // Change color based on combo level
+                if (comboCount >= 5) {
+                    comboEl.style.color = '#f0f';
+                } else if (comboCount >= 3) {
+                    comboEl.style.color = '#f80';
+                } else {
+                    comboEl.style.color = '#ff0';
+                }
+
+                // Clear previous timer
+                if (comboDisplayTimer) clearTimeout(comboDisplayTimer);
+                comboDisplayTimer = setTimeout(() => {
+                    comboEl.classList.remove('active');
+                }, 1000);
+            }
+
+            return bonusPoints;
+        }
+
+        function updateCombo() {
+            // Reset combo if timeout exceeded
+            if (comboCount > 0 && Date.now() - comboTimer > COMBO_TIMEOUT) {
+                comboCount = 0;
+                document.getElementById('comboDisplay').classList.remove('active');
+            }
+        }
+
+        // Achievement system
+        const ACHIEVEMENTS = {
+            firstBlood: { icon: '🎯', name: 'First Blood', desc: 'Dræb din første fjende', check: (stats) => stats.totalKills >= 1 },
+            killer: { icon: '💀', name: 'Killer', desc: 'Dræb 50 fjender', check: (stats) => stats.totalKills >= 50 },
+            massacre: { icon: '☠️', name: 'Massacre', desc: 'Dræb 200 fjender', check: (stats) => stats.totalKills >= 200 },
+            comboStarter: { icon: '🔥', name: 'Combo Starter', desc: 'Få en 3x combo', check: (stats) => stats.maxCombo >= 3 },
+            comboMaster: { icon: '⚡', name: 'Combo Master', desc: 'Få en 5x combo', check: (stats) => stats.maxCombo >= 5 },
+            survivor: { icon: '🛡️', name: 'Survivor', desc: 'Nå level 5', check: (stats) => stats.maxLevel >= 5 },
+            veteran: { icon: '🎖️', name: 'Veteran', desc: 'Nå level 10', check: (stats) => stats.maxLevel >= 10 },
+            bossSlayer: { icon: '👑', name: 'Boss Slayer', desc: 'Besejr din første boss', check: (stats) => stats.bossKills >= 1 },
+            untouchable: { icon: '✨', name: 'Untouchable', desc: 'Gennemfør et level uden at blive ramt', check: (stats) => stats.perfectLevels >= 1 },
+            powerPlayer: { icon: '💎', name: 'Power Player', desc: 'Saml 10 power-ups', check: (stats) => stats.powerUpsCollected >= 10 },
+            scoreHunter: { icon: '🏆', name: 'Score Hunter', desc: 'Opnå 5000 points', check: (stats) => stats.maxScore >= 5000 },
+            legend: { icon: '⭐', name: 'Legend', desc: 'Opnå 20000 points', check: (stats) => stats.maxScore >= 20000 }
+        };
+
+        const ACHIEVEMENTS_STORAGE_KEY = 'spaceInvadersAchievements';
+        const STATS_STORAGE_KEY = 'spaceInvadersStats';
+
+        let unlockedAchievements = [];
+        let gameStats = {
+            totalKills: 0,
+            maxCombo: 0,
+            maxLevel: 0,
+            bossKills: 0,
+            perfectLevels: 0,
+            powerUpsCollected: 0,
+            maxScore: 0,
+            levelDamageTaken: 0
+        };
+        let sessionStats = {
+            totalKills: 0,
+            maxCombo: 0,
+            maxLevel: 0,
+            bossKills: 0,
+            perfectLevels: 0,
+            powerUpsCollected: 0,
+            maxScore: 0,
+            levelDamageTaken: 0
+        };
+
+        function loadAchievements() {
+            try {
+                const data = localStorage.getItem(ACHIEVEMENTS_STORAGE_KEY);
+                unlockedAchievements = data ? JSON.parse(data) : [];
+                const statsData = localStorage.getItem(STATS_STORAGE_KEY);
+                gameStats = statsData ? JSON.parse(statsData) : gameStats;
+            } catch (e) {
+                unlockedAchievements = [];
+            }
+        }
+
+        function saveAchievements() {
+            try {
+                localStorage.setItem(ACHIEVEMENTS_STORAGE_KEY, JSON.stringify(unlockedAchievements));
+                localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(gameStats));
+            } catch (e) {}
+        }
+
+        function checkAchievements() {
+            // Merge session stats into game stats
+            gameStats.totalKills = Math.max(gameStats.totalKills, sessionStats.totalKills);
+            gameStats.maxCombo = Math.max(gameStats.maxCombo, sessionStats.maxCombo);
+            gameStats.maxLevel = Math.max(gameStats.maxLevel, sessionStats.maxLevel);
+            gameStats.bossKills += sessionStats.bossKills;
+            gameStats.perfectLevels += sessionStats.perfectLevels;
+            gameStats.powerUpsCollected += sessionStats.powerUpsCollected;
+            gameStats.maxScore = Math.max(gameStats.maxScore, sessionStats.maxScore);
+
+            Object.keys(ACHIEVEMENTS).forEach(key => {
+                if (!unlockedAchievements.includes(key) && ACHIEVEMENTS[key].check(gameStats)) {
+                    unlockAchievement(key);
+                }
+            });
+
+            saveAchievements();
+        }
+
+        function unlockAchievement(key) {
+            if (unlockedAchievements.includes(key)) return;
+
+            unlockedAchievements.push(key);
+            const achievement = ACHIEVEMENTS[key];
+
+            // Show popup
+            const popup = document.getElementById('achievementPopup');
+            document.getElementById('achievementIcon').textContent = achievement.icon;
+            document.getElementById('achievementName').textContent = achievement.name;
+            document.getElementById('achievementDesc').textContent = achievement.desc;
+
+            popup.classList.add('show');
+
+            // Play sound
+            playLevelUpSound();
+
+            // Hide after 3 seconds
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3000);
+
+            saveAchievements();
+        }
+
+        function renderAchievementBadges() {
+            const container = document.getElementById('achievementBadges');
+            let html = '';
+
+            Object.keys(ACHIEVEMENTS).forEach(key => {
+                const achievement = ACHIEVEMENTS[key];
+                const unlocked = unlockedAchievements.includes(key);
+                html += `<div class="achievement-badge ${unlocked ? 'unlocked' : ''}" title="${achievement.name}: ${achievement.desc}">${achievement.icon}</div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function updateSessionStats(stat, value) {
+            if (stat === 'kill') {
+                sessionStats.totalKills++;
+            } else if (stat === 'combo') {
+                sessionStats.maxCombo = Math.max(sessionStats.maxCombo, value);
+            } else if (stat === 'level') {
+                sessionStats.maxLevel = Math.max(sessionStats.maxLevel, value);
+                // Check for perfect level (no damage taken this level)
+                if (sessionStats.levelDamageTaken === 0 && value > 1) {
+                    sessionStats.perfectLevels++;
+                }
+                sessionStats.levelDamageTaken = 0;
+            } else if (stat === 'bossKill') {
+                sessionStats.bossKills++;
+            } else if (stat === 'powerUp') {
+                sessionStats.powerUpsCollected++;
+            } else if (stat === 'score') {
+                sessionStats.maxScore = Math.max(sessionStats.maxScore, value);
+            } else if (stat === 'damage') {
+                sessionStats.levelDamageTaken++;
+            }
+
+            // Check achievements in real-time for certain milestones
+            const tempStats = { ...gameStats };
+            tempStats.totalKills = Math.max(tempStats.totalKills, sessionStats.totalKills);
+            tempStats.maxCombo = Math.max(tempStats.maxCombo, sessionStats.maxCombo);
+            tempStats.maxLevel = Math.max(tempStats.maxLevel, sessionStats.maxLevel);
+            tempStats.bossKills = gameStats.bossKills + sessionStats.bossKills;
+            tempStats.perfectLevels = gameStats.perfectLevels + sessionStats.perfectLevels;
+            tempStats.powerUpsCollected = gameStats.powerUpsCollected + sessionStats.powerUpsCollected;
+            tempStats.maxScore = Math.max(tempStats.maxScore, sessionStats.maxScore);
+
+            Object.keys(ACHIEVEMENTS).forEach(key => {
+                if (!unlockedAchievements.includes(key) && ACHIEVEMENTS[key].check(tempStats)) {
+                    unlockAchievement(key);
+                }
+            });
+        }
+
+        function resetSessionStats() {
+            sessionStats = {
+                totalKills: 0,
+                maxCombo: 0,
+                maxLevel: 1,
+                bossKills: 0,
+                perfectLevels: 0,
+                powerUpsCollected: 0,
+                maxScore: 0,
+                levelDamageTaken: 0
+            };
+        }
+
+        // Load achievements on start
+        loadAchievements();
+
+        // Weapon system
+        const WEAPONS = {
+            laser: {
+                name: 'Laser',
+                color: '#0ff',
+                speed: 10,
+                damage: 1,
+                cooldown: 200,
+                width: 4,
+                height: 15,
+                penetrating: false,
+                splash: 0
+            },
+            missile: {
+                name: 'Missile',
+                color: '#f80',
+                speed: 6,
+                damage: 3,
+                cooldown: 500,
+                width: 8,
+                height: 20,
+                penetrating: false,
+                splash: 30
+            },
+            plasma: {
+                name: 'Plasma',
+                color: '#f0f',
+                speed: 12,
+                damage: 1,
+                cooldown: 150,
+                width: 6,
+                height: 25,
+                penetrating: true,
+                splash: 0
+            }
+        };
+        let currentWeapon = 'laser';
+
+        function selectWeapon(weapon) {
+            if (!WEAPONS[weapon]) return;
+            currentWeapon = weapon;
+
+            // Update UI
+            document.querySelectorAll('.weapon-btn').forEach(btn => btn.classList.remove('active'));
+            const btnId = weapon === 'laser' ? 'weapon1' : weapon === 'missile' ? 'weapon2' : 'weapon3';
+            document.getElementById(btnId).classList.add('active');
+
+            // Update cooldown based on weapon (unless rapid fire is active)
+            if (activePowerUp !== 'rapidFire') {
+                shootCooldown = WEAPONS[weapon].cooldown;
+            }
+
+            // Play sound
+            playShootSound();
+        }
+
         // Power-up system
         let powerUps = [];
         let activePowerUp = null;
@@ -642,6 +1102,244 @@
             bomb: { color: '#f80', duration: 0, name: 'BOMB' }
         };
         const POWERUP_DROP_CHANCE = 0.15;
+
+        // Barrier system (destructible shields)
+        let barriers = [];
+        const BARRIER_SEGMENT_SIZE = 8;
+        const BARRIER_ROWS = 4;
+        const BARRIER_COLS = 6;
+
+        function initBarriers() {
+            barriers = [];
+            const barrierWidth = BARRIER_COLS * BARRIER_SEGMENT_SIZE;
+            const barrierCount = 4;
+            const spacing = (canvas.width - barrierCount * barrierWidth) / (barrierCount + 1);
+
+            for (let b = 0; b < barrierCount; b++) {
+                const barrierX = spacing + b * (barrierWidth + spacing);
+                const barrierY = canvas.height - 150;
+                const segments = [];
+
+                for (let row = 0; row < BARRIER_ROWS; row++) {
+                    for (let col = 0; col < BARRIER_COLS; col++) {
+                        // Skip corners to create classic shape
+                        if ((row === 0 && (col === 0 || col === BARRIER_COLS - 1)) ||
+                            (row === BARRIER_ROWS - 1 && col >= 2 && col <= 3)) {
+                            continue;
+                        }
+                        segments.push({
+                            x: barrierX + col * BARRIER_SEGMENT_SIZE,
+                            y: barrierY + row * BARRIER_SEGMENT_SIZE,
+                            health: 3
+                        });
+                    }
+                }
+                barriers.push({ segments });
+            }
+        }
+
+        function drawBarriers() {
+            barriers.forEach(barrier => {
+                barrier.segments.forEach(seg => {
+                    if (seg.health <= 0) return;
+                    // Color based on health
+                    const colors = ['#300', '#060', '#0a0', '#0f0'];
+                    ctx.fillStyle = colors[seg.health] || '#0f0';
+                    ctx.fillRect(seg.x, seg.y, BARRIER_SEGMENT_SIZE - 1, BARRIER_SEGMENT_SIZE - 1);
+                });
+            });
+        }
+
+        function checkBarrierCollisions(bulletList, isEnemy) {
+            const bulletsToRemove = new Set();
+
+            bulletList.forEach((bullet, bi) => {
+                barriers.forEach(barrier => {
+                    barrier.segments.forEach(seg => {
+                        if (seg.health <= 0 || bulletsToRemove.has(bi)) return;
+
+                        // Check collision
+                        const bx = bullet.x;
+                        const by = bullet.y;
+                        if (bx >= seg.x && bx <= seg.x + BARRIER_SEGMENT_SIZE &&
+                            by >= seg.y && by <= seg.y + BARRIER_SEGMENT_SIZE) {
+                            seg.health--;
+                            bulletsToRemove.add(bi);
+
+                            // Small particle effect
+                            if (seg.health <= 0) {
+                                createExplosion(seg.x + BARRIER_SEGMENT_SIZE/2, seg.y + BARRIER_SEGMENT_SIZE/2, '#0f0', 3);
+                            }
+                        }
+                    });
+                });
+            });
+
+            return bulletsToRemove;
+        }
+
+        // UFO special enemy
+        let ufo = null;
+        let ufoTimer = 0;
+        const UFO_SPAWN_INTERVAL = 15000; // 15 seconds between potential UFO spawns
+        const UFO_SPAWN_CHANCE = 0.5;
+        const UFO_POINTS = [50, 100, 150, 200, 300];
+
+        function spawnUFO() {
+            if (ufo) return;
+            const direction = Math.random() < 0.5 ? 1 : -1;
+            ufo = {
+                x: direction === 1 ? -60 : canvas.width + 10,
+                y: 30,
+                width: 50,
+                height: 25,
+                speed: 2 + level * 0.2,
+                direction: direction,
+                points: UFO_POINTS[Math.floor(Math.random() * UFO_POINTS.length)]
+            };
+        }
+
+        function updateUFO() {
+            // Check if we should spawn a UFO
+            if (!ufo && Date.now() - ufoTimer > UFO_SPAWN_INTERVAL) {
+                ufoTimer = Date.now();
+                if (Math.random() < UFO_SPAWN_CHANCE) {
+                    spawnUFO();
+                }
+            }
+
+            if (!ufo) return;
+
+            // Move UFO
+            ufo.x += ufo.speed * ufo.direction;
+
+            // Remove if off screen
+            if ((ufo.direction === 1 && ufo.x > canvas.width + 10) ||
+                (ufo.direction === -1 && ufo.x < -70)) {
+                ufo = null;
+            }
+        }
+
+        function drawUFO() {
+            if (!ufo) return;
+
+            // UFO body (classic flying saucer shape)
+            ctx.fillStyle = '#f00';
+            ctx.beginPath();
+            ctx.ellipse(ufo.x + ufo.width/2, ufo.y + ufo.height/2, ufo.width/2, ufo.height/3, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Dome
+            ctx.fillStyle = '#ff0';
+            ctx.beginPath();
+            ctx.ellipse(ufo.x + ufo.width/2, ufo.y + ufo.height/3, ufo.width/4, ufo.height/3, 0, Math.PI, Math.PI * 2);
+            ctx.fill();
+
+            // Lights (blinking)
+            if (Math.floor(Date.now() / 200) % 2 === 0) {
+                ctx.fillStyle = '#0ff';
+                for (let i = 0; i < 3; i++) {
+                    ctx.beginPath();
+                    ctx.arc(ufo.x + 10 + i * 15, ufo.y + ufo.height/2 + 5, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        function checkUFOCollision(bullet) {
+            if (!ufo) return false;
+            if (bullet.x > ufo.x && bullet.x < ufo.x + ufo.width &&
+                bullet.y > ufo.y && bullet.y < ufo.y + ufo.height) {
+                // UFO hit!
+                createExplosion(ufo.x + ufo.width/2, ufo.y + ufo.height/2, '#f00', 15);
+                playExplosionSound('boss');
+                triggerScreenShake(6, 250);
+
+                // Bonus points with combo
+                const comboPoints = addComboKill(ufo.points);
+                score += comboPoints;
+                document.getElementById('scoreValue').textContent = score;
+                updateSessionStats('kill');
+                updateSessionStats('score', score);
+
+                // Higher chance for power-up
+                if (Math.random() < 0.5) {
+                    powerUps.push({
+                        x: ufo.x + ufo.width/2,
+                        y: ufo.y + ufo.height/2,
+                        type: Object.keys(POWERUP_TYPES)[Math.floor(Math.random() * Object.keys(POWERUP_TYPES).length)],
+                        width: 25,
+                        height: 25,
+                        speed: 2
+                    });
+                }
+
+                ufo = null;
+                return true;
+            }
+            return false;
+        }
+
+        // Slow-motion effect
+        let slowMotionFactor = 1;
+        let slowMotionDuration = 0;
+        let slowMotionStartTime = 0;
+        let slowMotionTargetFactor = 1;
+
+        function triggerSlowMotion(factor = 0.3, duration = 1000) {
+            slowMotionFactor = factor;
+            slowMotionTargetFactor = 1;
+            slowMotionDuration = duration;
+            slowMotionStartTime = Date.now();
+        }
+
+        function updateSlowMotion() {
+            if (slowMotionDuration <= 0) {
+                slowMotionFactor = 1;
+                return;
+            }
+
+            const elapsed = Date.now() - slowMotionStartTime;
+            if (elapsed >= slowMotionDuration) {
+                slowMotionDuration = 0;
+                slowMotionFactor = 1;
+                return;
+            }
+
+            // Gradually return to normal speed
+            const progress = elapsed / slowMotionDuration;
+            slowMotionFactor = slowMotionFactor + (slowMotionTargetFactor - slowMotionFactor) * progress * 0.1;
+        }
+
+        // Screen shake effect
+        let shakeIntensity = 0;
+        let shakeDuration = 0;
+        let shakeStartTime = 0;
+
+        function triggerScreenShake(intensity = 5, duration = 200) {
+            shakeIntensity = intensity;
+            shakeDuration = duration;
+            shakeStartTime = Date.now();
+        }
+
+        function applyScreenShake() {
+            if (shakeDuration <= 0) return { x: 0, y: 0 };
+
+            const elapsed = Date.now() - shakeStartTime;
+            if (elapsed >= shakeDuration) {
+                shakeDuration = 0;
+                return { x: 0, y: 0 };
+            }
+
+            // Decrease intensity over time
+            const progress = 1 - (elapsed / shakeDuration);
+            const currentIntensity = shakeIntensity * progress;
+
+            return {
+                x: (Math.random() - 0.5) * currentIntensity * 2,
+                y: (Math.random() - 0.5) * currentIntensity * 2
+            };
+        }
 
         // Boss system
         let currentBoss = null;
@@ -683,13 +1381,15 @@
             const pu = POWERUP_TYPES[type];
 
             if (type === 'bomb') {
-                // Bomb kills all enemies on screen
+                // Bomb kills all enemies on screen - each kill adds to combo
                 enemies.forEach(enemy => {
                     createExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2, '#f80', 8);
-                    score += enemy.points;
+                    const comboPoints = addComboKill(enemy.points);
+                    score += comboPoints;
                 });
                 enemies = [];
                 playExplosionSound('boss');
+                triggerScreenShake(10, 400);
                 document.getElementById('scoreValue').textContent = score;
                 return;
             }
@@ -714,6 +1414,7 @@
                     pu.y < player.y + player.height && pu.y + pu.height > player.y) {
                     activatePowerUp(pu.type);
                     playLevelUpSound();
+                    updateSessionStats('powerUp');
                     return false;
                 }
                 return pu.y < canvas.height;
@@ -825,6 +1526,8 @@
                 score += 500 + level * 100;
                 document.getElementById('scoreValue').textContent = score;
                 playExplosionSound('boss');
+                triggerScreenShake(12, 500);
+                triggerSlowMotion(0.2, 1500);
 
                 // Spawn power-up from boss (guaranteed)
                 powerUps.push({
@@ -839,10 +1542,14 @@
                 currentBoss = null;
                 document.getElementById('bossHealth').classList.add('hidden');
 
+                // Track boss kill for achievements
+                updateSessionStats('bossKill');
+
                 // Level up and spawn next wave
                 level++;
                 document.getElementById('levelValue').textContent = level;
                 playLevelUpSound();
+                updateSessionStats('level', level);
                 initEnemies();
                 return true;
             }
@@ -1119,14 +1826,44 @@
 
         // Draw bullet
         function drawBullet(bullet, isEnemy = false) {
-            ctx.fillStyle = isEnemy ? '#f00' : '#0ff';
-
             if (isEnemy) {
+                ctx.fillStyle = '#f00';
                 ctx.beginPath();
                 ctx.arc(bullet.x, bullet.y, 4, 0, Math.PI * 2);
                 ctx.fill();
             } else {
-                ctx.fillRect(bullet.x - 2, bullet.y, 4, 15);
+                const weapon = bullet.weapon ? WEAPONS[bullet.weapon] : WEAPONS.laser;
+                ctx.fillStyle = weapon.color;
+
+                if (bullet.weapon === 'missile') {
+                    // Missile: larger with trail
+                    ctx.beginPath();
+                    ctx.moveTo(bullet.x, bullet.y - 10);
+                    ctx.lineTo(bullet.x + 4, bullet.y + 10);
+                    ctx.lineTo(bullet.x - 4, bullet.y + 10);
+                    ctx.closePath();
+                    ctx.fill();
+                    // Flame trail
+                    ctx.fillStyle = '#ff0';
+                    ctx.beginPath();
+                    ctx.moveTo(bullet.x - 3, bullet.y + 10);
+                    ctx.lineTo(bullet.x, bullet.y + 18);
+                    ctx.lineTo(bullet.x + 3, bullet.y + 10);
+                    ctx.closePath();
+                    ctx.fill();
+                } else if (bullet.weapon === 'plasma') {
+                    // Plasma: glowing orb
+                    ctx.beginPath();
+                    ctx.arc(bullet.x, bullet.y, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(bullet.x, bullet.y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    // Laser: default
+                    ctx.fillRect(bullet.x - 2, bullet.y, weapon.width, weapon.height);
+                }
             }
         }
 
@@ -1196,18 +1933,25 @@
                 player.x += player.speed;
             }
             if (keys.space && canShoot) {
+                const weapon = WEAPONS[currentWeapon];
+                const bulletBase = {
+                    x: player.x + player.width / 2,
+                    y: player.y,
+                    speed: weapon.speed,
+                    angle: 0,
+                    weapon: currentWeapon,
+                    damage: weapon.damage,
+                    penetrating: weapon.penetrating,
+                    splash: weapon.splash
+                };
+
                 if (activePowerUp === 'spreadShot') {
                     // Spread shot: 3 bullets in a fan pattern
-                    bullets.push({ x: player.x + player.width / 2, y: player.y, speed: 10, angle: 0 });
-                    bullets.push({ x: player.x + player.width / 2 - 10, y: player.y, speed: 10, angle: -0.15 });
-                    bullets.push({ x: player.x + player.width / 2 + 10, y: player.y, speed: 10, angle: 0.15 });
+                    bullets.push({ ...bulletBase, angle: 0 });
+                    bullets.push({ ...bulletBase, x: bulletBase.x - 10, angle: -0.15 });
+                    bullets.push({ ...bulletBase, x: bulletBase.x + 10, angle: 0.15 });
                 } else {
-                    bullets.push({
-                        x: player.x + player.width / 2,
-                        y: player.y,
-                        speed: 10,
-                        angle: 0
-                    });
+                    bullets.push(bulletBase);
                 }
                 playShootSound();
                 canShoot = false;
@@ -1219,14 +1963,14 @@
         function updateBullets() {
             bullets = bullets.filter(b => b.y > 0 && b.x > 0 && b.x < canvas.width);
             bullets.forEach(b => {
-                b.y -= b.speed;
+                b.y -= b.speed * slowMotionFactor;
                 if (b.angle) {
-                    b.x += Math.sin(b.angle) * b.speed;
+                    b.x += Math.sin(b.angle) * b.speed * slowMotionFactor;
                 }
             });
 
             enemyBullets = enemyBullets.filter(b => b.y < canvas.height);
-            enemyBullets.forEach(b => b.y += b.speed);
+            enemyBullets.forEach(b => b.y += b.speed * slowMotionFactor);
         }
 
         // Update enemies
@@ -1235,6 +1979,7 @@
                 level++;
                 document.getElementById('levelValue').textContent = level;
                 playLevelUpSound();
+                updateSessionStats('level', level);
                 // Don't spawn enemies if it's a boss level - boss will spawn in game loop
                 if (!BOSS_LEVELS.includes(level)) {
                     initEnemies();
@@ -1245,7 +1990,7 @@
             let hitEdge = false;
 
             enemies.forEach(enemy => {
-                enemy.x += enemySpeed * enemyDirection;
+                enemy.x += enemySpeed * enemyDirection * slowMotionFactor;
 
                 if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
                     hitEdge = true;
@@ -1278,23 +2023,59 @@
 
             // Bullets hitting enemies
             bullets.forEach((bullet, bi) => {
+                const isPenetrating = bullet.penetrating || false;
+                const splashRadius = bullet.splash || 0;
+                const damage = bullet.damage || 1;
+
                 enemies.forEach((enemy, ei) => {
-                    if (!bulletsToRemove.has(bi) && !enemiesToRemove.has(ei) &&
-                        bullet.x > enemy.x && bullet.x < enemy.x + enemy.width &&
+                    // Skip if bullet already removed (unless penetrating) or enemy already removed
+                    if ((!isPenetrating && bulletsToRemove.has(bi)) || enemiesToRemove.has(ei)) return;
+
+                    if (bullet.x > enemy.x && bullet.x < enemy.x + enemy.width &&
                         bullet.y > enemy.y && bullet.y < enemy.y + enemy.height) {
 
                         const colors = { boss: '#f0f', medium: '#0f0', basic: '#ff0' };
                         createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, colors[enemy.type], 8);
                         playExplosionSound(enemy.type);
 
-                        score += enemy.points;
+                        // Add combo bonus
+                        const comboPoints = addComboKill(enemy.points * damage);
+                        score += comboPoints;
                         document.getElementById('scoreValue').textContent = score;
+
+                        // Track stats for achievements
+                        updateSessionStats('kill');
+                        updateSessionStats('combo', comboCount);
+                        updateSessionStats('score', score);
 
                         // Chance to spawn power-up
                         spawnPowerUp(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
 
                         enemiesToRemove.add(ei);
-                        bulletsToRemove.add(bi);
+
+                        // Only remove bullet if not penetrating
+                        if (!isPenetrating) {
+                            bulletsToRemove.add(bi);
+                        }
+
+                        // Splash damage for missiles
+                        if (splashRadius > 0) {
+                            const hitX = enemy.x + enemy.width / 2;
+                            const hitY = enemy.y + enemy.height / 2;
+                            enemies.forEach((nearEnemy, nei) => {
+                                if (enemiesToRemove.has(nei)) return;
+                                const dist = Math.hypot(nearEnemy.x + nearEnemy.width/2 - hitX, nearEnemy.y + nearEnemy.height/2 - hitY);
+                                if (dist < splashRadius) {
+                                    createExplosion(nearEnemy.x + nearEnemy.width / 2, nearEnemy.y + nearEnemy.height / 2, '#f80', 6);
+                                    const splashPoints = addComboKill(nearEnemy.points);
+                                    score += splashPoints;
+                                    updateSessionStats('kill');
+                                    spawnPowerUp(nearEnemy.x + nearEnemy.width / 2, nearEnemy.y + nearEnemy.height / 2);
+                                    enemiesToRemove.add(nei);
+                                }
+                            });
+                            document.getElementById('scoreValue').textContent = score;
+                        }
                     }
                 });
 
@@ -1302,8 +2083,10 @@
                 if (currentBoss && !bulletsToRemove.has(bi) &&
                     bullet.x > currentBoss.x && bullet.x < currentBoss.x + currentBoss.width &&
                     bullet.y > currentBoss.y && bullet.y < currentBoss.y + currentBoss.height) {
-                    damageBoss(1);
-                    bulletsToRemove.add(bi);
+                    damageBoss(damage);
+                    if (!isPenetrating) {
+                        bulletsToRemove.add(bi);
+                    }
                     createExplosion(bullet.x, bullet.y, '#ff0', 3);
                 }
             });
@@ -1321,10 +2104,12 @@
                     } else {
                         createExplosion(player.x + player.width / 2, player.y + player.height / 2, '#0ff', 12);
                         playPlayerHitSound();
+                        triggerScreenShake(8, 300);
 
                         lives--;
                         updateLivesDisplay();
                         enemyBulletsToRemove.add(bi);
+                        updateSessionStats('damage');
 
                         if (lives <= 0) {
                             gameOver();
@@ -1332,6 +2117,23 @@
                     }
                 }
             });
+
+            // Check UFO collisions
+            bullets.forEach((bullet, bi) => {
+                if (!bulletsToRemove.has(bi) && checkUFOCollision(bullet)) {
+                    if (!bullet.penetrating) {
+                        bulletsToRemove.add(bi);
+                    }
+                }
+            });
+
+            // Check barrier collisions
+            const barrierBulletsToRemove = checkBarrierCollisions(bullets, false);
+            const barrierEnemyBulletsToRemove = checkBarrierCollisions(enemyBullets, true);
+
+            // Merge barrier collision results
+            barrierBulletsToRemove.forEach(i => bulletsToRemove.add(i));
+            barrierEnemyBulletsToRemove.forEach(i => enemyBulletsToRemove.add(i));
 
             // Remove marked objects (in reverse order to preserve indices)
             bullets = bullets.filter((_, i) => !bulletsToRemove.has(i));
@@ -1357,6 +2159,9 @@
             gameRunning = false;
             playGameOverSound();
 
+            // Final score update for achievements
+            updateSessionStats('score', score);
+
             // Check for new highscore
             const isNew = isHighscore(score);
 
@@ -1374,6 +2179,10 @@
             if (score > 0) {
                 await saveHighscore(playerName, score);
             }
+
+            // Check and save achievements
+            checkAchievements();
+            renderAchievementBadges();
 
             renderHighscores('gameOverHighscores', score);
             document.getElementById('gameOverScreen').classList.remove('hidden');
@@ -1399,6 +2208,14 @@
                 // Clear canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+                // Apply screen shake
+                const shake = applyScreenShake();
+                ctx.save();
+                ctx.translate(shake.x, shake.y);
+
+                // Update slow motion
+                updateSlowMotion();
+
                 // Update
                 updateStars();
                 updatePlayer();
@@ -1406,6 +2223,8 @@
                 updateEnemies();
                 updatePowerUps();
                 updateBoss();
+                updateUFO();
+                updateCombo();
                 checkCollisions();
 
                 // Check for boss spawn (only when no enemies and no current boss)
@@ -1421,10 +2240,15 @@
 
                 enemies.forEach(e => drawEnemy(e));
                 drawBoss();
+                drawUFO();
+                drawBarriers();
                 drawPowerUps();
                 drawPlayer();
                 drawShield();
                 updateParticles();
+
+                // Restore context after shake
+                ctx.restore();
             } catch (error) {
                 console.error('Game error:', error);
             }
@@ -1475,6 +2299,25 @@
             shootCooldown = 200;
             document.getElementById('powerupIndicator').classList.add('hidden');
 
+            // Reset combo
+            comboCount = 0;
+            comboTimer = 0;
+            document.getElementById('comboDisplay').classList.remove('active');
+
+            // Reset session stats for achievements
+            resetSessionStats();
+
+            // Reset weapon
+            currentWeapon = 'laser';
+            selectWeapon('laser');
+
+            // Reset barriers
+            initBarriers();
+
+            // Reset UFO
+            ufo = null;
+            ufoTimer = Date.now();
+
             // Reset boss
             currentBoss = null;
             document.getElementById('bossHealth').classList.add('hidden');
@@ -1506,6 +2349,10 @@
             if (e.key === 'm' || e.key === 'M') {
                 toggleMute();
             }
+            // Weapon selection with 1, 2, 3
+            if (e.key === '1') selectWeapon('laser');
+            if (e.key === '2') selectWeapon('missile');
+            if (e.key === '3') selectWeapon('plasma');
         });
 
         document.addEventListener('keyup', (e) => {
