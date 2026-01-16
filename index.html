@@ -13684,31 +13684,34 @@
             });
         }
 
-        // Start loading sequence after DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', startLoadingProcess);
-        } else {
-            // DOM already loaded
-            setTimeout(startLoadingProcess, 50);
-        }
-
-        function startLoadingProcess() {
-            runLoadingSequence().then(() => {
-                // Splash screen will be shown after loading
-                console.log('Loading complete, showing splash screen');
-                // Start the amiga-style scroller and music after splash is visible
-                setTimeout(() => {
-                    initSplashStars();
-                    startScroller();
-                    // Try to start splash music
-                    try {
-                        startSplashMusicOnce();
-                    } catch (e) {
-                        console.log('Music autostart blocked by browser');
-                    }
-                }, 100);
-            });
-        }
+        // Start loading sequence immediately
+        (function() {
+            try {
+                console.log('Starting loading sequence...');
+                runLoadingSequence().then(() => {
+                    console.log('Loading complete, showing splash screen');
+                    setTimeout(() => {
+                        try {
+                            initSplashStars();
+                            startScroller();
+                            startSplashMusicOnce();
+                        } catch (e) {
+                            console.log('Splash init error:', e);
+                        }
+                    }, 100);
+                }).catch(err => {
+                    console.error('Loading sequence error:', err);
+                    // Fallback: skip loading screen
+                    document.getElementById('loadingScreen')?.classList.add('hidden');
+                    document.getElementById('splashScreen')?.classList.remove('hidden');
+                });
+            } catch (e) {
+                console.error('Loading init error:', e);
+                // Fallback: skip loading screen
+                document.getElementById('loadingScreen')?.classList.add('hidden');
+                document.getElementById('splashScreen')?.classList.remove('hidden');
+            }
+        })();
 
         // ========================================
         // UI Particles System
@@ -13821,168 +13824,6 @@
 
         // Run particles init after a short delay
         setTimeout(initUIParticles, 500);
-
-        // ========================================
-        // Daily Challenge System
-        // ========================================
-        const DAILY_CHALLENGES = [
-            { id: 'kills50', icon: '💀', name: 'Enemy Hunter', desc: 'Kill 50 enemies', target: 50, type: 'kills', reward: 100 },
-            { id: 'kills100', icon: '☠️', name: 'Exterminator', desc: 'Kill 100 enemies', target: 100, type: 'kills', reward: 200 },
-            { id: 'score5000', icon: '🏆', name: 'Score Chaser', desc: 'Reach 5000 points', target: 5000, type: 'score', reward: 150 },
-            { id: 'score10000', icon: '🌟', name: 'High Scorer', desc: 'Reach 10000 points', target: 10000, type: 'score', reward: 250 },
-            { id: 'survive3min', icon: '⏱️', name: 'Survivor', desc: 'Survive for 3 minutes', target: 180, type: 'time', reward: 175 },
-            { id: 'survive5min', icon: '🛡️', name: 'Endurance', desc: 'Survive for 5 minutes', target: 300, type: 'time', reward: 300 },
-            { id: 'powerups10', icon: '⚡', name: 'Power Collector', desc: 'Collect 10 power-ups', target: 10, type: 'powerups', reward: 125 },
-            { id: 'powerups20', icon: '🔋', name: 'Power Hoarder', desc: 'Collect 20 power-ups', target: 20, type: 'powerups', reward: 225 },
-            { id: 'level5', icon: '📈', name: 'Level Climber', desc: 'Reach level 5', target: 5, type: 'level', reward: 150 },
-            { id: 'level10', icon: '🚀', name: 'Sky High', desc: 'Reach level 10', target: 10, type: 'level', reward: 350 },
-            { id: 'boss3', icon: '👹', name: 'Boss Slayer', desc: 'Defeat 3 bosses', target: 3, type: 'bosses', reward: 200 },
-            { id: 'nodamage1', icon: '💎', name: 'Untouchable', desc: 'Complete a level without damage', target: 1, type: 'perfect', reward: 400 },
-            { id: 'combo50', icon: '🔥', name: 'Combo Master', desc: 'Get a 50x combo', target: 50, type: 'combo', reward: 175 }
-        ];
-
-        let dailyChallenge = null;
-        let dailyChallengeProgress = 0;
-        let dailyChallengeCompleted = false;
-        let dailyChallengeDate = '';
-
-        function getDailyChallenge() {
-            const today = new Date().toISOString().split('T')[0];
-
-            // Check if we have a stored challenge for today
-            const stored = localStorage.getItem('dailyChallenge');
-            if (stored) {
-                const data = JSON.parse(stored);
-                if (data.date === today) {
-                    dailyChallenge = DAILY_CHALLENGES.find(c => c.id === data.challengeId);
-                    dailyChallengeProgress = data.progress || 0;
-                    dailyChallengeCompleted = data.completed || false;
-                    dailyChallengeDate = today;
-                    return;
-                }
-            }
-
-            // Generate new challenge based on date seed
-            const seed = parseInt(today.replace(/-/g, ''));
-            const challengeIndex = seed % DAILY_CHALLENGES.length;
-            dailyChallenge = DAILY_CHALLENGES[challengeIndex];
-            dailyChallengeProgress = 0;
-            dailyChallengeCompleted = false;
-            dailyChallengeDate = today;
-
-            saveDailyChallenge();
-        }
-
-        function saveDailyChallenge() {
-            if (!dailyChallenge) return;
-            localStorage.setItem('dailyChallenge', JSON.stringify({
-                date: dailyChallengeDate,
-                challengeId: dailyChallenge.id,
-                progress: dailyChallengeProgress,
-                completed: dailyChallengeCompleted
-            }));
-        }
-
-        function updateDailyChallengeUI() {
-            if (!dailyChallenge) return;
-
-            const panel = document.getElementById('dailyChallenge');
-            const icon = document.getElementById('challengeIcon');
-            const name = document.getElementById('challengeName');
-            const desc = document.getElementById('challengeDesc');
-            const bar = document.getElementById('challengeBar');
-            const progressText = document.getElementById('challengeProgressText');
-            const reward = document.getElementById('challengeReward');
-
-            if (icon) icon.textContent = dailyChallenge.icon;
-            if (name) name.textContent = dailyChallenge.name;
-            if (desc) desc.textContent = dailyChallenge.desc;
-            if (reward) reward.textContent = dailyChallenge.reward;
-
-            const progress = Math.min(dailyChallengeProgress, dailyChallenge.target);
-            const percent = (progress / dailyChallenge.target) * 100;
-
-            if (bar) bar.style.width = percent + '%';
-            if (progressText) progressText.textContent = `${progress} / ${dailyChallenge.target}`;
-
-            if (panel) {
-                if (dailyChallengeCompleted) {
-                    panel.classList.add('daily-challenge-complete');
-                    if (name) name.textContent = dailyChallenge.name + ' ✓';
-                } else {
-                    panel.classList.remove('daily-challenge-complete');
-                }
-            }
-        }
-
-        function updateChallengeTimer() {
-            const timer = document.getElementById('challengeTimer');
-            if (!timer) return;
-
-            const now = new Date();
-            const tomorrow = new Date(now);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            tomorrow.setHours(0, 0, 0, 0);
-
-            const diff = tomorrow - now;
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            timer.textContent = `Resets in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function updateDailyChallengeProgress(type, value) {
-            if (!dailyChallenge || dailyChallengeCompleted) return;
-            if (dailyChallenge.type !== type) return;
-
-            if (type === 'kills' || type === 'powerups' || type === 'bosses') {
-                dailyChallengeProgress += value;
-            } else if (type === 'score' || type === 'time' || type === 'level' || type === 'combo') {
-                dailyChallengeProgress = Math.max(dailyChallengeProgress, value);
-            } else if (type === 'perfect') {
-                dailyChallengeProgress = value;
-            }
-
-            // Check completion
-            if (dailyChallengeProgress >= dailyChallenge.target && !dailyChallengeCompleted) {
-                completeDailyChallenge();
-            }
-
-            saveDailyChallenge();
-            updateDailyChallengeUI();
-        }
-
-        function completeDailyChallenge() {
-            if (!dailyChallenge || dailyChallengeCompleted) return;
-
-            dailyChallengeCompleted = true;
-            totalCoins += dailyChallenge.reward;
-            saveCoins();
-
-            // Track lifetime stats
-            updateLifetimeStat('challengesCompleted', 1, 'add');
-
-            // Show celebration
-            announce('dailyChallenge');
-            playLevelUpSound();
-
-            // Spawn particles
-            const panel = document.getElementById('dailyChallenge');
-            if (panel) {
-                const rect = panel.getBoundingClientRect();
-                spawnAchievementParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, dailyChallenge.icon);
-            }
-
-            saveDailyChallenge();
-            updateDailyChallengeUI();
-        }
-
-        // Initialize daily challenge
-        getDailyChallenge();
-        updateDailyChallengeUI();
-        updateChallengeTimer();
-        setInterval(updateChallengeTimer, 1000);
 
         // ========================================
         // Lifetime Statistics System
