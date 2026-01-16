@@ -1716,30 +1716,170 @@
             display: none !important;
         }
 
+        /* Pilot Profile Card */
+        .pilot-profile {
+            background: linear-gradient(135deg, rgba(0, 30, 60, 0.95) 0%, rgba(0, 15, 35, 0.98) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin-bottom: 24px;
+            width: 380px;
+            max-width: 90vw;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(0, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pilot-profile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #0ff, #f0f, #0ff, transparent);
+            opacity: 0.8;
+        }
+
+        .pilot-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .pilot-avatar {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, rgba(0, 200, 255, 0.2) 0%, rgba(255, 0, 255, 0.2) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            animation: avatarPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 40px rgba(255, 0, 255, 0.2); }
+        }
+
+        .pilot-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .pilot-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(0, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 4px;
+        }
+
+        .pilot-rank {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            color: #f0f;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pilot-rank-badge {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.3) 0%, rgba(255, 100, 200, 0.2) 100%);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            border: 1px solid rgba(255, 0, 255, 0.4);
+        }
+
+        .pilot-input-container {
+            position: relative;
+        }
+
+        .pilot-input-label {
+            display: block;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .name-input {
-            padding: 14px 24px;
-            font-size: 18px;
-            font-weight: 500;
-            background: rgba(0, 20, 40, 0.6);
-            color: #0ff;
-            border: 2px solid rgba(0, 255, 255, 0.4);
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 20px;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            border: 2px solid rgba(0, 255, 255, 0.3);
             border-radius: 10px;
             font-family: 'Orbitron', sans-serif;
             text-align: center;
-            margin-bottom: 22px;
-            width: 280px;
             outline: none;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
         }
 
         .name-input::placeholder {
-            color: rgba(0, 255, 255, 0.4);
+            color: rgba(0, 255, 255, 0.3);
+            font-weight: 400;
         }
 
         .name-input:focus {
-            border-color: rgba(0, 255, 255, 0.8);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-color: #0ff;
+            background: rgba(0, 20, 40, 0.6);
+            box-shadow:
+                inset 0 2px 10px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .pilot-hint {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .pilot-stats-mini {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0, 255, 255, 0.15);
+        }
+
+        .pilot-stat-mini {
+            text-align: center;
+        }
+
+        .pilot-stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0ff;
+            display: block;
+        }
+
+        .pilot-stat-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .highscore-list {
@@ -4781,7 +4921,39 @@
                     ★★★ WELCOME TO COSMIC BLASTERZ ★★★ PROGRAMMED WITH ♥ IN 2026 ★★★ USE ARROW KEYS TO MOVE AND SPACE TO SHOOT ★★★ COLLECT POWER-UPS FOR SPECIAL ABILITIES ★★★ DEFEAT THE BOSS AT THE END OF EACH LEVEL ★★★ CAN YOU BEAT THE HIGHSCORE? ★★★ GREETINGS TO ALL RETRO GAMERS OUT THERE ★★★
                 </div>
             </div>
-            <input type="text" id="playerName" class="name-input" placeholder="Enter your name" maxlength="15">
+
+            <!-- Pilot Profile Card -->
+            <div class="pilot-profile">
+                <div class="pilot-header">
+                    <div class="pilot-avatar">👨‍🚀</div>
+                    <div class="pilot-info">
+                        <div class="pilot-title">Pilot Profile</div>
+                        <div class="pilot-rank">
+                            <span class="pilot-rank-badge">ROOKIE</span>
+                            <span id="pilotRankText">Ready for action</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pilot-input-container">
+                    <label class="pilot-input-label" for="playerName">Call Sign</label>
+                    <input type="text" id="playerName" class="name-input" placeholder="Enter your call sign" maxlength="15" autocomplete="off" spellcheck="false">
+                </div>
+                <div class="pilot-hint">Your name will appear on the global leaderboard</div>
+                <div class="pilot-stats-mini">
+                    <div class="pilot-stat-mini">
+                        <span class="pilot-stat-value" id="pilotGames">0</span>
+                        <span class="pilot-stat-label">Games</span>
+                    </div>
+                    <div class="pilot-stat-mini">
+                        <span class="pilot-stat-value" id="pilotBest">0</span>
+                        <span class="pilot-stat-label">Best Score</span>
+                    </div>
+                    <div class="pilot-stat-mini">
+                        <span class="pilot-stat-value" id="pilotKills">0</span>
+                        <span class="pilot-stat-label">Total Kills</span>
+                    </div>
+                </div>
+            </div>
 
             <!-- Daily Challenge -->
             <div class="daily-challenge-panel" id="dailyChallenge">
@@ -12143,6 +12315,9 @@
             await fetchHighscores();
             renderHighscores('startHighscores');
 
+            // Update pilot profile with latest stats
+            updatePilotProfile();
+
             // Focus on name input
             const nameInput = document.getElementById('playerName');
             if (nameInput) {
@@ -13928,6 +14103,39 @@
 
         // Load stats on startup
         loadLifetimeStats();
+
+        // Update Pilot Profile on start screen
+        function getPilotRank(gamesPlayed, highScore) {
+            if (highScore >= 100000) return { badge: 'LEGENDARY', text: 'Master of the cosmos', avatar: '👑' };
+            if (highScore >= 50000) return { badge: 'ACE', text: 'Elite pilot', avatar: '⭐' };
+            if (gamesPlayed >= 100) return { badge: 'VETERAN', text: 'Battle-hardened', avatar: '🎖️' };
+            if (gamesPlayed >= 50) return { badge: 'CAPTAIN', text: 'Experienced commander', avatar: '🚀' };
+            if (gamesPlayed >= 25) return { badge: 'LIEUTENANT', text: 'Rising star', avatar: '✨' };
+            if (gamesPlayed >= 10) return { badge: 'PILOT', text: 'Licensed and ready', avatar: '👨‍🚀' };
+            if (gamesPlayed >= 5) return { badge: 'CADET', text: 'Learning the ropes', avatar: '🎮' };
+            return { badge: 'ROOKIE', text: 'Ready for action', avatar: '👨‍🚀' };
+        }
+
+        function updatePilotProfile() {
+            const rank = getPilotRank(lifetimeStats.gamesPlayed, lifetimeStats.highScore);
+
+            const rankBadge = document.querySelector('.pilot-rank-badge');
+            const rankText = document.getElementById('pilotRankText');
+            const avatar = document.querySelector('.pilot-avatar');
+            const pilotGames = document.getElementById('pilotGames');
+            const pilotBest = document.getElementById('pilotBest');
+            const pilotKills = document.getElementById('pilotKills');
+
+            if (rankBadge) rankBadge.textContent = rank.badge;
+            if (rankText) rankText.textContent = rank.text;
+            if (avatar) avatar.textContent = rank.avatar;
+            if (pilotGames) pilotGames.textContent = formatNumber(lifetimeStats.gamesPlayed);
+            if (pilotBest) pilotBest.textContent = formatNumber(lifetimeStats.highScore);
+            if (pilotKills) pilotKills.textContent = formatNumber(lifetimeStats.totalKills);
+        }
+
+        // Initialize pilot profile
+        updatePilotProfile();
 
         // ========================================
         // Screen Transition System
