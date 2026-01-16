@@ -617,12 +617,8 @@
 
         /* Game controls overlay */
         .game-controls {
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
             display: flex;
             gap: 8px;
-            z-index: 50;
         }
 
         .control-btn {
@@ -935,11 +931,28 @@
             opacity: 0.6;
         }
 
-        /* Shop button and panel */
-        .shop-btn {
+        /* Bottom toolbar */
+        .bottom-toolbar {
             position: absolute;
             bottom: 12px;
             left: 12px;
+            right: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 60;
+            pointer-events: none;
+        }
+
+        .toolbar-left, .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            pointer-events: auto;
+        }
+
+        /* Shop button and panel */
+        .shop-btn {
             padding: 8px 16px;
             background: rgba(0, 20, 40, 0.85);
             border: 1px solid rgba(255, 255, 0, 0.4);
@@ -949,7 +962,6 @@
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            z-index: 60;
             transition: all 0.3s ease;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
@@ -959,13 +971,10 @@
             background: rgba(255, 255, 0, 0.15);
             border-color: rgba(255, 255, 0, 0.7);
             box-shadow: 0 0 15px rgba(255, 255, 0, 0.2);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         .coins-display {
-            position: absolute;
-            bottom: 12px;
-            left: 105px;
             color: #ff0;
             font-family: 'Orbitron', sans-serif;
             font-size: 13px;
@@ -974,7 +983,6 @@
             padding: 8px 14px;
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 0, 0.25);
-            z-index: 60;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
@@ -1101,9 +1109,6 @@
 
         /* Settings button and panel */
         .settings-btn {
-            position: absolute;
-            bottom: 12px;
-            left: 185px;
             padding: 8px 16px;
             background: rgba(0, 20, 40, 0.85);
             border: 1px solid rgba(0, 255, 255, 0.4);
@@ -1113,7 +1118,6 @@
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            z-index: 60;
             transition: all 0.3s ease;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
@@ -1123,7 +1127,7 @@
             background: rgba(0, 255, 255, 0.15);
             border-color: rgba(0, 255, 255, 0.7);
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         .settings-panel {
@@ -1405,12 +1409,21 @@
             <p>Press P to continue</p>
         </div>
 
-        <!-- Game controls (pause/mute) -->
-        <div class="game-controls" id="gameControls">
-            <button class="control-btn" id="muteBtn" onclick="toggleMute()" title="Mute Sound (M)">🔊</button>
-            <button class="control-btn" id="musicBtn" onclick="toggleMusic()" title="Mute Music">🎶</button>
-            <button class="control-btn" id="announcerBtn" onclick="toggleAnnouncer()" title="Announcer">🎙️</button>
-            <button class="control-btn" id="pauseBtn" onclick="togglePause()" title="Pause (P)">⏸️</button>
+        <!-- Bottom toolbar -->
+        <div class="bottom-toolbar">
+            <div class="toolbar-left">
+                <button class="shop-btn" id="shopBtn" onclick="toggleShop()">🛒 SHOP</button>
+                <div class="coins-display" id="coinsDisplay">🪙 0</div>
+                <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">⚙️ SETTINGS</button>
+            </div>
+            <div class="toolbar-right">
+                <div class="game-controls" id="gameControls">
+                    <button class="control-btn" id="muteBtn" onclick="toggleMute()" title="Mute Sound (M)">🔊</button>
+                    <button class="control-btn" id="musicBtn" onclick="toggleMusic()" title="Mute Music">🎶</button>
+                    <button class="control-btn" id="announcerBtn" onclick="toggleAnnouncer()" title="Announcer">🎙️</button>
+                    <button class="control-btn" id="pauseBtn" onclick="togglePause()" title="Pause (P)">⏸️</button>
+                </div>
+            </div>
         </div>
 
         <!-- Power-up indicator -->
@@ -1458,21 +1471,12 @@
             </button>
         </div>
 
-        <!-- Coins display -->
-        <div class="coins-display" id="coinsDisplay">🪙 0</div>
-
-        <!-- Shop button -->
-        <button class="shop-btn" id="shopBtn" onclick="toggleShop()">🛒 SHOP</button>
-
         <!-- Shop panel -->
         <div class="shop-panel hidden" id="shopPanel">
             <button class="shop-close" onclick="toggleShop()">✕</button>
             <h2>🛒 SHOP</h2>
             <div id="shopItems"></div>
         </div>
-
-        <!-- Settings button -->
-        <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">⚙️ SETTINGS</button>
 
         <!-- Settings panel -->
         <div class="settings-panel hidden" id="settingsPanel">
