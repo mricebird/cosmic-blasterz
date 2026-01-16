@@ -2059,6 +2059,97 @@
             }
         }
 
+        /* Screen Transitions */
+        .screen-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, #0a0a2a 0%, #000 70%);
+            z-index: 9998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .screen-transition-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .screen-transition-overlay .transition-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .screen-transition-overlay .transition-icon {
+            font-size: 60px;
+            animation: transitionPulse 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes transitionPulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .screen-transition-overlay .transition-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            color: #0ff;
+            margin-top: 15px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Fade transition classes for screens */
+        .fade-transition {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.98);
+        }
+
+        .fade-in {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .slide-up {
+            animation: slideUpIn 0.4s ease forwards;
+        }
+
+        .slide-down {
+            animation: slideDownOut 0.3s ease forwards;
+        }
+
+        @keyframes slideUpIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDownOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+
         /* AI Demo overlay */
         .demo-overlay {
             position: fixed;
@@ -3654,7 +3745,7 @@
         /* Amiga-style scroll text */
         .scroll-text-container {
             position: absolute;
-            bottom: 70px;
+            top: 10px;
             left: 0;
             right: 0;
             height: 30px;
@@ -4154,6 +4245,14 @@
         <div class="loading-text" id="loadingText">Initializing...</div>
         <div class="loading-percent" id="loadingPercent">0%</div>
         <div class="loading-tips" id="loadingTips">Use arrow keys to move and SPACE to shoot</div>
+    </div>
+
+    <!-- Screen Transition Overlay -->
+    <div class="screen-transition-overlay" id="screenTransition">
+        <div class="transition-content">
+            <div class="transition-icon" id="transitionIcon">🚀</div>
+            <div class="transition-text" id="transitionText">Loading...</div>
+        </div>
     </div>
 
     <!-- Splash Screen -->
@@ -11433,33 +11532,35 @@
         let garageShipRotation = 0;
 
         function openGarage() {
-            document.getElementById('startScreen').classList.add('hidden');
-            document.getElementById('garageScreen').classList.remove('hidden');
-            document.getElementById('garageCoins').textContent = totalCoins;
-
-            // Update equipped display
-            updateEquippedDisplay();
-
-            // Render items
-            renderGarageItems();
-
-            // Start ship animation
-            startGarageAnimation();
-
             playSelectSound();
+            showScreenTransition('garage', () => {
+                document.getElementById('startScreen').classList.add('hidden');
+                document.getElementById('garageScreen').classList.remove('hidden');
+                document.getElementById('garageCoins').textContent = totalCoins;
+
+                // Update equipped display
+                updateEquippedDisplay();
+
+                // Render items
+                renderGarageItems();
+
+                // Start ship animation
+                startGarageAnimation();
+            });
         }
 
         function closeGarage() {
-            document.getElementById('garageScreen').classList.add('hidden');
-            document.getElementById('startScreen').classList.remove('hidden');
-
-            // Stop animation
-            if (garageAnimationFrame) {
-                cancelAnimationFrame(garageAnimationFrame);
-                garageAnimationFrame = null;
-            }
-
             playSelectSound();
+            showScreenTransition('menu', () => {
+                document.getElementById('garageScreen').classList.add('hidden');
+                document.getElementById('startScreen').classList.remove('hidden');
+
+                // Stop animation
+                if (garageAnimationFrame) {
+                    cancelAnimationFrame(garageAnimationFrame);
+                    garageAnimationFrame = null;
+                }
+            });
         }
 
         function switchGarageTab(tab) {
@@ -12961,7 +13062,108 @@
         runLoadingSequence().then(() => {
             // Splash screen will be shown after loading
             console.log('Loading complete, showing splash screen');
+            // Start the amiga-style scroller and music after splash is visible
+            setTimeout(() => {
+                initSplashStars();
+                startScroller();
+                // Try to start splash music
+                try {
+                    startSplashMusicOnce();
+                } catch (e) {
+                    console.log('Music autostart blocked by browser');
+                }
+            }, 100);
         });
+
+        // ========================================
+        // Screen Transition System
+        // ========================================
+        const transitionMessages = {
+            game: { icon: '🚀', text: 'Launching...' },
+            menu: { icon: '🏠', text: 'Returning...' },
+            shop: { icon: '🛒', text: 'Opening Shop...' },
+            garage: { icon: '🔧', text: 'Entering Garage...' },
+            gameOver: { icon: '💀', text: 'Game Over...' },
+            victory: { icon: '🏆', text: 'Victory!' },
+            restart: { icon: '🔄', text: 'Restarting...' }
+        };
+
+        function showScreenTransition(type = 'game', callback = null, duration = 400) {
+            const overlay = document.getElementById('screenTransition');
+            const icon = document.getElementById('transitionIcon');
+            const text = document.getElementById('transitionText');
+
+            if (!overlay) {
+                if (callback) callback();
+                return;
+            }
+
+            const message = transitionMessages[type] || transitionMessages.game;
+            if (icon) icon.textContent = message.icon;
+            if (text) text.textContent = message.text;
+
+            // Show overlay
+            overlay.classList.add('active');
+
+            // Execute callback at midpoint
+            setTimeout(() => {
+                if (callback) callback();
+
+                // Hide overlay
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                }, duration / 2);
+            }, duration / 2);
+        }
+
+        function fadeOutElement(element, callback = null) {
+            if (!element) {
+                if (callback) callback();
+                return;
+            }
+
+            element.classList.add('fade-transition');
+            element.classList.add('fade-out');
+
+            setTimeout(() => {
+                element.classList.add('hidden');
+                element.classList.remove('fade-out');
+                element.classList.remove('fade-transition');
+                if (callback) callback();
+            }, 300);
+        }
+
+        function fadeInElement(element, callback = null) {
+            if (!element) {
+                if (callback) callback();
+                return;
+            }
+
+            element.classList.remove('hidden');
+            element.classList.add('fade-transition');
+            element.classList.add('fade-out');
+
+            // Force reflow
+            void element.offsetWidth;
+
+            element.classList.remove('fade-out');
+            element.classList.add('fade-in');
+
+            setTimeout(() => {
+                element.classList.remove('fade-transition');
+                element.classList.remove('fade-in');
+                if (callback) callback();
+            }, 300);
+        }
+
+        function slideUpElement(element) {
+            if (!element) return;
+            element.classList.remove('hidden');
+            element.classList.add('slide-up');
+            setTimeout(() => {
+                element.classList.remove('slide-up');
+            }, 400);
+        }
 
         // ========================================
         // Splash Screen System
@@ -13014,37 +13216,11 @@
             }
         }
 
-        // Initialize splash screen
+        // Initialize splash screen (after loading screen completes)
         const splashScreen = document.getElementById('splashScreen');
         if (splashScreen) {
-            try {
-                initSplashStars();
-                // Small delay to ensure canvas container has dimensions
-                setTimeout(() => {
-                    try {
-                        startScroller();
-                    } catch (e) {
-                        console.error('Scroller start error:', e);
-                    }
-                }, 50);
-            } catch (e) {
-                console.error('Splash init error:', e);
-            }
-
             // Track if music has started (for two-step interaction)
             let musicStartedByUser = false;
-
-            // Try to autostart music (may be blocked by browser)
-            setTimeout(() => {
-                try {
-                    startSplashMusicOnce();
-                    if (splashMusicPlaying) {
-                        musicStartedByUser = true;
-                    }
-                } catch (e) {
-                    console.error('Music autostart error:', e);
-                }
-            }, 100);
 
             // Handle splash interaction: single click/tap/key to proceed
             function handleSplashInteraction(e) {
