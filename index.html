@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -933,53 +933,53 @@
 
         <div class="start-screen" id="startScreen">
             <h1>🚀 SPACE INVADERS 👾</h1>
-            <p style="font-size: 18px; margin-bottom: 20px; opacity: 0.8;">Forsvar Jorden mod alien-invasionen!</p>
-            <input type="text" id="playerName" class="name-input" placeholder="Indtast dit navn" maxlength="15">
+            <p style="font-size: 18px; margin-bottom: 20px; opacity: 0.8;">Defend Earth from the alien invasion!</p>
+            <input type="text" id="playerName" class="name-input" placeholder="Enter your name" maxlength="15">
             <div class="mode-buttons">
                 <button class="start-btn" onclick="startGame(false)">NORMAL MODE</button>
                 <button class="start-btn endless-btn" onclick="startGame(true)">♾️ ENDLESS MODE</button>
                 <button class="start-btn tutorial-btn" onclick="startTutorial()">📖 TUTORIAL</button>
             </div>
             <div class="controls-info">
-                <p>← → Piletaster for at bevæge dig</p>
-                <p>MELLEMRUM for at skyde</p>
-                <p>1-2-3 = Skift våben | P = Pause | M = Mute</p>
+                <p>← → Arrow keys to move</p>
+                <p>SPACE to shoot</p>
+                <p>1-2-3 = Switch weapon | P = Pause | M = Mute</p>
             </div>
             <div class="highscore-list" id="startHighscores"></div>
         </div>
 
         <div class="game-over-screen hidden" id="gameOverScreen">
             <h1>GAME OVER</h1>
-            <div id="newHighscoreMsg" class="new-highscore hidden">NY HIGHSCORE!</div>
+            <div id="newHighscoreMsg" class="new-highscore hidden">NEW HIGHSCORE!</div>
             <div class="final-score"><span id="playerNameDisplay"></span> score: <span id="finalScore">0</span></div>
-            <div class="endless-survival hidden" id="endlessSurvival">⏱️ Overlevede: <span id="survivalTime">00:00</span> | Bølge: <span id="finalWave">1</span></div>
+            <div class="endless-survival hidden" id="endlessSurvival">⏱️ Survived: <span id="survivalTime">00:00</span> | Wave: <span id="finalWave">1</span></div>
             <div class="highscore-list" id="gameOverHighscores"></div>
             <div class="achievements-section">
                 <h4>🏆 ACHIEVEMENTS</h4>
                 <div class="achievement-badges" id="achievementBadges"></div>
             </div>
             <div class="game-over-buttons">
-                <button class="restart-btn" onclick="restartGame()">SPIL IGEN</button>
-                <button class="share-btn" onclick="shareScore()">📤 DEL SCORE</button>
+                <button class="restart-btn" onclick="restartGame()">PLAY AGAIN</button>
+                <button class="share-btn" onclick="shareScore()">📤 SHARE SCORE</button>
             </div>
             <div class="share-options hidden" id="shareOptions">
                 <button class="share-option-btn" onclick="shareToTwitter()">🐦 Twitter</button>
                 <button class="share-option-btn" onclick="shareToFacebook()">📘 Facebook</button>
-                <button class="share-option-btn" onclick="copyShareLink()">📋 Kopiér</button>
+                <button class="share-option-btn" onclick="copyShareLink()">📋 Copy</button>
             </div>
-            <div class="share-copied hidden" id="shareCopied">✅ Kopieret til udklipsholder!</div>
+            <div class="share-copied hidden" id="shareCopied">✅ Copied to clipboard!</div>
         </div>
 
         <!-- Pause screen -->
         <div class="pause-screen hidden" id="pauseScreen">
-            <h2>PAUSE</h2>
-            <p>Tryk P for at fortsætte</p>
+            <h2>PAUSED</h2>
+            <p>Press P to continue</p>
         </div>
 
         <!-- Game controls (pause/mute) -->
         <div class="game-controls" id="gameControls">
-            <button class="control-btn" id="muteBtn" onclick="toggleMute()" title="Mute Lyd (M)">🔊</button>
-            <button class="control-btn" id="musicBtn" onclick="toggleMusic()" title="Mute Musik">🎶</button>
+            <button class="control-btn" id="muteBtn" onclick="toggleMute()" title="Mute Sound (M)">🔊</button>
+            <button class="control-btn" id="musicBtn" onclick="toggleMusic()" title="Mute Music">🎶</button>
             <button class="control-btn" id="announcerBtn" onclick="toggleAnnouncer()" title="Announcer">🎙️</button>
             <button class="control-btn" id="pauseBtn" onclick="togglePause()" title="Pause (P)">⏸️</button>
         </div>
@@ -995,7 +995,7 @@
             <h4>🏆 ACHIEVEMENT UNLOCKED!</h4>
             <div class="achievement-icon" id="achievementIcon">🎯</div>
             <div class="achievement-name" id="achievementName">First Blood</div>
-            <div class="achievement-desc" id="achievementDesc">Dræb din første fjende</div>
+            <div class="achievement-desc" id="achievementDesc">Kill your first enemy</div>
         </div>
 
         <!-- Boss health bar -->
@@ -1047,17 +1047,17 @@
 
         <!-- Endless Mode UI -->
         <div class="endless-timer hidden" id="endlessTimer">⏱️ 00:00</div>
-        <div class="endless-wave hidden" id="endlessWave">Bølge 1</div>
+        <div class="endless-wave hidden" id="endlessWave">Wave 1</div>
 
         <!-- Tutorial overlay -->
         <div class="tutorial-overlay hidden" id="tutorialOverlay">
             <div class="tutorial-box">
                 <div class="tutorial-progress" id="tutorialProgress"></div>
-                <div class="tutorial-title" id="tutorialTitle">Velkommen!</div>
-                <div class="tutorial-text" id="tutorialText">Lær at spille Space Invaders!</div>
+                <div class="tutorial-title" id="tutorialTitle">Welcome!</div>
+                <div class="tutorial-text" id="tutorialText">Learn to play Space Invaders!</div>
                 <div>
-                    <button class="tutorial-btn-next" onclick="nextTutorialStep()">Næste</button>
-                    <button class="tutorial-btn-skip" onclick="skipTutorial()">Spring over</button>
+                    <button class="tutorial-btn-next" onclick="nextTutorialStep()">Next</button>
+                    <button class="tutorial-btn-skip" onclick="skipTutorial()">Skip</button>
                 </div>
             </div>
         </div>
@@ -1381,17 +1381,17 @@
         const ANNOUNCEMENT_COOLDOWN = 2000;
 
         const ANNOUNCEMENTS = {
-            gameStart: ['Forsvar Jorden!', 'Klar til kamp!', 'Vis dem hvem der bestemmer!'],
-            levelUp: ['Niveau op!', 'Godt klaret!', 'Næste bølge!', 'Fortsæt sådan!'],
-            bossAppear: ['Advarsel! Boss opdaget!', 'Stor fjende!', 'Boss kamp!'],
-            bossDefeat: ['Boss elimineret!', 'Fantastisk!', 'Boss besejret!'],
-            combo5: ['Combo mester!', 'Utroligt!', 'Fem i træk!'],
-            combo7: ['Legendarisk combo!', 'Ustoppelig!', 'Super combo!'],
-            powerUp: ['Power op!', 'Bonus aktiveret!'],
-            ufoKill: ['UFO nedskudt!', 'Bonus point!'],
-            lowHealth: ['Advarsel! Lavt liv!', 'Pas på!'],
-            gameOver: ['Spil slut!', 'Bedre held næste gang!'],
-            newHighscore: ['Ny rekord!', 'Fantastisk score!']
+            gameStart: ['Defend Earth!', 'Ready for battle!', 'Show them who is boss!'],
+            levelUp: ['Level up!', 'Well done!', 'Next wave!', 'Keep it up!'],
+            bossAppear: ['Warning! Boss detected!', 'Big enemy!', 'Boss fight!'],
+            bossDefeat: ['Boss eliminated!', 'Fantastic!', 'Boss defeated!'],
+            combo5: ['Combo master!', 'Incredible!', 'Five in a row!'],
+            combo7: ['Legendary combo!', 'Unstoppable!', 'Super combo!'],
+            powerUp: ['Power up!', 'Bonus activated!'],
+            ufoKill: ['UFO destroyed!', 'Bonus points!'],
+            lowHealth: ['Warning! Low health!', 'Watch out!'],
+            gameOver: ['Game over!', 'Better luck next time!'],
+            newHighscore: ['New record!', 'Amazing score!']
         };
 
         function announce(type) {
@@ -1408,16 +1408,16 @@
                 window.speechSynthesis.cancel();
 
                 const utterance = new SpeechSynthesisUtterance(message);
-                utterance.lang = 'da-DK';
+                utterance.lang = 'en-US';
                 utterance.rate = 1.1;
                 utterance.pitch = 1.0;
                 utterance.volume = 0.8;
 
-                // Try to find a Danish voice
+                // Try to find an English voice
                 const voices = window.speechSynthesis.getVoices();
-                const danishVoice = voices.find(v => v.lang.startsWith('da'));
-                if (danishVoice) {
-                    utterance.voice = danishVoice;
+                const englishVoice = voices.find(v => v.lang.startsWith('en'));
+                if (englishVoice) {
+                    utterance.voice = englishVoice;
                 }
 
                 window.speechSynthesis.speak(utterance);
@@ -1449,50 +1449,50 @@
         let tutorialStep = 0;
         const TUTORIAL_STEPS = [
             {
-                title: '🚀 Velkommen til Space Invaders!',
-                text: 'I dette spil skal du forsvare Jorden mod bølger af rumvæsner. Lad os lære de grundlæggende kontroller!'
+                title: '🚀 Welcome to Space Invaders!',
+                text: 'In this game you must defend Earth against waves of aliens. Let\'s learn the basic controls!'
             },
             {
-                title: '⬅️ ➡️ Bevægelse',
-                text: 'Brug <span class="tutorial-highlight">venstre og højre piletaster</span> til at bevæge dit rumskib. Prøv det nu!',
+                title: '⬅️ ➡️ Movement',
+                text: 'Use the <span class="tutorial-highlight">left and right arrow keys</span> to move your spaceship. Try it now!',
                 action: 'move'
             },
             {
-                title: '🔫 Skydning',
-                text: 'Tryk på <span class="tutorial-highlight">MELLEMRUM</span> for at skyde lasere mod fjenderne. Skyd nu!',
+                title: '🔫 Shooting',
+                text: 'Press <span class="tutorial-highlight">SPACE</span> to shoot lasers at the enemies. Shoot now!',
                 action: 'shoot'
             },
             {
-                title: '⚡ Våbensystem',
-                text: 'Du har 3 våben: <span class="tutorial-highlight">1=Laser</span>, <span class="tutorial-highlight">2=Missile</span>, <span class="tutorial-highlight">3=Plasma</span>. Hver har unikke egenskaber!'
+                title: '⚡ Weapon System',
+                text: 'You have 3 weapons: <span class="tutorial-highlight">1=Laser</span>, <span class="tutorial-highlight">2=Missile</span>, <span class="tutorial-highlight">3=Plasma</span>. Each has unique properties!'
             },
             {
                 title: '🎁 Power-ups',
-                text: 'Saml power-ups der falder fra fjender: <span class="tutorial-highlight">Shield</span> beskytter dig, <span class="tutorial-highlight">Rapid Fire</span> øger skudhastighed, <span class="tutorial-highlight">Spread Shot</span> skyder 3 kugler, og <span class="tutorial-highlight">Bomb</span> rydder skærmen!'
+                text: 'Collect power-ups that fall from enemies: <span class="tutorial-highlight">Shield</span> protects you, <span class="tutorial-highlight">Rapid Fire</span> increases fire rate, <span class="tutorial-highlight">Spread Shot</span> shoots 3 bullets, and <span class="tutorial-highlight">Bomb</span> clears the screen!'
             },
             {
-                title: '👾 Boss Kampe',
-                text: 'Hvert 5. niveau møder du en <span class="tutorial-highlight">BOSS</span>. Bosser har meget liv og skyder hurtigere!'
+                title: '👾 Boss Battles',
+                text: 'Every 5th level you meet a <span class="tutorial-highlight">BOSS</span>. Bosses have lots of health and shoot faster!'
             },
             {
-                title: '🛡️ Barrierer',
-                text: 'De grønne <span class="tutorial-highlight">barrierer</span> beskytter dig mod fjendeskud, men de kan også blive ødelagt!'
+                title: '🛡️ Barriers',
+                text: 'The green <span class="tutorial-highlight">barriers</span> protect you from enemy fire, but they can also be destroyed!'
             },
             {
                 title: '🛸 UFO Bonus',
-                text: 'Lejlighedsvis flyver en <span class="tutorial-highlight">UFO</span> hen over skærmen. Skyd den for bonuspoint og power-ups!'
+                text: 'Occasionally a <span class="tutorial-highlight">UFO</span> flies across the screen. Shoot it for bonus points and power-ups!'
             },
             {
                 title: '💰 Coins & Shop',
-                text: 'Du tjener <span class="tutorial-highlight">coins</span> ved at dræbe fjender. Brug dem i <span class="tutorial-highlight">SHOP</span> til permanente opgraderinger!'
+                text: 'You earn <span class="tutorial-highlight">coins</span> by killing enemies. Use them in the <span class="tutorial-highlight">SHOP</span> for permanent upgrades!'
             },
             {
                 title: '🎯 Combo System',
-                text: 'Dræb fjender hurtigt efter hinanden for at opbygge <span class="tutorial-highlight">combo</span> og tjene flere point!'
+                text: 'Kill enemies quickly in succession to build up <span class="tutorial-highlight">combo</span> and earn more points!'
             },
             {
-                title: '🏆 Du er klar!',
-                text: 'Nu kender du det grundlæggende! Husk: P=Pause, M=Mute. God fornøjelse med spillet!'
+                title: '🏆 You\'re ready!',
+                text: 'Now you know the basics! Remember: P=Pause, M=Mute. Have fun with the game!'
             }
         ];
 
@@ -1582,16 +1582,16 @@
         }
 
         function getShareText() {
-            let text = `🚀 Jeg scorede ${score} point i Space Invaders! 👾`;
+            let text = `🚀 I scored ${score} points in Space Invaders! 👾`;
             if (endlessMode) {
                 const elapsed = Math.floor((Date.now() - endlessStartTime) / 1000);
                 const minutes = Math.floor(elapsed / 60);
                 const seconds = elapsed % 60;
-                text += ` (Endless Mode: ${minutes}m ${seconds}s, Bølge ${endlessWave})`;
+                text += ` (Endless Mode: ${minutes}m ${seconds}s, Wave ${endlessWave})`;
             } else {
-                text += ` (Niveau ${level})`;
+                text += ` (Level ${level})`;
             }
-            text += `\nKan du slå mig? 🎮`;
+            text += `\nCan you beat me? 🎮`;
             return text;
         }
 
@@ -1688,18 +1688,18 @@
 
         // Achievement system
         const ACHIEVEMENTS = {
-            firstBlood: { icon: '🎯', name: 'First Blood', desc: 'Dræb din første fjende', check: (stats) => stats.totalKills >= 1 },
-            killer: { icon: '💀', name: 'Killer', desc: 'Dræb 50 fjender', check: (stats) => stats.totalKills >= 50 },
-            massacre: { icon: '☠️', name: 'Massacre', desc: 'Dræb 200 fjender', check: (stats) => stats.totalKills >= 200 },
-            comboStarter: { icon: '🔥', name: 'Combo Starter', desc: 'Få en 3x combo', check: (stats) => stats.maxCombo >= 3 },
-            comboMaster: { icon: '⚡', name: 'Combo Master', desc: 'Få en 5x combo', check: (stats) => stats.maxCombo >= 5 },
-            survivor: { icon: '🛡️', name: 'Survivor', desc: 'Nå level 5', check: (stats) => stats.maxLevel >= 5 },
-            veteran: { icon: '🎖️', name: 'Veteran', desc: 'Nå level 10', check: (stats) => stats.maxLevel >= 10 },
-            bossSlayer: { icon: '👑', name: 'Boss Slayer', desc: 'Besejr din første boss', check: (stats) => stats.bossKills >= 1 },
-            untouchable: { icon: '✨', name: 'Untouchable', desc: 'Gennemfør et level uden at blive ramt', check: (stats) => stats.perfectLevels >= 1 },
-            powerPlayer: { icon: '💎', name: 'Power Player', desc: 'Saml 10 power-ups', check: (stats) => stats.powerUpsCollected >= 10 },
-            scoreHunter: { icon: '🏆', name: 'Score Hunter', desc: 'Opnå 5000 points', check: (stats) => stats.maxScore >= 5000 },
-            legend: { icon: '⭐', name: 'Legend', desc: 'Opnå 20000 points', check: (stats) => stats.maxScore >= 20000 }
+            firstBlood: { icon: '🎯', name: 'First Blood', desc: 'Kill your first enemy', check: (stats) => stats.totalKills >= 1 },
+            killer: { icon: '💀', name: 'Killer', desc: 'Kill 50 enemies', check: (stats) => stats.totalKills >= 50 },
+            massacre: { icon: '☠️', name: 'Massacre', desc: 'Kill 200 enemies', check: (stats) => stats.totalKills >= 200 },
+            comboStarter: { icon: '🔥', name: 'Combo Starter', desc: 'Get a 3x combo', check: (stats) => stats.maxCombo >= 3 },
+            comboMaster: { icon: '⚡', name: 'Combo Master', desc: 'Get a 5x combo', check: (stats) => stats.maxCombo >= 5 },
+            survivor: { icon: '🛡️', name: 'Survivor', desc: 'Reach level 5', check: (stats) => stats.maxLevel >= 5 },
+            veteran: { icon: '🎖️', name: 'Veteran', desc: 'Reach level 10', check: (stats) => stats.maxLevel >= 10 },
+            bossSlayer: { icon: '👑', name: 'Boss Slayer', desc: 'Defeat your first boss', check: (stats) => stats.bossKills >= 1 },
+            untouchable: { icon: '✨', name: 'Untouchable', desc: 'Complete a level without getting hit', check: (stats) => stats.perfectLevels >= 1 },
+            powerPlayer: { icon: '💎', name: 'Power Player', desc: 'Collect 10 power-ups', check: (stats) => stats.powerUpsCollected >= 10 },
+            scoreHunter: { icon: '🏆', name: 'Score Hunter', desc: 'Achieve 5000 points', check: (stats) => stats.maxScore >= 5000 },
+            legend: { icon: '⭐', name: 'Legend', desc: 'Achieve 20000 points', check: (stats) => stats.maxScore >= 20000 }
         };
 
         const ACHIEVEMENTS_STORAGE_KEY = 'spaceInvadersAchievements';
@@ -1863,12 +1863,12 @@
         let ownedUpgrades = [];
 
         const SHOP_ITEMS = {
-            extraLife: { name: 'Ekstra Liv', desc: 'Start med 4 liv i stedet for 3', price: 500, effect: 'startLives' },
-            fasterShip: { name: 'Hurtigere Skib', desc: '+20% bevægelseshastighed', price: 300, effect: 'shipSpeed' },
-            biggerBullets: { name: 'Større Kugler', desc: '+50% skade på alle våben', price: 400, effect: 'bulletDamage' },
-            longerPowerups: { name: 'Længere Power-ups', desc: 'Power-ups varer 50% længere', price: 350, effect: 'powerupDuration' },
-            coinMagnet: { name: 'Coin Magnet', desc: '+25% flere coins per kill', price: 250, effect: 'coinBonus' },
-            startShield: { name: 'Start Shield', desc: 'Start med shield i 5 sekunder', price: 600, effect: 'startShield' }
+            extraLife: { name: 'Extra Life', desc: 'Start with 4 lives instead of 3', price: 500, effect: 'startLives' },
+            fasterShip: { name: 'Faster Ship', desc: '+20% movement speed', price: 300, effect: 'shipSpeed' },
+            biggerBullets: { name: 'Bigger Bullets', desc: '+50% damage on all weapons', price: 400, effect: 'bulletDamage' },
+            longerPowerups: { name: 'Longer Power-ups', desc: 'Power-ups last 50% longer', price: 350, effect: 'powerupDuration' },
+            coinMagnet: { name: 'Coin Magnet', desc: '+25% more coins per kill', price: 250, effect: 'coinBonus' },
+            startShield: { name: 'Start Shield', desc: 'Start with shield for 5 seconds', price: 600, effect: 'startShield' }
         };
 
         function loadShopData() {
@@ -1935,7 +1935,7 @@
                         <button class="shop-item-btn"
                             ${owned || !canAfford ? 'disabled' : ''}
                             onclick="purchaseItem('${key}')">
-                            ${owned ? '✓ KØBT' : '🪙 ' + item.price}
+                            ${owned ? '✓ OWNED' : '🪙 ' + item.price}
                         </button>
                     </div>
                 `;
@@ -1965,13 +1965,13 @@
 
         // Daily Challenges system
         const DAILY_CHALLENGES = [
-            { id: 'speed', name: 'Hurtighedsmester', desc: 'Dræb 30 fjender på 60 sekunder', goal: 30, timeLimit: 60, reward: 100 },
-            { id: 'combo', name: 'Combo Kong', desc: 'Opnå en 7x combo', goal: 7, reward: 150 },
-            { id: 'boss', name: 'Boss Jæger', desc: 'Besejr en boss uden at miste liv', goal: 1, reward: 200 },
-            { id: 'accuracy', name: 'Skarpskytter', desc: 'Opnå 80% præcision i en runde', goal: 80, reward: 125 },
-            { id: 'survival', name: 'Overlever', desc: 'Nå niveau 5 uden at miste liv', goal: 5, reward: 175 },
-            { id: 'powerup', name: 'Power Samler', desc: 'Saml 10 power-ups i én runde', goal: 10, reward: 100 },
-            { id: 'ufo', name: 'UFO Jæger', desc: 'Skyd 3 UFOer ned i én runde', goal: 3, reward: 150 }
+            { id: 'speed', name: 'Speed Master', desc: 'Kill 30 enemies in 60 seconds', goal: 30, timeLimit: 60, reward: 100 },
+            { id: 'combo', name: 'Combo King', desc: 'Achieve a 7x combo', goal: 7, reward: 150 },
+            { id: 'boss', name: 'Boss Hunter', desc: 'Defeat a boss without losing a life', goal: 1, reward: 200 },
+            { id: 'accuracy', name: 'Sharpshooter', desc: 'Achieve 80% accuracy in a round', goal: 80, reward: 125 },
+            { id: 'survival', name: 'Survivor', desc: 'Reach level 5 without losing a life', goal: 5, reward: 175 },
+            { id: 'powerup', name: 'Power Collector', desc: 'Collect 10 power-ups in one round', goal: 10, reward: 100 },
+            { id: 'ufo', name: 'UFO Hunter', desc: 'Shoot down 3 UFOs in one round', goal: 3, reward: 150 }
         ];
 
         let dailyChallenge = null;
@@ -2104,7 +2104,7 @@
             popup.className = 'daily-challenge-complete';
             popup.innerHTML = `
                 <div class="daily-complete-icon">🏆</div>
-                <div class="daily-complete-title">Daglig Udfordring Fuldført!</div>
+                <div class="daily-complete-title">Daily Challenge Complete!</div>
                 <div class="daily-complete-name">${dailyChallenge.name}</div>
                 <div class="daily-complete-reward">+${dailyChallenge.reward} coins</div>
             `;
@@ -2121,13 +2121,13 @@
             if (!container || !dailyChallenge) return;
 
             container.innerHTML = `
-                <div class="daily-challenge-header">📅 Daglig Udfordring</div>
+                <div class="daily-challenge-header">📅 Daily Challenge</div>
                 <div class="daily-challenge-name">${dailyChallenge.name}</div>
                 <div class="daily-challenge-desc">${dailyChallenge.desc}</div>
                 <div class="daily-challenge-progress">
-                    ${dailyChallengeCompleted ? '✅ Fuldført!' : `Fremskridt: ${dailyChallengeProgress}/${dailyChallenge.goal}`}
+                    ${dailyChallengeCompleted ? '✅ Completed!' : `Progress: ${dailyChallengeProgress}/${dailyChallenge.goal}`}
                 </div>
-                <div class="daily-challenge-reward">Belønning: ${dailyChallenge.reward} coins</div>
+                <div class="daily-challenge-reward">Reward: ${dailyChallenge.reward} coins</div>
             `;
         }
 
@@ -2576,7 +2576,7 @@
             const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
             const seconds = (elapsed % 60).toString().padStart(2, '0');
             document.getElementById('endlessTimer').textContent = `⏱️ ${minutes}:${seconds}`;
-            document.getElementById('endlessWave').textContent = `Bølge ${endlessWave}`;
+            document.getElementById('endlessWave').textContent = `Wave ${endlessWave}`;
 
             // Spawn new enemies continuously
             if (Date.now() - endlessSpawnTimer > endlessSpawnInterval) {
@@ -2808,12 +2808,12 @@
             const highscores = cachedHighscores;
 
             if (!highscoresLoaded) {
-                container.innerHTML = '<h3>🏆 GLOBAL HIGHSCORES 🏆</h3><p style="text-align:center;opacity:0.7;">Indlæser...</p>';
+                container.innerHTML = '<h3>🏆 GLOBAL HIGHSCORES 🏆</h3><p style="text-align:center;opacity:0.7;">Loading...</p>';
                 return;
             }
 
             if (highscores.length === 0) {
-                container.innerHTML = '<h3>🏆 GLOBAL HIGHSCORES 🏆</h3><p style="text-align:center;opacity:0.7;">Ingen highscores endnu - bliv den første!</p>';
+                container.innerHTML = '<h3>🏆 GLOBAL HIGHSCORES 🏆</h3><p style="text-align:center;opacity:0.7;">No highscores yet - be the first!</p>';
                 return;
             }
 
