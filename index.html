@@ -10254,34 +10254,30 @@
                 }
             }, 100);
 
-            // Handle splash interaction: click to proceed
+            // Handle splash interaction: single click/tap/key to proceed
             function handleSplashInteraction(e) {
-                e.preventDefault();
-                e.stopPropagation();
+                if (e && e.preventDefault) e.preventDefault();
 
+                // Try to start music (may fail due to autoplay policy, that's ok)
                 try {
-                    if (!musicStartedByUser) {
-                        startSplashMusicOnce();
-                        musicStartedByUser = true;
-                        const prompt = splashScreen.querySelector('.splash-prompt');
-                        if (prompt) prompt.textContent = 'Press Again to Start';
-                    } else {
-                        hideSplashScreen();
-                    }
+                    startSplashMusicOnce();
                 } catch (err) {
-                    console.error('Splash interaction error:', err);
-                    // Fallback: always hide splash on error
-                    hideSplashScreen();
+                    // Ignore music errors
                 }
+
+                // Always proceed to game
+                hideSplashScreen();
             }
 
+            // Click anywhere to continue
             splashScreen.addEventListener('click', handleSplashInteraction);
-            splashScreen.addEventListener('touchstart', handleSplashInteraction, { passive: false });
 
-            // Any key to interact
+            // Touch to continue (mobile)
+            splashScreen.addEventListener('touchend', handleSplashInteraction);
+
+            // Any key to continue
             document.addEventListener('keydown', function splashKeyHandler(e) {
                 if (!splashScreen.classList.contains('hidden')) {
-                    e.preventDefault();
                     handleSplashInteraction(e);
                 }
             });
