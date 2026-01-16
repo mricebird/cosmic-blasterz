@@ -8,7 +8,7 @@
     <!-- PWA Meta Tags -->
     <meta name="description" content="Defend Earth from the alien invasion in this epic retro arcade shooter!">
     <meta name="theme-color" content="#00ffff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Cosmic Blasterz">
     <link rel="manifest" href="manifest.json">
@@ -5463,9 +5463,11 @@
             } catch (e) {}
         }
 
+        let weaponsInitialized = false;
+
         function applyWeaponUpgrades() {
             // Check if WEAPONS is defined yet (called later in initialization)
-            if (typeof WEAPONS === 'undefined') return;
+            if (!weaponsInitialized) return;
 
             // Apply all purchased weapon upgrades
             Object.keys(WEAPON_UPGRADES).forEach(weaponKey => {
@@ -6005,7 +6007,8 @@
         };
         let currentWeapon = 'laser';
 
-        // Apply weapon upgrades now that WEAPONS is defined
+        // Mark WEAPONS as initialized and apply upgrades
+        weaponsInitialized = true;
         applyWeaponUpgrades();
 
         function selectWeapon(weapon) {
