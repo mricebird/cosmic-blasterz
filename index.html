@@ -245,6 +245,10 @@
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
+            // Resume AudioContext if suspended (required by modern browsers)
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
         }
 
         // Sound effect: Player shooting
