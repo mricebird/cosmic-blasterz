@@ -6723,54 +6723,130 @@
             ctx.arc(player.x + player.width / 2 - 2, player.y + 13, 2, 0, Math.PI * 2);
             ctx.fill();
 
-            // Engine glow with animated flicker and 3D depth
+            // Engine glow with animated flicker and 3D depth (logo-style dramatic flames)
             const flicker = 0.8 + Math.sin(Date.now() / 50) * 0.2;
-            ctx.globalAlpha = flicker;
+            const flameHeight = 25 + Math.sin(Date.now() / 30) * 5;
 
-            // Engine inner glow (brighter center)
-            const engineGradient = ctx.createLinearGradient(
+            // Outer orange flame (like in logo)
+            ctx.globalAlpha = flicker * 0.8;
+            const outerFlameGradient = ctx.createLinearGradient(
                 player.x + player.width / 2, player.y + player.height,
-                player.x + player.width / 2, player.y + player.height + 12
+                player.x + player.width / 2, player.y + player.height + flameHeight + 10
             );
-            engineGradient.addColorStop(0, colors.engine);
-            engineGradient.addColorStop(0.5, colors.engine);
-            engineGradient.addColorStop(1, 'rgba(255, 255, 255, 0.8)');
+            outerFlameGradient.addColorStop(0, '#ff6600');
+            outerFlameGradient.addColorStop(0.4, '#ff9900');
+            outerFlameGradient.addColorStop(0.7, '#ffcc00');
+            outerFlameGradient.addColorStop(1, 'rgba(255, 255, 0, 0)');
 
-            ctx.fillStyle = engineGradient;
-            ctx.shadowColor = colors.engine;
+            ctx.fillStyle = outerFlameGradient;
+            ctx.shadowColor = '#ff6600';
+            ctx.shadowBlur = 20;
+            ctx.beginPath();
+            ctx.moveTo(player.x + 8, player.y + player.height);
+            ctx.lineTo(player.x + player.width / 2, player.y + player.height + flameHeight + Math.sin(Date.now() / 25) * 3);
+            ctx.lineTo(player.x + player.width - 8, player.y + player.height);
+            ctx.closePath();
+            ctx.fill();
+
+            // Middle yellow flame
+            ctx.globalAlpha = flicker;
+            const midFlameGradient = ctx.createLinearGradient(
+                player.x + player.width / 2, player.y + player.height,
+                player.x + player.width / 2, player.y + player.height + flameHeight
+            );
+            midFlameGradient.addColorStop(0, '#ffcc00');
+            midFlameGradient.addColorStop(0.5, '#ffff00');
+            midFlameGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+            ctx.fillStyle = midFlameGradient;
+            ctx.shadowColor = '#ffff00';
             ctx.shadowBlur = 15;
             ctx.beginPath();
             ctx.moveTo(player.x + 15, player.y + player.height);
-            ctx.lineTo(player.x + player.width / 2, player.y + player.height + 8 + Math.sin(Date.now() / 30) * 2);
+            ctx.lineTo(player.x + player.width / 2, player.y + player.height + flameHeight * 0.8 + Math.sin(Date.now() / 20) * 2);
             ctx.lineTo(player.x + player.width - 15, player.y + player.height);
             ctx.closePath();
             ctx.fill();
 
-            // Secondary engine flames
-            ctx.globalAlpha = flicker * 0.6;
-            ctx.fillStyle = 'rgba(255, 200, 100, 0.7)';
+            // Inner white-hot core
+            ctx.globalAlpha = flicker * 0.9;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.shadowColor = '#fff';
             ctx.shadowBlur = 10;
             ctx.beginPath();
             ctx.moveTo(player.x + 20, player.y + player.height);
-            ctx.lineTo(player.x + player.width / 2, player.y + player.height + 5 + Math.sin(Date.now() / 25) * 1.5);
+            ctx.lineTo(player.x + player.width / 2, player.y + player.height + flameHeight * 0.5 + Math.sin(Date.now() / 15) * 1.5);
             ctx.lineTo(player.x + player.width - 20, player.y + player.height);
             ctx.closePath();
+            ctx.fill();
+
+            // Red engine pods (like in logo)
+            ctx.globalAlpha = 1;
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = '#f00';
+            ctx.fillStyle = '#cc0000';
+            ctx.beginPath();
+            ctx.arc(player.x + 12, player.y + player.height - 5, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(player.x + player.width - 12, player.y + player.height - 5, 5, 0, Math.PI * 2);
             ctx.fill();
 
             ctx.globalAlpha = 1;
             ctx.restore();
         }
 
-        // Enemy type definitions
+        // Enemy type definitions - Classic Space Invaders style from logo
         const ENEMY_TYPES = {
-            basic: { color: '#ff0', eye: '#f00', points: 10, health: 1 },
-            medium: { color: '#0f0', eye: '#ff0', points: 20, health: 1 },
-            boss: { color: '#f0f', eye: '#fff', points: 30, health: 1 },
-            zigzag: { color: '#0ff', eye: '#f00', points: 25, health: 1 },
-            tank: { color: '#888', eye: '#f00', points: 50, health: 3 },
-            speeder: { color: '#f80', eye: '#fff', points: 15, health: 1 },
-            bomber: { color: '#f00', eye: '#ff0', points: 35, health: 2 }
+            basic: { color: '#0f0', eye: '#fff', points: 10, health: 1, style: 'crab' },      // Green crab alien
+            medium: { color: '#f44', eye: '#fff', points: 20, health: 1, style: 'squid' },    // Red squid alien
+            boss: { color: '#f0f', eye: '#fff', points: 30, health: 1, style: 'squid' },
+            zigzag: { color: '#0ff', eye: '#f00', points: 25, health: 1, style: 'crab' },
+            tank: { color: '#888', eye: '#f00', points: 50, health: 3, style: 'tank' },
+            speeder: { color: '#f80', eye: '#fff', points: 15, health: 1, style: 'speeder' },
+            bomber: { color: '#f00', eye: '#ff0', points: 35, health: 2, style: 'bomber' }
         };
+
+        // Classic pixel-art Space Invaders sprites (8-bit style from logo)
+        function drawPixelArt(x, y, pixelSize, pattern, color) {
+            ctx.fillStyle = color;
+            pattern.forEach((row, rowIndex) => {
+                row.forEach((pixel, colIndex) => {
+                    if (pixel) {
+                        ctx.fillRect(
+                            x + colIndex * pixelSize,
+                            y + rowIndex * pixelSize,
+                            pixelSize,
+                            pixelSize
+                        );
+                    }
+                });
+            });
+        }
+
+        // Classic crab alien pattern (green one from logo)
+        const CRAB_ALIEN = [
+            [0,0,1,0,0,0,0,0,1,0,0],
+            [0,0,0,1,0,0,0,1,0,0,0],
+            [0,0,1,1,1,1,1,1,1,0,0],
+            [0,1,1,0,1,1,1,0,1,1,0],
+            [1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,1,1,1,1,1,1,1,0,1],
+            [1,0,1,0,0,0,0,0,1,0,1],
+            [0,0,0,1,1,0,1,1,0,0,0],
+        ];
+
+        // Classic squid/octopus alien pattern (red one from logo)
+        const SQUID_ALIEN = [
+            [0,0,0,0,1,1,0,0,0,0],
+            [0,0,0,1,1,1,1,0,0,0],
+            [0,0,1,1,1,1,1,1,0,0],
+            [0,1,1,0,1,1,0,1,1,0],
+            [0,1,1,1,1,1,1,1,1,0],
+            [0,0,0,1,0,0,1,0,0,0],
+            [0,0,1,0,1,1,0,1,0,0],
+            [0,1,0,1,0,0,1,0,1,0],
+        ];
 
         // 3D Shadow system
         const SHADOW_CONFIG = {
@@ -6953,24 +7029,38 @@
                 ctx.shadowBlur = 10 * perspectiveScale;
             }
 
-            // Body
+            // Body - use classic pixel-art sprites from logo
             ctx.fillStyle = mainColor;
+            const style = typeData.style || 'basic';
 
-            if (enemy.type === 'boss') {
-                // Squid-like alien
-                ctx.beginPath();
-                ctx.arc(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2,
-                        enemy.width / 2.5, 0, Math.PI * 2);
-                ctx.fill();
-                // Simple tentacles
-                ctx.fillRect(enemy.x + 5, enemy.y + enemy.height - 5, 6, 10);
-                ctx.fillRect(enemy.x + 15, enemy.y + enemy.height - 5, 6, 12);
-                ctx.fillRect(enemy.x + 25, enemy.y + enemy.height - 5, 6, 10);
-            } else if (enemy.type === 'medium') {
-                // Crab-like alien
-                ctx.fillRect(enemy.x + 5, enemy.y + 5, enemy.width - 10, enemy.height - 10);
-                ctx.fillRect(enemy.x - 3, enemy.y + 10, 8, 10);
-                ctx.fillRect(enemy.x + enemy.width - 5, enemy.y + 10, 8, 10);
+            if (style === 'squid' || enemy.type === 'boss' || enemy.type === 'medium') {
+                // Classic squid/octopus alien (red style from logo)
+                const pixelSize = Math.max(3, Math.floor(enemy.width / 10));
+                const spriteWidth = SQUID_ALIEN[0].length * pixelSize;
+                const spriteHeight = SQUID_ALIEN.length * pixelSize;
+                const offsetX = enemy.x + (enemy.width - spriteWidth) / 2;
+                const offsetY = enemy.y + (enemy.height - spriteHeight) / 2;
+
+                // Add glow effect
+                ctx.shadowColor = mainColor;
+                ctx.shadowBlur = 8;
+                drawPixelArt(offsetX, offsetY, pixelSize, SQUID_ALIEN, mainColor);
+                ctx.shadowBlur = 0;
+
+            } else if (style === 'crab' || enemy.type === 'basic' || enemy.type === 'zigzag') {
+                // Classic crab alien (green style from logo)
+                const pixelSize = Math.max(3, Math.floor(enemy.width / 11));
+                const spriteWidth = CRAB_ALIEN[0].length * pixelSize;
+                const spriteHeight = CRAB_ALIEN.length * pixelSize;
+                const offsetX = enemy.x + (enemy.width - spriteWidth) / 2;
+                const offsetY = enemy.y + (enemy.height - spriteHeight) / 2;
+
+                // Add glow effect
+                ctx.shadowColor = mainColor;
+                ctx.shadowBlur = 8;
+                drawPixelArt(offsetX, offsetY, pixelSize, CRAB_ALIEN, mainColor);
+                ctx.shadowBlur = 0;
+
             } else if (enemy.type === 'zigzag') {
                 // Lightning bolt shape
                 ctx.beginPath();
@@ -7028,8 +7118,8 @@
                 ctx.fillRect(enemy.x + 3, enemy.y + 3, enemy.width - 6, enemy.height - 6);
             }
 
-            // Eyes (skip for some types)
-            if (!['zigzag', 'speeder'].includes(enemy.type)) {
+            // Eyes (skip for pixel-art aliens which have their own design)
+            if (!['basic', 'medium', 'boss', 'zigzag', 'speeder'].includes(enemy.type)) {
                 ctx.shadowBlur = 0;
                 ctx.fillStyle = eyeColor;
                 const eyeY = enemy.y + enemy.height / 2.5;
@@ -8295,6 +8385,134 @@
         // SPLASH SCREEN
         // ==========================================
 
+        // Amiga-style Chiptune Music for Splash Screen
+        let splashAudioCtx = null;
+        let splashMusicPlaying = false;
+        let splashMusicNodes = [];
+
+        function createSplashMusic() {
+            if (splashAudioCtx) return;
+
+            splashAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+            // Classic Amiga-style arpeggio melody
+            const melody = [
+                { note: 'C4', duration: 0.2 },
+                { note: 'E4', duration: 0.2 },
+                { note: 'G4', duration: 0.2 },
+                { note: 'C5', duration: 0.4 },
+                { note: 'G4', duration: 0.2 },
+                { note: 'E4', duration: 0.2 },
+                { note: 'C4', duration: 0.2 },
+                { note: 'D4', duration: 0.2 },
+                { note: 'F4', duration: 0.2 },
+                { note: 'A4', duration: 0.2 },
+                { note: 'D5', duration: 0.4 },
+                { note: 'A4', duration: 0.2 },
+                { note: 'F4', duration: 0.2 },
+                { note: 'D4', duration: 0.2 },
+                { note: 'E4', duration: 0.2 },
+                { note: 'G4', duration: 0.2 },
+                { note: 'B4', duration: 0.2 },
+                { note: 'E5', duration: 0.4 },
+                { note: 'B4', duration: 0.2 },
+                { note: 'G4', duration: 0.2 },
+                { note: 'E4', duration: 0.2 },
+                { note: 'G4', duration: 0.3 },
+                { note: 'C5', duration: 0.3 },
+                { note: 'E5', duration: 0.6 },
+            ];
+
+            // Bass line
+            const bassLine = [
+                { note: 'C2', duration: 0.8 },
+                { note: 'C2', duration: 0.4 },
+                { note: 'G2', duration: 0.4 },
+                { note: 'D2', duration: 0.8 },
+                { note: 'D2', duration: 0.4 },
+                { note: 'A2', duration: 0.4 },
+                { note: 'E2', duration: 0.8 },
+                { note: 'E2', duration: 0.4 },
+                { note: 'B2', duration: 0.4 },
+                { note: 'G2', duration: 0.6 },
+                { note: 'C3', duration: 0.6 },
+            ];
+
+            const noteFreqs = {
+                'C2': 65.41, 'D2': 73.42, 'E2': 82.41, 'F2': 87.31, 'G2': 98.00, 'A2': 110.00, 'B2': 123.47,
+                'C3': 130.81, 'D3': 146.83, 'E3': 164.81, 'F3': 174.61, 'G3': 196.00, 'A3': 220.00, 'B3': 246.94,
+                'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
+                'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99, 'A5': 880.00, 'B5': 987.77,
+            };
+
+            function playNote(freq, startTime, duration, type = 'square', volume = 0.15) {
+                const osc = splashAudioCtx.createOscillator();
+                const gain = splashAudioCtx.createGain();
+
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, startTime);
+
+                // Envelope
+                gain.gain.setValueAtTime(0, startTime);
+                gain.gain.linearRampToValueAtTime(volume, startTime + 0.01);
+                gain.gain.setValueAtTime(volume * 0.8, startTime + duration * 0.3);
+                gain.gain.linearRampToValueAtTime(0, startTime + duration);
+
+                osc.connect(gain);
+                gain.connect(splashAudioCtx.destination);
+
+                osc.start(startTime);
+                osc.stop(startTime + duration);
+
+                splashMusicNodes.push({ osc, gain });
+            }
+
+            function playMelody(startOffset = 0) {
+                if (!splashMusicPlaying) return;
+
+                let time = splashAudioCtx.currentTime + startOffset;
+                const loopDuration = melody.reduce((sum, n) => sum + n.duration, 0);
+
+                // Lead melody with arpeggio
+                melody.forEach(({ note, duration }) => {
+                    playNote(noteFreqs[note], time, duration * 0.9, 'square', 0.12);
+                    // Add slight detune for chorus effect
+                    playNote(noteFreqs[note] * 1.005, time, duration * 0.9, 'square', 0.06);
+                    time += duration;
+                });
+
+                // Bass line
+                let bassTime = splashAudioCtx.currentTime + startOffset;
+                bassLine.forEach(({ note, duration }) => {
+                    playNote(noteFreqs[note], bassTime, duration * 0.8, 'triangle', 0.2);
+                    bassTime += duration;
+                });
+
+                // Schedule next loop
+                if (splashMusicPlaying) {
+                    setTimeout(() => playMelody(0.1), loopDuration * 1000);
+                }
+            }
+
+            splashMusicPlaying = true;
+            playMelody(0);
+        }
+
+        function stopSplashMusic() {
+            splashMusicPlaying = false;
+            splashMusicNodes.forEach(node => {
+                try {
+                    node.osc.stop();
+                    node.gain.disconnect();
+                } catch (e) {}
+            });
+            splashMusicNodes = [];
+            if (splashAudioCtx) {
+                splashAudioCtx.close();
+                splashAudioCtx = null;
+            }
+        }
+
         // Amiga-style Sine Wave Scroller
         const scrollerCanvas = document.getElementById('scrollerCanvas');
         let scrollerCtx = null;
@@ -8412,6 +8630,15 @@
             }
         }
 
+        // Start music on first interaction (browser autoplay policy)
+        let splashMusicStarted = false;
+        function startSplashMusicOnce() {
+            if (!splashMusicStarted) {
+                splashMusicStarted = true;
+                createSplashMusic();
+            }
+        }
+
         // Hide splash screen on click/tap
         function hideSplashScreen() {
             const splash = document.getElementById('splashScreen');
@@ -8422,6 +8649,8 @@
                     cancelAnimationFrame(scrollerAnimationId);
                     scrollerAnimationId = null;
                 }
+                // Stop splash music
+                stopSplashMusic();
                 // Play a sound effect when entering
                 if (typeof initAudio === 'function') {
                     initAudio();
@@ -8434,15 +8663,32 @@
         if (splashScreen) {
             initSplashStars();
             startScroller();
-            splashScreen.addEventListener('click', hideSplashScreen);
-            splashScreen.addEventListener('touchstart', hideSplashScreen);
-            // Also allow Enter or Space to dismiss
+
+            // Start music on first interaction, then hide on second
+            let firstClick = true;
+            function handleSplashInteraction(e) {
+                if (firstClick) {
+                    startSplashMusicOnce();
+                    firstClick = false;
+                    // Update prompt
+                    const prompt = splashScreen.querySelector('.splash-prompt');
+                    if (prompt) prompt.textContent = 'Click Again to Start';
+                } else {
+                    hideSplashScreen();
+                }
+            }
+
+            splashScreen.addEventListener('click', handleSplashInteraction);
+            splashScreen.addEventListener('touchstart', handleSplashInteraction);
+            // Also allow Enter or Space to interact
             document.addEventListener('keydown', function splashKeyHandler(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     if (!splashScreen.classList.contains('hidden')) {
                         e.preventDefault();
-                        hideSplashScreen();
-                        document.removeEventListener('keydown', splashKeyHandler);
+                        handleSplashInteraction(e);
+                        if (!firstClick) {
+                            document.removeEventListener('keydown', splashKeyHandler);
+                        }
                     }
                 }
             });
