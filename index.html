@@ -429,9 +429,11 @@
         let level = 1;
         let playerName = 'Spiller';
 
-        // Global Highscore system using JSONBlob
+        // Global Highscore system using JSONBlob with CORS proxy
         const JSONBLOB_ID = '019bc699-3ad3-72d4-b829-0b138c882139';
-        const JSONBLOB_URL = `https://jsonblob.com/api/jsonBlob/${JSONBLOB_ID}`;
+        const JSONBLOB_BASE = `https://jsonblob.com/api/jsonBlob/${JSONBLOB_ID}`;
+        const CORS_PROXY = 'https://corsproxy.io/?';
+        const JSONBLOB_URL = CORS_PROXY + encodeURIComponent(JSONBLOB_BASE);
         const MAX_HIGHSCORES = 10;
         let cachedHighscores = [];
         let highscoresLoaded = false;
@@ -444,7 +446,8 @@
                 highscoresLoaded = true;
                 return cachedHighscores;
             } catch (e) {
-                console.log('Could not fetch highscores, using cached');
+                console.log('Could not fetch highscores:', e);
+                highscoresLoaded = true; // Mark as loaded even on error
                 return cachedHighscores;
             }
         }
@@ -459,15 +462,15 @@
             cachedHighscores.sort((a, b) => b.score - a.score);
             cachedHighscores = cachedHighscores.slice(0, MAX_HIGHSCORES);
 
-            // Save to server
+            // Save to server via CORS proxy
             try {
-                await fetch(JSONBLOB_URL, {
+                await fetch(CORS_PROXY + encodeURIComponent(JSONBLOB_BASE), {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ highscores: cachedHighscores })
                 });
             } catch (e) {
-                console.log('Could not save highscore to server');
+                console.log('Could not save highscore to server:', e);
             }
 
             return cachedHighscores;
