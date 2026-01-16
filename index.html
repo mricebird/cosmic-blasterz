@@ -1917,20 +1917,35 @@
 
         // Audio context for sound effects
         let audioCtx = null;
+        let audioReady = false;
 
-        function initAudio() {
+        async function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
             // Resume AudioContext if suspended (required by modern browsers)
             if (audioCtx.state === 'suspended') {
+                await audioCtx.resume();
+            }
+            audioReady = true;
+            console.log('Audio initialized, state:', audioCtx.state);
+        }
+
+        // Helper to ensure audio is ready before playing
+        function ensureAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
+            return audioCtx && audioCtx.state === 'running';
         }
 
         // Sound effect: Player shooting
         function playShootSound() {
-            if (!audioCtx || soundMuted) return;
+            if (soundMuted || sfxVolume === 0) return;
+            if (!ensureAudio()) return;
             try {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -1942,17 +1957,19 @@
                 osc.frequency.setValueAtTime(880, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.1);
 
-                gain.gain.setValueAtTime(0.15 * (sfxVolume / 100), audioCtx.currentTime);
+                const vol = Math.max(0.01, 0.15 * (sfxVolume / 100));
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
 
                 osc.start(audioCtx.currentTime);
                 osc.stop(audioCtx.currentTime + 0.1);
-            } catch (e) {}
+            } catch (e) { console.log('Shoot sound error:', e); }
         }
 
         // Sound effect: Enemy explosion
         function playExplosionSound(type = 'basic') {
-            if (!audioCtx || soundMuted) return;
+            if (soundMuted || sfxVolume === 0) return;
+            if (!ensureAudio()) return;
             try {
                 const duration = type === 'boss' ? 0.4 : type === 'medium' ? 0.3 : 0.2;
                 const freq = type === 'boss' ? 150 : type === 'medium' ? 200 : 250;
@@ -1988,7 +2005,8 @@
 
         // Sound effect: Player hit
         function playPlayerHitSound() {
-            if (!audioCtx || soundMuted) return;
+            if (soundMuted || sfxVolume === 0) return;
+            if (!ensureAudio()) return;
             try {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -2000,17 +2018,19 @@
                 osc.frequency.setValueAtTime(200, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.5);
 
-                gain.gain.setValueAtTime(0.25 * (sfxVolume / 100), audioCtx.currentTime);
+                const vol = Math.max(0.01, 0.25 * (sfxVolume / 100));
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
 
                 osc.start(audioCtx.currentTime);
                 osc.stop(audioCtx.currentTime + 0.5);
-            } catch (e) {}
+            } catch (e) { console.log('Player hit sound error:', e); }
         }
 
         // Sound effect: Level up
         function playLevelUpSound() {
-            if (!audioCtx || soundMuted) return;
+            if (soundMuted || sfxVolume === 0) return;
+            if (!ensureAudio()) return;
             try {
                 const notes = [523, 659, 784, 1047]; // C5, E5, G5, C6
 
@@ -2024,19 +2044,21 @@
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
 
+                    const vol = Math.max(0.01, 0.2 * (sfxVolume / 100));
                     gain.gain.setValueAtTime(0, audioCtx.currentTime + i * 0.1);
-                    gain.gain.linearRampToValueAtTime(0.2 * (sfxVolume / 100), audioCtx.currentTime + i * 0.1 + 0.05);
+                    gain.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + i * 0.1 + 0.05);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.1 + 0.3);
 
                     osc.start(audioCtx.currentTime + i * 0.1);
                     osc.stop(audioCtx.currentTime + i * 0.1 + 0.3);
                 });
-            } catch (e) {}
+            } catch (e) { console.log('Level up sound error:', e); }
         }
 
         // Sound effect: Game over
         function playGameOverSound() {
-            if (!audioCtx || soundMuted) return;
+            if (soundMuted || sfxVolume === 0) return;
+            if (!ensureAudio()) return;
             try {
                 const notes = [392, 349, 330, 262]; // G4, F4, E4, C4
 
@@ -2050,19 +2072,21 @@
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.2);
 
-                    gain.gain.setValueAtTime(0.2 * (sfxVolume / 100), audioCtx.currentTime + i * 0.2);
+                    const vol = Math.max(0.01, 0.2 * (sfxVolume / 100));
+                    gain.gain.setValueAtTime(vol, audioCtx.currentTime + i * 0.2);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.2 + 0.4);
 
                     osc.start(audioCtx.currentTime + i * 0.2);
                     osc.stop(audioCtx.currentTime + i * 0.2 + 0.4);
                 });
-            } catch (e) {}
+            } catch (e) { console.log('Game over sound error:', e); }
         }
 
         // Sound effect: Enemy shooting (throttled)
         let lastEnemyShootTime = 0;
         function playEnemyShootSound() {
-            if (!audioCtx || soundMuted) return;
+            if (soundMuted || sfxVolume === 0) return;
+            if (!ensureAudio()) return;
 
             // Throttle to max once every 100ms
             const now = Date.now();
@@ -2080,7 +2104,8 @@
                 osc.frequency.setValueAtTime(300, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
 
-                gain.gain.setValueAtTime(0.08 * (sfxVolume / 100), audioCtx.currentTime);
+                const vol = Math.max(0.01, 0.08 * (sfxVolume / 100));
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
 
                 osc.start(audioCtx.currentTime);
@@ -2278,20 +2303,26 @@
         const BEAT_INTERVAL = 60000 / MUSIC_BPM;
 
         function initMusic() {
-            if (!audioCtx || musicPlaying) return;
+            if (musicPlaying) return;
+            if (!ensureAudio()) return;
+
             musicPlaying = true;
 
             // Create master gain for music
             musicGain = audioCtx.createGain();
-            musicGain.gain.setValueAtTime(0.08 * (musicVolumeLevel / 100), audioCtx.currentTime);
+            const musicVol = Math.max(0.01, 0.08 * (musicVolumeLevel / 100));
+            musicGain.gain.setValueAtTime(musicVol, audioCtx.currentTime);
             musicGain.connect(audioCtx.destination);
+
+            console.log('Music initialized, volume:', musicVol);
 
             // Start the music loop
             playMusicLoop();
         }
 
         function playMusicLoop() {
-            if (!musicPlaying || musicMuted || !audioCtx) return;
+            if (!musicPlaying || musicMuted) return;
+            if (!ensureAudio()) return;
 
             // Simple bass line pattern (low frequency)
             const bassNotes = [55, 55, 65.4, 55, 55, 65.4, 73.4, 65.4]; // A1, A1, C2, etc.
