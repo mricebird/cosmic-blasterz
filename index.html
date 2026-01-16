@@ -2817,12 +2817,18 @@
             comboTimer = Date.now();
 
             const multiplier = getComboMultiplier();
-            const bonusPoints = Math.floor(basePoints * multiplier);
+            let bonusPoints = Math.floor(basePoints * multiplier);
+
+            // Apply double points power-up
+            if (doublePointsActive) {
+                bonusPoints *= 2;
+            }
 
             // Update combo display
             const comboEl = document.getElementById('comboDisplay');
             if (comboCount >= 2) {
-                comboEl.textContent = `${comboCount}x COMBO! +${bonusPoints}`;
+                const doubleText = doublePointsActive ? ' (2X!)' : '';
+                comboEl.textContent = `${comboCount}x COMBO! +${bonusPoints}${doubleText}`;
                 comboEl.classList.add('active');
 
                 // Change color based on combo level
@@ -3370,12 +3376,18 @@
         let activePowerUp = null;
         let powerUpTimer = 0;
         const POWERUP_TYPES = {
-            shield: { color: '#0ff', duration: 8000, name: 'SHIELD' },
-            rapidFire: { color: '#ff0', duration: 6000, name: 'RAPID FIRE' },
-            spreadShot: { color: '#f0f', duration: 5000, name: 'SPREAD SHOT' },
-            bomb: { color: '#f80', duration: 0, name: 'BOMB' }
+            shield: { color: '#0ff', duration: 8000, name: 'SHIELD', symbol: '🛡️' },
+            rapidFire: { color: '#ff0', duration: 6000, name: 'RAPID FIRE', symbol: '⚡' },
+            spreadShot: { color: '#f0f', duration: 5000, name: 'SPREAD SHOT', symbol: '✦' },
+            bomb: { color: '#f80', duration: 0, name: 'BOMB', symbol: '💣' },
+            slowMotion: { color: '#88f', duration: 5000, name: 'SLOW-MO', symbol: '⏱️' },
+            doublePoints: { color: '#0f0', duration: 10000, name: '2X POINTS', symbol: '×2' },
+            extraLife: { color: '#f55', duration: 0, name: 'EXTRA LIFE', symbol: '❤️' },
+            magnet: { color: '#fa0', duration: 8000, name: 'MAGNET', symbol: '🧲' }
         };
-        const POWERUP_DROP_CHANCE = 0.15;
+        const POWERUP_DROP_CHANCE = 0.18;
+        let doublePointsActive = false;
+        let magnetActive = false;
 
         // Barrier system (destructible shields)
         let barriers = [];
@@ -3656,6 +3668,7 @@
         function activatePowerUp(type) {
             const pu = POWERUP_TYPES[type];
 
+            // Instant effect power-ups (no duration)
             if (type === 'bomb') {
                 // Bomb kills all enemies on screen - each kill adds to combo
                 enemies.forEach(enemy => {
@@ -3670,6 +3683,17 @@
                 return;
             }
 
+            if (type === 'extraLife') {
+                // Extra life - add one life (max 5)
+                if (lives < 5) {
+                    lives++;
+                    updateLivesDisplay();
+                    announce('powerUp');
+                }
+                return;
+            }
+
+            // Duration-based power-ups
             activePowerUp = type;
             const duration = hasUpgrade('longerPowerups') ? Math.floor(pu.duration * 1.5) : pu.duration;
             powerUpTimer = Date.now() + duration;
@@ -3680,6 +3704,12 @@
 
             if (type === 'rapidFire') {
                 shootCooldown = 80;
+            } else if (type === 'slowMotion') {
+                triggerSlowMotion(0.4, duration);
+            } else if (type === 'doublePoints') {
+                doublePointsActive = true;
+            } else if (type === 'magnet') {
+                magnetActive = true;
             }
         }
 
@@ -3703,24 +3733,61 @@
             if (activePowerUp && powerUpTimer < Date.now()) {
                 if (activePowerUp === 'rapidFire') {
                     shootCooldown = 200;
+                } else if (activePowerUp === 'doublePoints') {
+                    doublePointsActive = false;
+                } else if (activePowerUp === 'magnet') {
+                    magnetActive = false;
                 }
                 activePowerUp = null;
                 document.getElementById('powerupIndicator').classList.add('hidden');
+            }
+
+            // Magnet effect - attract power-ups towards player
+            if (magnetActive) {
+                powerUps.forEach(pu => {
+                    const dx = (player.x + player.width / 2) - (pu.x + pu.width / 2);
+                    const dy = (player.y + player.height / 2) - (pu.y + pu.height / 2);
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 200) {
+                        pu.x += dx * 0.05;
+                        pu.y += dy * 0.05;
+                    }
+                });
             }
         }
 
         function drawPowerUps() {
             powerUps.forEach(pu => {
-                const color = POWERUP_TYPES[pu.type].color;
+                const puType = POWERUP_TYPES[pu.type];
+                const color = puType.color;
+
+                // Glow effect
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 15;
+
+                // Pulsing animation
+                const pulse = 1 + Math.sin(Date.now() / 200) * 0.1;
+                const size = pu.width * pulse;
+
                 ctx.fillStyle = color;
                 ctx.beginPath();
-                ctx.arc(pu.x + pu.width/2, pu.y + pu.height/2, pu.width/2, 0, Math.PI * 2);
+                ctx.arc(pu.x + pu.width/2, pu.y + pu.height/2, size/2, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.fillStyle = '#000';
-                ctx.font = '12px Arial';
+
+                // Inner circle
+                ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                ctx.beginPath();
+                ctx.arc(pu.x + pu.width/2, pu.y + pu.height/2, size/3, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.shadowBlur = 0;
+
+                // Symbol
+                ctx.font = '14px Arial';
                 ctx.textAlign = 'center';
-                const symbols = { shield: 'S', rapidFire: 'R', spreadShot: 'X', bomb: 'B' };
-                ctx.fillText(symbols[pu.type], pu.x + pu.width/2, pu.y + pu.height/2 + 4);
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#fff';
+                ctx.fillText(puType.symbol, pu.x + pu.width/2, pu.y + pu.height/2);
             });
         }
 
