@@ -433,27 +433,58 @@
         let level = 1;
         let playerName = 'Spiller';
 
-        // Global Highscore system using JSONBlob with CORS proxy
+        // Global Highscore system using JSONBlob
         const JSONBLOB_ID = '019bc699-3ad3-72d4-b829-0b138c882139';
-        const JSONBLOB_BASE = `https://jsonblob.com/api/jsonBlob/${JSONBLOB_ID}`;
-        const CORS_PROXY = 'https://corsproxy.io/?';
-        const JSONBLOB_URL = CORS_PROXY + encodeURIComponent(JSONBLOB_BASE);
+        const JSONBLOB_URL = `https://jsonblob.com/api/jsonBlob/${JSONBLOB_ID}`;
+        const CORS_PROXY = 'https://api.codetabs.com/v1/proxy?quest=';
         const MAX_HIGHSCORES = 10;
+        const LOCAL_STORAGE_KEY = 'spaceInvadersHighscores';
         let cachedHighscores = [];
         let highscoresLoaded = false;
 
-        async function fetchHighscores() {
+        // Load from localStorage as fallback
+        function loadLocalHighscores() {
             try {
-                const response = await fetch(JSONBLOB_URL);
-                const data = await response.json();
-                cachedHighscores = data.highscores || [];
-                highscoresLoaded = true;
-                return cachedHighscores;
+                const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+                return data ? JSON.parse(data) : [];
             } catch (e) {
-                console.log('Could not fetch highscores:', e);
-                highscoresLoaded = true; // Mark as loaded even on error
-                return cachedHighscores;
+                return [];
             }
+        }
+
+        // Save to localStorage as backup
+        function saveLocalHighscores(highscores) {
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(highscores));
+            } catch (e) {}
+        }
+
+        async function fetchHighscores() {
+            // First load local as fallback
+            cachedHighscores = loadLocalHighscores();
+
+            try {
+                const response = await fetch(CORS_PROXY + JSONBLOB_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.highscores && data.highscores.length > 0) {
+                        // Merge server and local highscores
+                        const merged = [...data.highscores, ...cachedHighscores];
+                        // Remove duplicates (same name + score)
+                        const unique = merged.filter((item, index, self) =>
+                            index === self.findIndex(t => t.name === item.name && t.score === item.score)
+                        );
+                        unique.sort((a, b) => b.score - a.score);
+                        cachedHighscores = unique.slice(0, MAX_HIGHSCORES);
+                        saveLocalHighscores(cachedHighscores);
+                    }
+                }
+            } catch (e) {
+                console.log('Using local highscores:', e);
+            }
+
+            highscoresLoaded = true;
+            return cachedHighscores;
         }
 
         function getHighscores() {
@@ -466,15 +497,18 @@
             cachedHighscores.sort((a, b) => b.score - a.score);
             cachedHighscores = cachedHighscores.slice(0, MAX_HIGHSCORES);
 
-            // Save to server via CORS proxy
+            // Always save locally
+            saveLocalHighscores(cachedHighscores);
+
+            // Try to save to server
             try {
-                await fetch(CORS_PROXY + encodeURIComponent(JSONBLOB_BASE), {
+                await fetch(JSONBLOB_URL, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ highscores: cachedHighscores })
                 });
             } catch (e) {
-                console.log('Could not save highscore to server:', e);
+                console.log('Could not save to server, saved locally:', e);
             }
 
             return cachedHighscores;
