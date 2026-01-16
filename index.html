@@ -10680,13 +10680,13 @@
         let asteroids = [];
         let nebulaClouds = [];
 
-        // Parallax star layers configuration
+        // Parallax star layers configuration (optimized)
         const STAR_LAYERS = [
-            { count: 80, minSize: 0.5, maxSize: 1, speed: 0.2, color: '#446', twinkle: false },      // Far distant stars
-            { count: 60, minSize: 0.8, maxSize: 1.5, speed: 0.5, color: '#668', twinkle: true },     // Mid-far stars
-            { count: 40, minSize: 1, maxSize: 2, speed: 1, color: '#88a', twinkle: true },           // Mid stars
-            { count: 25, minSize: 1.5, maxSize: 2.5, speed: 1.8, color: '#aac', twinkle: true },     // Mid-close stars
-            { count: 15, minSize: 2, maxSize: 3.5, speed: 3, color: '#fff', twinkle: true }          // Close bright stars
+            { count: 40, minSize: 0.5, maxSize: 1, speed: 0.2, color: '#446', twinkle: false },      // Far distant stars
+            { count: 30, minSize: 0.8, maxSize: 1.5, speed: 0.5, color: '#668', twinkle: false },    // Mid-far stars
+            { count: 20, minSize: 1, maxSize: 2, speed: 1, color: '#88a', twinkle: false },          // Mid stars
+            { count: 12, minSize: 1.5, maxSize: 2.5, speed: 1.8, color: '#aac', twinkle: true },     // Mid-close stars
+            { count: 8, minSize: 2, maxSize: 3.5, speed: 3, color: '#fff', twinkle: true }           // Close bright stars
         ];
 
         let starLayers = [];
@@ -12329,33 +12329,18 @@
             shootingStars = shootingStars.filter(ss => ss.life > 0 && ss.y < canvas.height + 50);
         }
 
-        // Create explosion particles
-        function createExplosion(x, y, color, count = 10) {
-            // Limit total particles
-            if (particles.length > 150) return;
+        // Create explosion particles (optimized for performance)
+        function createExplosion(x, y, color, count = 8) {
+            // Stricter particle limit for better performance
+            if (particles.length > 80) return;
 
-            // Inner core flash (bright center)
-            const coreCount = Math.floor(count / 2);
-            for (let i = 0; i < coreCount; i++) {
-                const angle = (Math.PI * 2 / coreCount) * i + Math.random() * 0.5;
-                const speed = 1 + Math.random() * 2;
-                particles.push({
-                    x: x,
-                    y: y,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    life: 1,
-                    color: '#fff',
-                    size: 4 + Math.random() * 2,
-                    type: 'core',
-                    decay: 0.08
-                });
-            }
+            // Reduced particle count for better performance
+            const actualCount = Math.min(count, 8);
 
-            // Main debris particles
-            for (let i = 0; i < count; i++) {
-                const angle = (Math.PI * 2 / count) * i + Math.random() * 0.3;
-                const speed = 2 + Math.random() * 4;
+            // Main debris particles only
+            for (let i = 0; i < actualCount; i++) {
+                const angle = (Math.PI * 2 / actualCount) * i + Math.random() * 0.3;
+                const speed = 2 + Math.random() * 3;
                 particles.push({
                     x: x,
                     y: y,
@@ -12363,102 +12348,54 @@
                     vy: Math.sin(angle) * speed,
                     life: 1,
                     color: color,
-                    size: 2 + Math.random() * 3,
+                    size: 2 + Math.random() * 2,
                     type: 'debris',
-                    decay: 0.025 + Math.random() * 0.015
+                    decay: 0.04
                 });
             }
 
-            // Spark trails (small fast particles)
-            const sparkCount = Math.floor(count * 0.6);
-            for (let i = 0; i < sparkCount; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = 4 + Math.random() * 5;
-                particles.push({
-                    x: x,
-                    y: y,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    life: 0.6 + Math.random() * 0.4,
-                    color: '#ff0',
-                    size: 1 + Math.random() * 2,
-                    type: 'spark',
-                    decay: 0.04 + Math.random() * 0.02
-                });
-            }
-
-            // Expanding ring (for larger explosions)
-            if (count >= 8) {
-                particles.push({
-                    x: x,
-                    y: y,
-                    vx: 0,
-                    vy: 0,
-                    life: 1,
-                    color: color,
-                    size: 5,
-                    type: 'ring',
-                    decay: 0.04,
-                    radius: 5
-                });
+            // Only add sparks for larger explosions
+            if (count >= 6) {
+                for (let i = 0; i < 3; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = 3 + Math.random() * 3;
+                    particles.push({
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        life: 0.6,
+                        color: '#ff0',
+                        size: 1.5,
+                        type: 'spark',
+                        decay: 0.06
+                    });
+                }
             }
         }
 
-        // Update and draw particles
+        // Update and draw particles (optimized)
         function updateParticles() {
             particles = particles.filter(p => p.life > 0);
 
             particles.forEach(p => {
                 p.x += p.vx;
                 p.y += p.vy;
-                p.life -= p.decay || 0.03;
-                p.vx *= 0.96;
-                p.vy *= 0.96;
+                p.life -= p.decay || 0.04;
+                p.vx *= 0.95;
+                p.vy *= 0.95;
 
                 // Add gravity to debris
                 if (p.type === 'debris') {
-                    p.vy += 0.1;
+                    p.vy += 0.08;
                 }
 
                 ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
 
-                if (p.type === 'ring') {
-                    // Expanding ring effect
-                    p.radius += 3;
-                    ctx.strokeStyle = p.color;
-                    ctx.lineWidth = 2 * p.life;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.stroke();
-                } else if (p.type === 'spark') {
-                    // Spark with trail
-                    ctx.fillStyle = p.color;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-                    ctx.fill();
-                    // Trail
-                    ctx.globalAlpha = p.life * 0.3;
-                    ctx.beginPath();
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(p.x - p.vx * 2, p.y - p.vy * 2);
-                    ctx.strokeStyle = p.color;
-                    ctx.lineWidth = p.size * 0.5;
-                    ctx.stroke();
-                } else if (p.type === 'core') {
-                    // Bright core glow
-                    ctx.fillStyle = p.color;
-                    ctx.shadowColor = p.color;
-                    ctx.shadowBlur = 10;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.shadowBlur = 0;
-                } else {
-                    // Regular debris squares
-                    ctx.fillStyle = p.color;
-                    const size = p.size * (0.5 + p.life * 0.5);
-                    ctx.fillRect(p.x - size/2, p.y - size/2, size, size);
-                }
+                // Simple square particles for performance
+                const size = p.size * p.life;
+                ctx.fillRect(p.x - size/2, p.y - size/2, size, size);
             });
             ctx.globalAlpha = 1;
         }
