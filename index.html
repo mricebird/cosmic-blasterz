@@ -68,18 +68,45 @@
         }
 
         .splash-prompt {
-            margin-top: 40px;
+            margin-top: 50px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.8);
+            font-size: 20px;
+            color: #fff;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            animation: promptPulse 1.5s ease-in-out infinite;
+            letter-spacing: 6px;
+            text-shadow:
+                0 0 10px rgba(0, 200, 255, 0.8),
+                0 0 20px rgba(0, 200, 255, 0.6),
+                0 0 30px rgba(0, 200, 255, 0.4),
+                0 0 40px rgba(0, 150, 255, 0.3);
+            animation: promptGlow 2s ease-in-out infinite;
+            padding: 15px 30px;
+            border: 1px solid rgba(0, 200, 255, 0.3);
+            border-radius: 8px;
+            background: linear-gradient(180deg, rgba(0, 50, 100, 0.3) 0%, rgba(0, 20, 50, 0.5) 100%);
+            backdrop-filter: blur(5px);
         }
 
-        @keyframes promptPulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+        @keyframes promptGlow {
+            0%, 100% {
+                opacity: 0.7;
+                text-shadow:
+                    0 0 10px rgba(0, 200, 255, 0.8),
+                    0 0 20px rgba(0, 200, 255, 0.6),
+                    0 0 30px rgba(0, 200, 255, 0.4);
+                border-color: rgba(0, 200, 255, 0.3);
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                text-shadow:
+                    0 0 15px rgba(0, 255, 255, 1),
+                    0 0 30px rgba(0, 255, 255, 0.8),
+                    0 0 45px rgba(0, 200, 255, 0.6),
+                    0 0 60px rgba(0, 150, 255, 0.4);
+                border-color: rgba(0, 255, 255, 0.6);
+                transform: scale(1.02);
+            }
         }
 
         .splash-stars {
@@ -138,11 +165,13 @@
         @media (max-width: 600px) {
             .splash-logo {
                 max-width: 95%;
-                max-height: 45vh;
+                max-height: 40vh;
             }
             .splash-prompt {
-                font-size: 14px;
-                letter-spacing: 2px;
+                font-size: 12px;
+                letter-spacing: 3px;
+                padding: 12px 20px;
+                margin-top: 30px;
             }
             .splash-scroller {
                 bottom: 60px;
@@ -2508,7 +2537,7 @@
     <div class="splash-screen" id="splashScreen">
         <div class="splash-stars" id="splashStars"></div>
         <img src="logo.png" alt="Cosmic Blasterz" class="splash-logo">
-        <div class="splash-prompt">Click or Tap to Start</div>
+        <div class="splash-prompt">Press Any Button to Continue</div>
         <div class="splash-scroller">
             <canvas id="scrollerCanvas"></canvas>
         </div>
@@ -8815,14 +8844,12 @@
 
             splashScreen.addEventListener('click', handleSplashInteraction);
             splashScreen.addEventListener('touchstart', handleSplashInteraction);
-            // Also allow Enter or Space to start
+            // Any key to start game
             document.addEventListener('keydown', function splashKeyHandler(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    if (!splashScreen.classList.contains('hidden')) {
-                        e.preventDefault();
-                        hideSplashScreen();
-                        document.removeEventListener('keydown', splashKeyHandler);
-                    }
+                if (!splashScreen.classList.contains('hidden')) {
+                    e.preventDefault();
+                    hideSplashScreen();
+                    document.removeEventListener('keydown', splashKeyHandler);
                 }
             });
         }
