@@ -779,35 +779,31 @@
         /* Game controls overlay */
         .game-controls {
             display: flex;
-            gap: 8px;
+            gap: 3px;
         }
 
         .control-btn {
-            width: 38px;
-            height: 38px;
-            background: rgba(0, 20, 40, 0.8);
-            border: 1px solid rgba(0, 255, 255, 0.4);
-            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            background: rgba(0, 30, 50, 0.9);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 6px;
             color: #0ff;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
         }
 
         .control-btn:hover {
-            background: rgba(0, 255, 255, 0.2);
-            border-color: rgba(0, 255, 255, 0.7);
-            transform: scale(1.05);
+            background: rgba(0, 255, 255, 0.15);
+            border-color: rgba(0, 255, 255, 0.6);
         }
 
         .control-btn.muted {
             opacity: 0.4;
-            border-color: rgba(100, 100, 100, 0.4);
         }
 
         /* Mobile controls */
@@ -1097,53 +1093,133 @@
             left: 12px;
             right: 12px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             z-index: 60;
             pointer-events: none;
         }
 
-        .toolbar-left, .toolbar-right {
+        .toolbar-center {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
             pointer-events: auto;
+            background: rgba(0, 10, 20, 0.7);
+            padding: 6px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        /* Shop button and panel */
-        .shop-btn {
-            padding: 8px 16px;
-            background: rgba(0, 20, 40, 0.85);
-            border: 1px solid rgba(255, 255, 0, 0.4);
-            border-radius: 8px;
-            color: #ff0;
+        .toolbar-divider {
+            width: 1px;
+            height: 28px;
+            background: rgba(0, 255, 255, 0.2);
+            margin: 0 4px;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Toolbar buttons */
+        .toolbar-btn {
+            padding: 6px 12px;
+            background: rgba(0, 30, 50, 0.9);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 6px;
+            color: #0ff;
             font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
-        .shop-btn:hover {
+        .toolbar-btn:hover {
+            background: rgba(0, 255, 255, 0.15);
+            border-color: rgba(0, 255, 255, 0.6);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+
+        .toolbar-btn.shop {
+            color: #ff0;
+            border-color: rgba(255, 255, 0, 0.3);
+        }
+
+        .toolbar-btn.shop:hover {
             background: rgba(255, 255, 0, 0.15);
-            border-color: rgba(255, 255, 0, 0.7);
-            box-shadow: 0 0 15px rgba(255, 255, 0, 0.2);
-            transform: translateY(-2px);
+            border-color: rgba(255, 255, 0, 0.6);
+            box-shadow: 0 0 10px rgba(255, 255, 0, 0.2);
+        }
+
+        .toolbar-btn.share {
+            color: #0f8;
+            border-color: rgba(0, 255, 128, 0.3);
+        }
+
+        .toolbar-btn.share:hover {
+            background: rgba(0, 255, 128, 0.15);
+            border-color: rgba(0, 255, 128, 0.6);
+            box-shadow: 0 0 10px rgba(0, 255, 128, 0.2);
         }
 
         .coins-display {
             color: #ff0;
             font-family: 'Orbitron', sans-serif;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 600;
-            background: rgba(0, 20, 40, 0.85);
-            padding: 8px 14px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 0, 0.25);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            padding: 6px 10px;
+            white-space: nowrap;
+        }
+
+        /* Icon buttons */
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            background: rgba(0, 30, 50, 0.9);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 6px;
+            color: #0ff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background: rgba(0, 255, 255, 0.15);
+            border-color: rgba(0, 255, 255, 0.6);
+        }
+
+        .icon-btn.muted {
+            opacity: 0.4;
+        }
+
+        /* Legacy support */
+        .shop-btn {
+            padding: 6px 12px;
+            background: rgba(0, 30, 50, 0.9);
+            border: 1px solid rgba(255, 255, 0, 0.3);
+            border-radius: 6px;
+            color: #ff0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .shop-btn:hover {
+            background: rgba(255, 255, 0, 0.15);
+            border-color: rgba(255, 255, 0, 0.6);
+            box-shadow: 0 0 10px rgba(255, 255, 0, 0.2);
         }
 
         .shop-panel {
@@ -1268,47 +1344,41 @@
 
         /* Settings button and panel */
         .settings-btn {
-            padding: 8px 16px;
-            background: rgba(0, 20, 40, 0.85);
-            border: 1px solid rgba(0, 255, 255, 0.4);
-            border-radius: 8px;
+            padding: 6px 12px;
+            background: rgba(0, 30, 50, 0.9);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 6px;
             color: #0ff;
             font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
         }
 
         .settings-btn:hover {
             background: rgba(0, 255, 255, 0.15);
-            border-color: rgba(0, 255, 255, 0.7);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-            transform: translateY(-2px);
+            border-color: rgba(0, 255, 255, 0.6);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
         }
 
         .share-btn {
-            padding: 8px 16px;
-            background: rgba(0, 20, 40, 0.85);
-            border: 1px solid rgba(0, 255, 128, 0.4);
-            border-radius: 8px;
+            padding: 6px 12px;
+            background: rgba(0, 30, 50, 0.9);
+            border: 1px solid rgba(0, 255, 128, 0.3);
+            border-radius: 6px;
             color: #0f8;
             font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
         }
 
         .share-btn:hover {
             background: rgba(0, 255, 128, 0.15);
-            border-color: rgba(0, 255, 128, 0.7);
-            box-shadow: 0 0 15px rgba(0, 255, 128, 0.2);
-            transform: translateY(-2px);
+            border-color: rgba(0, 255, 128, 0.6);
+            box-shadow: 0 0 10px rgba(0, 255, 128, 0.2);
         }
 
         .share-toast {
@@ -1697,11 +1767,17 @@
 
         <!-- Bottom toolbar -->
         <div class="bottom-toolbar">
-            <div class="toolbar-left">
-                <button class="shop-btn" id="shopBtn" onclick="toggleShop()">🛒 SHOP</button>
-                <div class="coins-display" id="coinsDisplay">🪙 0</div>
-                <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">⚙️ SETTINGS</button>
-                <div class="weapon-selector" id="weaponSelector">
+            <div class="toolbar-center">
+                <!-- Shop & Coins -->
+                <div class="toolbar-group">
+                    <button class="shop-btn" id="shopBtn" onclick="toggleShop()">🛒 SHOP</button>
+                    <div class="coins-display" id="coinsDisplay">🪙 0</div>
+                </div>
+
+                <div class="toolbar-divider"></div>
+
+                <!-- Weapons -->
+                <div class="toolbar-group weapon-selector" id="weaponSelector">
                     <button class="weapon-btn active" id="weapon1" onclick="selectWeapon('laser')" title="Laser (1)">
                         <span class="weapon-icon">⚡</span>
                         <span class="weapon-key">1</span>
@@ -1715,14 +1791,23 @@
                         <span class="weapon-key">3</span>
                     </button>
                 </div>
-            </div>
-            <div class="toolbar-right">
-                <button class="share-btn" onclick="shareGame()" title="Share with friends">📤 SHARE</button>
-                <div class="game-controls" id="gameControls">
-                    <button class="control-btn" id="muteBtn" onclick="toggleMute()" title="Mute Sound (M)">🔊</button>
-                    <button class="control-btn" id="musicBtn" onclick="toggleMusic()" title="Mute Music">🎶</button>
+
+                <div class="toolbar-divider"></div>
+
+                <!-- Audio Controls -->
+                <div class="toolbar-group game-controls" id="gameControls">
+                    <button class="control-btn" id="muteBtn" onclick="toggleMute()" title="Sound (M)">🔊</button>
+                    <button class="control-btn" id="musicBtn" onclick="toggleMusic()" title="Music">🎶</button>
                     <button class="control-btn" id="announcerBtn" onclick="toggleAnnouncer()" title="Announcer">🎙️</button>
+                </div>
+
+                <div class="toolbar-divider"></div>
+
+                <!-- Game Controls -->
+                <div class="toolbar-group">
                     <button class="control-btn" id="pauseBtn" onclick="togglePause()" title="Pause (P)">⏸️</button>
+                    <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">⚙️</button>
+                    <button class="share-btn" onclick="shareGame()" title="Share">📤</button>
                 </div>
             </div>
         </div>
