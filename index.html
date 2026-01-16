@@ -517,8 +517,60 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 22px;
             font-weight: 500;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             color: rgba(255, 255, 255, 0.9);
+        }
+
+        .game-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 255, 0.15);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            background: rgba(0, 20, 40, 0.5);
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0ff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .stat-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 500px) {
+            .game-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .restart-btn, .start-btn {
@@ -994,6 +1046,13 @@
             text-align: center;
         }
 
+        .controls-gamepad {
+            margin-top: 8px !important;
+            font-size: 11px !important;
+            color: rgba(0, 255, 255, 0.5) !important;
+            text-align: center;
+        }
+
         /* Invite Friend Button */
         .invite-friend-container {
             margin-top: 20px;
@@ -1205,6 +1264,35 @@
         }
 
         .install-pwa-btn:active {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            padding: 12px 24px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 50%, #6c5ce7 100%);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4),
+                        0 0 20px rgba(108, 92, 231, 0.2);
+            margin-top: 10px;
+        }
+
+        .fullscreen-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 25px rgba(108, 92, 231, 0.5),
+                        0 0 35px rgba(108, 92, 231, 0.3);
+        }
+
+        .fullscreen-btn:active {
             transform: translateY(0) scale(1);
         }
 
@@ -3132,7 +3220,8 @@
                         <p>Q Shoot</p>
                     </div>
                 </div>
-                <p class="controls-extra">1-2-3 Switch weapon · P Pause · M Mute</p>
+                <p class="controls-extra">1-2-3 Switch weapon · P Pause · M Mute · F Fullscreen</p>
+                <p class="controls-gamepad">🎮 Gamepads supported! Connect controller to play</p>
             </div>
             <div class="invite-friend-container">
                 <button class="invite-friend-btn" onclick="openInviteModal()">
@@ -3141,6 +3230,9 @@
                 <span class="invite-friend-text">Challenge your friends to beat your score!</span>
                 <button class="install-pwa-btn hidden" id="installPwaBtn" onclick="installPwa()">
                     📲 Install App
+                </button>
+                <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">
+                    🔲 Fullscreen
                 </button>
             </div>
             <div class="highscore-list" id="startHighscores"></div>
@@ -3168,6 +3260,38 @@
             <div id="newHighscoreMsg" class="new-highscore hidden">🎉 NEW HIGHSCORE! 🎉</div>
             <div class="final-score"><span id="playerNameDisplay"></span>'s Score: <span id="finalScore">0</span></div>
             <div class="endless-survival hidden" id="endlessSurvival">⏱️ Survived: <span id="survivalTime">00:00</span> | Wave: <span id="finalWave">1</span></div>
+            <div class="game-stats-grid" id="gameStatsGrid">
+                <div class="stat-item">
+                    <span class="stat-icon">💀</span>
+                    <span class="stat-value" id="statKills">0</span>
+                    <span class="stat-label">Enemies Killed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🎯</span>
+                    <span class="stat-value" id="statAccuracy">0%</span>
+                    <span class="stat-label">Accuracy</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🔥</span>
+                    <span class="stat-value" id="statMaxCombo">0x</span>
+                    <span class="stat-label">Max Combo</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⏱️</span>
+                    <span class="stat-value" id="statTime">00:00</span>
+                    <span class="stat-label">Time Played</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⚡</span>
+                    <span class="stat-value" id="statPowerups">0</span>
+                    <span class="stat-label">Powerups</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">📊</span>
+                    <span class="stat-value" id="statLevel">1</span>
+                    <span class="stat-label">Level Reached</span>
+                </div>
+            </div>
             <div class="highscore-list" id="gameOverHighscores"></div>
             <div class="achievements-section">
                 <h4>🏆 ACHIEVEMENTS</h4>
@@ -3964,6 +4088,7 @@
         let lives = 3;
         let level = 1;
         let playerName = 'Spiller';
+        let gameStartTime = 0;
 
         // Volume settings (0-100)
         let sfxVolume = 100;
@@ -7163,6 +7288,59 @@
         let canShoot2 = true;
         let shootCooldown = 200;
 
+        // Gamepad support
+        let gamepadConnected = false;
+        let gamepad2Connected = false;
+        let lastPausePress = 0;
+
+        function pollGamepads() {
+            const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+
+            // Player 1 gamepad (first connected)
+            const gp1 = gamepads[0];
+            if (gp1) {
+                gamepadConnected = true;
+                // Left stick or D-pad
+                const deadzone = 0.3;
+                keys.left = gp1.axes[0] < -deadzone || gp1.buttons[14]?.pressed;
+                keys.right = gp1.axes[0] > deadzone || gp1.buttons[15]?.pressed;
+                keys.up = gp1.axes[1] < -deadzone || gp1.buttons[12]?.pressed;
+                keys.down = gp1.axes[1] > deadzone || gp1.buttons[13]?.pressed;
+                // A/X button or triggers for shooting
+                keys.space = gp1.buttons[0]?.pressed || gp1.buttons[7]?.pressed;
+                // Start button for pause (with debounce)
+                if (gp1.buttons[9]?.pressed && Date.now() - lastPausePress > 300) {
+                    lastPausePress = Date.now();
+                    togglePause();
+                }
+            }
+
+            // Player 2 gamepad (second connected)
+            const gp2 = gamepads[1];
+            if (gp2 && twoPlayerMode) {
+                gamepad2Connected = true;
+                const deadzone = 0.3;
+                keys2.left = gp2.axes[0] < -deadzone || gp2.buttons[14]?.pressed;
+                keys2.right = gp2.axes[0] > deadzone || gp2.buttons[15]?.pressed;
+                keys2.up = gp2.axes[1] < -deadzone || gp2.buttons[12]?.pressed;
+                keys2.down = gp2.axes[1] > deadzone || gp2.buttons[13]?.pressed;
+                keys2.shoot = gp2.buttons[0]?.pressed || gp2.buttons[7]?.pressed;
+            }
+        }
+
+        // Gamepad connection events
+        window.addEventListener('gamepadconnected', (e) => {
+            console.log(`Gamepad connected: ${e.gamepad.id}`);
+            showShareToast(`🎮 Controller ${e.gamepad.index + 1} connected!`);
+        });
+
+        window.addEventListener('gamepaddisconnected', (e) => {
+            console.log(`Gamepad disconnected: ${e.gamepad.id}`);
+            showShareToast(`🎮 Controller ${e.gamepad.index + 1} disconnected`);
+            if (e.gamepad.index === 0) gamepadConnected = false;
+            if (e.gamepad.index === 1) gamepad2Connected = false;
+        });
+
         // Enemy settings
         let enemyDirection = 1;
         let enemySpeed = 1;
@@ -9244,6 +9422,21 @@
             document.getElementById('playerNameDisplay').textContent = playerName;
             document.getElementById('finalScore').textContent = score;
 
+            // Calculate and display game stats
+            const timePlayed = Math.floor((Date.now() - gameStartTime) / 1000);
+            const timeMinutes = Math.floor(timePlayed / 60).toString().padStart(2, '0');
+            const timeSeconds = (timePlayed % 60).toString().padStart(2, '0');
+            const accuracy = dailyChallengeStats.shotsFired > 0
+                ? Math.round((dailyChallengeStats.shotsHit / dailyChallengeStats.shotsFired) * 100)
+                : 0;
+
+            document.getElementById('statKills').textContent = sessionStats.totalKills;
+            document.getElementById('statAccuracy').textContent = accuracy + '%';
+            document.getElementById('statMaxCombo').textContent = sessionStats.maxCombo + 'x';
+            document.getElementById('statTime').textContent = `${timeMinutes}:${timeSeconds}`;
+            document.getElementById('statPowerups').textContent = sessionStats.powerUpsCollected;
+            document.getElementById('statLevel').textContent = level;
+
             // Show endless mode stats
             if (endlessMode) {
                 const elapsed = Math.floor((Date.now() - endlessStartTime) / 1000);
@@ -9292,6 +9485,9 @@
         // Main game loop
         function gameLoop() {
             if (!gameRunning || gamePaused) return;
+
+            // Poll gamepads for input
+            pollGamepads();
 
             try {
                 // Clear canvas
@@ -9395,6 +9591,7 @@
             document.getElementById('startScreen').classList.add('hidden');
             resetGame();
             gameRunning = true;
+            gameStartTime = Date.now();
             announce('gameStart');
 
             // Show/hide endless mode UI
@@ -10390,6 +10587,54 @@
             return window.matchMedia('(display-mode: standalone)').matches ||
                    window.navigator.standalone === true;
         }
+
+        // Fullscreen toggle
+        function toggleFullscreen() {
+            const elem = document.documentElement;
+            const btn = document.getElementById('fullscreenBtn');
+
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                // Enter fullscreen
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen(); // Safari
+                }
+                if (btn) btn.textContent = '🔳 Exit Fullscreen';
+            } else {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen(); // Safari
+                }
+                if (btn) btn.textContent = '🔲 Fullscreen';
+            }
+        }
+
+        // Update button text on fullscreen change
+        document.addEventListener('fullscreenchange', () => {
+            const btn = document.getElementById('fullscreenBtn');
+            if (btn) {
+                btn.textContent = document.fullscreenElement ? '🔳 Exit Fullscreen' : '🔲 Fullscreen';
+            }
+        });
+
+        document.addEventListener('webkitfullscreenchange', () => {
+            const btn = document.getElementById('fullscreenBtn');
+            if (btn) {
+                btn.textContent = document.webkitFullscreenElement ? '🔳 Exit Fullscreen' : '🔲 Fullscreen';
+            }
+        });
+
+        // F key for fullscreen during gameplay
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f' || e.key === 'F') {
+                if (gameRunning && !document.activeElement.matches('input')) {
+                    toggleFullscreen();
+                }
+            }
+        });
     </script>
 </body>
 </html>
