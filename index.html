@@ -13,6 +13,7 @@
     <meta name="apple-mobile-web-app-title" content="Cosmic Blasterz">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -6066,6 +6067,49 @@
             } catch (e) {}
         }
 
+        // Sound effect: Enemy hit (damage but not killed)
+        function playEnemyHitSound() {
+            if (soundMuted || sfxVolume === 0) return;
+            if (!ensureAudio()) return;
+            try {
+                const vol = Math.max(0.01, 0.15 * (sfxVolume / 100));
+
+                // Quick metallic ping
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
+
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.05);
+
+                // Secondary hit confirmation
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(1200, audioCtx.currentTime);
+                osc2.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.03);
+
+                gain2.gain.setValueAtTime(vol * 0.5, audioCtx.currentTime);
+                gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.03);
+
+                osc2.start(audioCtx.currentTime);
+                osc2.stop(audioCtx.currentTime + 0.03);
+            } catch (e) {}
+        }
+
         // Enhanced Sound effect: Player hit with alarm
         function playPlayerHitSound() {
             if (soundMuted || sfxVolume === 0) return;
@@ -10000,6 +10044,7 @@
             if (!currentBoss) return false;
             currentBoss.health -= damage;
             updateBossHealthBar();
+            playEnemyHitSound(); // Hit feedback
 
             if (currentBoss.health <= 0) {
                 // Boss defeated
@@ -12241,6 +12286,7 @@
                         } else {
                             // Enemy hit but not destroyed (tank)
                             createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#888', 4);
+                            playEnemyHitSound();
                             dailyChallengeStats.shotsHit++;
                         }
 
