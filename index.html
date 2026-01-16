@@ -4787,11 +4787,13 @@
         .scroll-text {
             position: absolute;
             white-space: nowrap;
-            font-family: 'Orbitron', monospace;
-            font-size: 14px;
+            font-family: 'Orbitron', sans-serif;
             font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
             color: #0ff;
-            text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.6), 0 0 16px rgba(0, 255, 255, 0.3);
             animation: scrollText 30s linear infinite;
             line-height: 30px;
         }
@@ -14909,13 +14911,13 @@
             // Clear canvas
             scrollerCtx.clearRect(0, 0, width, height);
 
-            // Font settings - retro terminal style
+            // Font settings - retro arcade style with Orbitron
             const fontSize = Math.min(32, height * 0.5);
-            scrollerCtx.font = `${fontSize}px "Share Tech Mono", monospace`;
+            scrollerCtx.font = `600 ${fontSize}px "Orbitron", sans-serif`;
             scrollerCtx.textBaseline = 'middle';
 
-            // Calculate text width for looping
-            const charWidth = fontSize * 0.6;
+            // Calculate text width for looping (wider for letter-spacing effect)
+            const charWidth = fontSize * 0.72;
             const totalWidth = scrollText.length * charWidth;
 
             // Draw each character with sine wave offset
@@ -14941,6 +14943,10 @@
                 scrollerCtx.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 scrollerCtx.fillText(char, x + 3, y + 3);
 
+                // Draw subtle arcade glow
+                scrollerCtx.shadowColor = `hsl(${hue}, 100%, 60%)`;
+                scrollerCtx.shadowBlur = 12;
+
                 // Draw main character with gradient
                 const gradient = scrollerCtx.createLinearGradient(x, y - fontSize/2, x, y + fontSize/2);
                 gradient.addColorStop(0, `hsl(${hue}, ${saturation}%, ${lightness + 20}%)`);
@@ -14949,6 +14955,9 @@
 
                 scrollerCtx.fillStyle = gradient;
                 scrollerCtx.fillText(char, x, y);
+
+                // Reset shadow for highlight
+                scrollerCtx.shadowBlur = 0;
 
                 // Chrome/metallic highlight
                 scrollerCtx.fillStyle = `rgba(255, 255, 255, ${0.3 + Math.sin(time * 2 + i * 0.5) * 0.2})`;
