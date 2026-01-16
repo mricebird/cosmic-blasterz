@@ -116,13 +116,91 @@
         }
 
         .controls-info {
-            margin-top: 30px;
+            margin-top: 20px;
             font-size: 14px;
             opacity: 0.7;
         }
 
         .hidden {
             display: none !important;
+        }
+
+        .name-input {
+            padding: 10px 20px;
+            font-size: 18px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #0ff;
+            border: 2px solid #0ff;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin-bottom: 20px;
+            width: 250px;
+            outline: none;
+        }
+
+        .name-input:focus {
+            box-shadow: 0 0 15px #0ff;
+        }
+
+        .name-input::placeholder {
+            color: rgba(0, 255, 255, 0.5);
+        }
+
+        .highscore-list {
+            margin-top: 20px;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .highscore-list h3 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #f0f;
+            font-size: 16px;
+        }
+
+        .highscore-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+            font-size: 14px;
+        }
+
+        .highscore-entry:last-child {
+            border-bottom: none;
+        }
+
+        .highscore-entry.current {
+            color: #f0f;
+            font-weight: bold;
+        }
+
+        .highscore-rank {
+            color: #ff0;
+            width: 30px;
+        }
+
+        .highscore-name {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .highscore-score {
+            color: #0f0;
+        }
+
+        .new-highscore {
+            color: #f0f;
+            font-size: 20px;
+            margin-bottom: 10px;
+            animation: pulse 1s ease-in-out infinite;
         }
     </style>
 </head>
@@ -138,16 +216,20 @@
         <div class="start-screen" id="startScreen">
             <h1>🚀 SPACE INVADERS 👾</h1>
             <p style="font-size: 18px; margin-bottom: 20px; opacity: 0.8;">Forsvar Jorden mod alien-invasionen!</p>
+            <input type="text" id="playerName" class="name-input" placeholder="Indtast dit navn" maxlength="15">
             <button class="start-btn" onclick="startGame()">START SPIL</button>
             <div class="controls-info">
                 <p>← → Piletaster for at bevæge dig</p>
                 <p>MELLEMRUM for at skyde</p>
             </div>
+            <div class="highscore-list" id="startHighscores"></div>
         </div>
 
         <div class="game-over-screen hidden" id="gameOverScreen">
             <h1>GAME OVER</h1>
-            <div class="final-score">Din score: <span id="finalScore">0</span></div>
+            <div id="newHighscoreMsg" class="new-highscore hidden">NY HIGHSCORE!</div>
+            <div class="final-score"><span id="playerNameDisplay"></span> score: <span id="finalScore">0</span></div>
+            <div class="highscore-list" id="gameOverHighscores"></div>
             <button class="restart-btn" onclick="restartGame()">SPIL IGEN</button>
         </div>
     </div>
@@ -345,6 +427,60 @@
         let score = 0;
         let lives = 3;
         let level = 1;
+        let playerName = 'Spiller';
+
+        // Highscore system
+        const HIGHSCORE_KEY = 'spaceInvadersHighscores';
+        const MAX_HIGHSCORES = 10;
+
+        function getHighscores() {
+            try {
+                const data = localStorage.getItem(HIGHSCORE_KEY);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveHighscore(name, newScore) {
+            const highscores = getHighscores();
+            highscores.push({ name: name, score: newScore, date: Date.now() });
+            highscores.sort((a, b) => b.score - a.score);
+            const trimmed = highscores.slice(0, MAX_HIGHSCORES);
+            try {
+                localStorage.setItem(HIGHSCORE_KEY, JSON.stringify(trimmed));
+            } catch (e) {}
+            return trimmed;
+        }
+
+        function isHighscore(newScore) {
+            const highscores = getHighscores();
+            if (highscores.length < MAX_HIGHSCORES) return true;
+            return newScore > highscores[highscores.length - 1].score;
+        }
+
+        function renderHighscores(containerId, currentScore = null) {
+            const container = document.getElementById(containerId);
+            const highscores = getHighscores();
+
+            if (highscores.length === 0) {
+                container.innerHTML = '<h3>🏆 HIGHSCORES 🏆</h3><p style="text-align:center;opacity:0.7;">Ingen highscores endnu</p>';
+                return;
+            }
+
+            let html = '<h3>🏆 HIGHSCORES 🏆</h3>';
+            highscores.forEach((entry, index) => {
+                const isCurrent = currentScore !== null && entry.score === currentScore && entry.name === playerName;
+                html += `
+                    <div class="highscore-entry ${isCurrent ? 'current' : ''}">
+                        <span class="highscore-rank">${index + 1}.</span>
+                        <span class="highscore-name">${entry.name}</span>
+                        <span class="highscore-score">${entry.score}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
 
         // Player
         const player = {
@@ -706,7 +842,24 @@
         function gameOver() {
             gameRunning = false;
             playGameOverSound();
+
+            // Check for new highscore
+            const isNew = isHighscore(score);
+            if (score > 0) {
+                saveHighscore(playerName, score);
+            }
+
+            // Update UI
+            document.getElementById('playerNameDisplay').textContent = playerName;
             document.getElementById('finalScore').textContent = score;
+
+            if (isNew && score > 0) {
+                document.getElementById('newHighscoreMsg').classList.remove('hidden');
+            } else {
+                document.getElementById('newHighscoreMsg').classList.add('hidden');
+            }
+
+            renderHighscores('gameOverHighscores', score);
             document.getElementById('gameOverScreen').classList.remove('hidden');
         }
 
@@ -744,6 +897,11 @@
         // Start game
         function startGame() {
             initAudio();
+
+            // Get player name
+            const nameInput = document.getElementById('playerName');
+            playerName = nameInput.value.trim() || 'Spiller';
+
             document.getElementById('startScreen').classList.add('hidden');
             resetGame();
             gameRunning = true;
@@ -808,6 +966,16 @@
             }
         }
         drawStartScreen();
+
+        // Show highscores on start screen
+        renderHighscores('startHighscores');
+
+        // Allow starting game with Enter key
+        document.getElementById('playerName').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                startGame();
+            }
+        });
     </script>
 </body>
 </html>
