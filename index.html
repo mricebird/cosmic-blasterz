@@ -1226,6 +1226,59 @@
             transform: translateY(-2px);
         }
 
+        .share-btn {
+            padding: 8px 16px;
+            background: rgba(0, 20, 40, 0.85);
+            border: 1px solid rgba(0, 255, 128, 0.4);
+            border-radius: 8px;
+            color: #0f8;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .share-btn:hover {
+            background: rgba(0, 255, 128, 0.15);
+            border-color: rgba(0, 255, 128, 0.7);
+            box-shadow: 0 0 15px rgba(0, 255, 128, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .share-toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 40, 20, 0.95);
+            border: 1px solid rgba(0, 255, 128, 0.6);
+            border-radius: 10px;
+            padding: 12px 24px;
+            color: #0f8;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 255, 128, 0.3);
+            animation: toastSlide 0.3s ease;
+        }
+
+        @keyframes toastSlide {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
         .settings-panel {
             position: absolute;
             top: 50%;
@@ -1586,6 +1639,7 @@
                 <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">⚙️ SETTINGS</button>
             </div>
             <div class="toolbar-right">
+                <button class="share-btn" onclick="shareGame()" title="Share with friends">📤 SHARE</button>
                 <div class="game-controls" id="gameControls">
                     <button class="control-btn" id="muteBtn" onclick="toggleMute()" title="Mute Sound (M)">🔊</button>
                     <button class="control-btn" id="musicBtn" onclick="toggleMusic()" title="Mute Music">🎶</button>
@@ -1970,6 +2024,47 @@
         function toggleSettings() {
             settingsOpen = !settingsOpen;
             document.getElementById('settingsPanel').classList.toggle('hidden', !settingsOpen);
+        }
+
+        // Share game with friends
+        function shareGame() {
+            const shareData = {
+                title: 'Space Invaders',
+                text: 'Play Space Invaders - Defend Earth from the alien invasion!',
+                url: 'https://mricebird.github.io/space-invaders/'
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => {
+                    copyToClipboard(shareData.url);
+                });
+            } else {
+                copyToClipboard(shareData.url);
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showShareToast('Link copied to clipboard!');
+            }).catch(() => {
+                showShareToast('Share: ' + text);
+            });
+        }
+
+        function showShareToast(message) {
+            const existingToast = document.querySelector('.share-toast');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'share-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
         }
 
         // Screen size presets
