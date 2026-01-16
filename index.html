@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cosmic Blasterz</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Defend Earth from the alien invasion in this epic retro arcade shooter!">
+    <meta name="theme-color" content="#00ffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Cosmic Blasterz">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="logo.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -371,6 +381,12 @@
             text-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
         }
 
+        .player2-lives {
+            color: #f0f;
+            border-color: rgba(255, 0, 255, 0.3);
+            text-shadow: 0 0 8px rgba(255, 0, 255, 0.5);
+        }
+
         .level {
             color: #ffd93d;
             border-color: rgba(255, 217, 61, 0.3);
@@ -549,19 +565,21 @@
         }
 
         .mode-buttons {
-            display: flex;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
             justify-content: center;
-            flex-wrap: wrap;
             margin-bottom: 10px;
+            max-width: 360px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .mode-card {
             background: rgba(0, 20, 40, 0.6);
             border: 1px solid rgba(100, 100, 120, 0.3);
             border-radius: 12px;
-            padding: 16px 20px;
-            width: 160px;
+            padding: 14px 16px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -608,6 +626,15 @@
 
         .mode-card.tutorial .mode-title {
             color: #0f0;
+        }
+
+        .mode-card.twoplayer:hover {
+            border-color: rgba(255, 0, 255, 0.6);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+        }
+
+        .mode-card.twoplayer .mode-title {
+            color: #f0f;
         }
 
         .mode-desc {
@@ -922,6 +949,220 @@
             margin-bottom: 0;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Invite Friend Button */
+        .invite-friend-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .invite-friend-btn {
+            padding: 14px 32px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4),
+                        0 0 30px rgba(255, 107, 53, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: invitePulse 2s ease-in-out infinite;
+        }
+
+        .invite-friend-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: inviteShine 3s ease-in-out infinite;
+        }
+
+        .invite-friend-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 30px rgba(255, 107, 53, 0.6),
+                        0 0 50px rgba(255, 107, 53, 0.3);
+        }
+
+        .invite-friend-btn:active {
+            transform: translateY(0) scale(1);
+        }
+
+        @keyframes invitePulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4), 0 0 30px rgba(255, 107, 53, 0.2); }
+            50% { box-shadow: 0 4px 30px rgba(255, 107, 53, 0.6), 0 0 50px rgba(255, 107, 53, 0.4); }
+        }
+
+        @keyframes inviteShine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        .invite-friend-text {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 5px;
+        }
+
+        .invite-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .invite-modal-content {
+            background: linear-gradient(145deg, #0a1628 0%, #162447 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.2),
+                        inset 0 0 30px rgba(0, 255, 255, 0.05);
+        }
+
+        .invite-modal h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: #0ff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .invite-modal p {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        .invite-share-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .invite-share-btn {
+            padding: 12px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .invite-share-btn.twitter {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .invite-share-btn.facebook {
+            background: #4267b2;
+            color: white;
+        }
+
+        .invite-share-btn.whatsapp {
+            background: #25d366;
+            color: white;
+        }
+
+        .invite-share-btn.copy {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .invite-share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .invite-link-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 20px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #0ff;
+        }
+
+        .invite-close-btn {
+            padding: 10px 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .invite-close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+        }
+
+        /* Install PWA Button */
+        .install-pwa-btn {
+            padding: 12px 24px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #00d4aa 0%, #00b894 50%, #00d4aa 100%);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.4),
+                        0 0 20px rgba(0, 212, 170, 0.2);
+            margin-top: 10px;
+        }
+
+        .install-pwa-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 25px rgba(0, 212, 170, 0.5),
+                        0 0 35px rgba(0, 212, 170, 0.3);
+        }
+
+        .install-pwa-btn:active {
+            transform: translateY(0) scale(1);
         }
 
         .hidden {
@@ -2027,6 +2268,114 @@
             color: #fc0;
         }
 
+        /* Weapon upgrade cards */
+        .weapon-upgrade-card {
+            background: rgba(20, 30, 50, 0.9);
+            border: 2px solid rgba(80, 80, 120, 0.4);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .weapon-upgrade-card:hover {
+            border-color: rgba(0, 255, 255, 0.5);
+            background: rgba(25, 40, 65, 0.95);
+        }
+
+        .weapon-upgrade-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .weapon-icon {
+            font-size: 24px;
+        }
+
+        .weapon-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            flex-grow: 1;
+        }
+
+        .weapon-level {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: #0ff;
+            background: rgba(0, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .weapon-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .weapon-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ff 0%, #0af 50%, #0ff 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .weapon-upgrade-info {
+            text-align: center;
+            margin-bottom: 10px;
+            min-height: 20px;
+        }
+
+        .weapon-next-upgrade {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .weapon-maxed {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: #fc0;
+            text-shadow: 0 0 10px rgba(255, 200, 0, 0.5);
+        }
+
+        .weapon-upgrade-btn {
+            width: 100%;
+            padding: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #000;
+            background: linear-gradient(135deg, #0ff 0%, #0af 100%);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .weapon-upgrade-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #5ff 0%, #0cf 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+        }
+
+        .weapon-upgrade-btn:disabled {
+            background: rgba(100, 100, 100, 0.4);
+            color: rgba(255, 255, 255, 0.4);
+            cursor: not-allowed;
+        }
+
         .shop-close, .settings-close {
             position: absolute;
             top: 14px;
@@ -2681,7 +3030,8 @@
         <div class="ui-overlay">
             <div class="score">SCORE: <span id="scoreValue">0</span></div>
             <div class="level">LEVEL: <span id="levelValue">1</span></div>
-            <div class="lives">LIVES: <span id="livesValue">❤️❤️❤️</span></div>
+            <div class="lives">P1: <span id="livesValue">❤️❤️❤️</span></div>
+            <div class="lives player2-lives hidden" id="player2Lives">P2: <span id="lives2Value">💜💜💜</span></div>
         </div>
 
         <div class="start-screen" id="startScreen">
@@ -2719,14 +3069,44 @@
                     <div class="mode-title">TUTORIAL</div>
                     <div class="mode-desc">Learn the controls and game mechanics step by step.</div>
                 </div>
+                <div class="mode-card twoplayer" onclick="startGame(false, true)">
+                    <div class="mode-icon">👥</div>
+                    <div class="mode-title">2 PLAYERS</div>
+                    <div class="mode-desc">Play with a friend! Co-op mode on the same keyboard.</div>
+                </div>
             </div>
             <div class="controls-info">
                 <p class="controls-title">⌨️ Controls</p>
-                <p>← → Arrow keys to move</p>
-                <p>SPACE to shoot</p>
+                <p><strong>P1:</strong> ← → Arrow keys · SPACE shoot</p>
+                <p><strong>P2:</strong> A D keys · Q shoot</p>
                 <p>1-2-3 Switch weapon · P Pause · M Mute</p>
             </div>
+            <div class="invite-friend-container">
+                <button class="invite-friend-btn" onclick="openInviteModal()">
+                    👥 Invite Friend
+                </button>
+                <span class="invite-friend-text">Challenge your friends to beat your score!</span>
+                <button class="install-pwa-btn hidden" id="installPwaBtn" onclick="installPwa()">
+                    📲 Install App
+                </button>
+            </div>
             <div class="highscore-list" id="startHighscores"></div>
+        </div>
+
+        <!-- Invite Friend Modal -->
+        <div class="invite-modal hidden" id="inviteModal">
+            <div class="invite-modal-content">
+                <h2>👥 Invite Friends</h2>
+                <p>Share Cosmic Blasterz with your friends and challenge them to beat your highscore!</p>
+                <div class="invite-link-box" id="inviteLink">https://mricebird.github.io/cosmic-blasterz/</div>
+                <div class="invite-share-buttons">
+                    <button class="invite-share-btn twitter" onclick="inviteViaTwitter()">🐦 Twitter</button>
+                    <button class="invite-share-btn facebook" onclick="inviteViaFacebook()">📘 Facebook</button>
+                    <button class="invite-share-btn whatsapp" onclick="inviteViaWhatsApp()">💬 WhatsApp</button>
+                    <button class="invite-share-btn copy" onclick="copyInviteLink()">📋 Copy Link</button>
+                </div>
+                <button class="invite-close-btn" onclick="closeInviteModal()">Close</button>
+            </div>
         </div>
 
         <div class="game-over-screen hidden" id="gameOverScreen">
@@ -3633,6 +4013,75 @@
             }, 2500);
         }
 
+        // Invite Friend functions
+        const GAME_URL = 'https://mricebird.github.io/cosmic-blasterz/';
+        const INVITE_MESSAGE = '🚀 Join me in Cosmic Blasterz! Defend Earth from alien invasion in this epic retro arcade shooter!';
+
+        function openInviteModal() {
+            document.getElementById('inviteModal').classList.remove('hidden');
+            // Try native share API first on mobile
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Cosmic Blasterz',
+                    text: INVITE_MESSAGE,
+                    url: GAME_URL
+                }).then(() => {
+                    closeInviteModal();
+                }).catch(() => {
+                    // User cancelled or not supported, show modal
+                });
+            }
+        }
+
+        function closeInviteModal() {
+            document.getElementById('inviteModal').classList.add('hidden');
+        }
+
+        function inviteViaTwitter() {
+            const text = encodeURIComponent(INVITE_MESSAGE + ' 🎮');
+            const url = encodeURIComponent(GAME_URL);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=400');
+            closeInviteModal();
+        }
+
+        function inviteViaFacebook() {
+            const url = encodeURIComponent(GAME_URL);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+            closeInviteModal();
+        }
+
+        function inviteViaWhatsApp() {
+            const text = encodeURIComponent(INVITE_MESSAGE + ' ' + GAME_URL);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+            closeInviteModal();
+        }
+
+        function copyInviteLink() {
+            const fullMessage = INVITE_MESSAGE + '\n' + GAME_URL;
+            navigator.clipboard.writeText(fullMessage).then(() => {
+                showShareToast('✅ Invite link copied!');
+                closeInviteModal();
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = fullMessage;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showShareToast('✅ Invite link copied!');
+                closeInviteModal();
+            });
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('inviteModal');
+            if (e.target === modal) {
+                closeInviteModal();
+            }
+        });
+
         // Screen size presets
         const SCREEN_SIZES = {
             small: { width: 800, height: 560 },
@@ -4196,8 +4645,16 @@
             if (!ensureAudio()) return;
 
             const time = audioCtx.currentTime;
-            const patternIndex = SONG[musicPattern % SONG.length];
-            const pattern = PATTERNS[patternIndex];
+
+            // Use boss patterns if in boss mode
+            let patternIndex, pattern;
+            if (bossMode) {
+                patternIndex = BOSS_SONG[musicPattern % BOSS_SONG.length];
+                pattern = BOSS_PATTERNS[patternIndex];
+            } else {
+                patternIndex = SONG[musicPattern % SONG.length];
+                pattern = PATTERNS[patternIndex];
+            }
             const row = pattern[musicRow];
 
             // Play all channels
@@ -4213,9 +4670,10 @@
                 musicPattern++;
             }
 
-            // Schedule next row
+            // Schedule next row (faster tempo for boss)
+            const rowTime = bossMode ? ROW_TIME * 0.8 : ROW_TIME;
             if (musicPlaying && !musicMuted) {
-                musicTimerId = setTimeout(playMusicRow, ROW_TIME);
+                musicTimerId = setTimeout(playMusicRow, rowTime);
             }
         }
 
@@ -4233,6 +4691,121 @@
             if (!musicMuted && gameRunning && !gamePaused) {
                 playMusicRow();
             }
+        }
+
+        // Boss battle music - more intense patterns
+        let bossMode = false;
+        const BOSS_PATTERNS = [
+            // Intense boss pattern 1
+            [
+                [NOTE.E2, NOTE.E5, NOTE.B5, 'K'],
+                [NOTE.E3, NOTE.REST, NOTE.E5, 'H'],
+                [NOTE.E2, NOTE.E5, NOTE.B5, 'K'],
+                [NOTE.REST, NOTE.REST, NOTE.E5, 'H'],
+                [NOTE.E2, NOTE.G5, NOTE.B5, 'K'],
+                [NOTE.E3, NOTE.REST, NOTE.G5, 'H'],
+                [NOTE.E2, NOTE.REST, NOTE.E5, 'S'],
+                [NOTE.REST, NOTE.E5, NOTE.B5, 'H'],
+                [NOTE.D2, NOTE.D5, NOTE.A5, 'K'],
+                [NOTE.D3, NOTE.REST, NOTE.D5, 'H'],
+                [NOTE.D2, NOTE.D5, NOTE.A5, 'K'],
+                [NOTE.REST, NOTE.REST, NOTE.F5, 'H'],
+                [NOTE.C2, NOTE.C5, NOTE.G5, 'K'],
+                [NOTE.C3, NOTE.REST, NOTE.E5, 'H'],
+                [NOTE.B2, NOTE.B4, NOTE.F5, 'K'],
+                [NOTE.REST, NOTE.G4, NOTE.E5, 'S'],
+            ],
+            // Intense boss pattern 2
+            [
+                [NOTE.A2, NOTE.A5, NOTE.E6, 'K'],
+                [NOTE.REST, NOTE.REST, NOTE.A5, 'H'],
+                [NOTE.A2, NOTE.A5, NOTE.E6, 'K'],
+                [NOTE.A3, NOTE.REST, NOTE.A5, 'H'],
+                [NOTE.G2, NOTE.G5, NOTE.D6, 'K'],
+                [NOTE.REST, NOTE.REST, NOTE.G5, 'H'],
+                [NOTE.G2, NOTE.G5, NOTE.D6, 'S'],
+                [NOTE.G3, NOTE.REST, NOTE.B5, 'H'],
+                [NOTE.F2, NOTE.F5, NOTE.C6, 'K'],
+                [NOTE.REST, NOTE.REST, NOTE.F5, 'H'],
+                [NOTE.F2, NOTE.F5, NOTE.C6, 'K'],
+                [NOTE.F3, NOTE.REST, NOTE.A5, 'H'],
+                [NOTE.E2, NOTE.E5, NOTE.B5, 'K'],
+                [NOTE.REST, NOTE.REST, NOTE.E5, 'H'],
+                [NOTE.E2, NOTE.G5, NOTE.B5, 'K'],
+                [NOTE.E3, NOTE.E5, NOTE.G5, 'S'],
+            ],
+        ];
+
+        const BOSS_SONG = [0, 0, 1, 1, 0, 1, 0, 1];
+
+        function startBossMusic() {
+            bossMode = true;
+            musicPattern = 0;
+            musicRow = 0;
+        }
+
+        function stopBossMusic() {
+            bossMode = false;
+            musicPattern = 0;
+            musicRow = 0;
+        }
+
+        // Victory fanfare (level complete)
+        function playVictoryFanfare() {
+            if (!ensureAudio() || musicMuted) return;
+
+            const time = audioCtx.currentTime;
+            const fanfareGain = audioCtx.createGain();
+            fanfareGain.gain.setValueAtTime(0.15 * (musicVolumeLevel / 100), time);
+            fanfareGain.connect(audioCtx.destination);
+
+            // Victory melody notes
+            const notes = [
+                { freq: NOTE.C5, time: 0, dur: 0.15 },
+                { freq: NOTE.E5, time: 0.15, dur: 0.15 },
+                { freq: NOTE.G5, time: 0.3, dur: 0.15 },
+                { freq: NOTE.C6, time: 0.45, dur: 0.4 },
+                { freq: NOTE.G5, time: 0.65, dur: 0.15 },
+                { freq: NOTE.C6, time: 0.8, dur: 0.6 },
+            ];
+
+            notes.forEach(note => {
+                const osc = audioCtx.createOscillator();
+                const osc2 = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'square';
+                osc2.type = 'sawtooth';
+                osc.frequency.value = note.freq;
+                osc2.frequency.value = note.freq * 1.002;
+
+                gain.gain.setValueAtTime(0.2, time + note.time);
+                gain.gain.exponentialRampToValueAtTime(0.01, time + note.time + note.dur);
+
+                osc.connect(gain);
+                osc2.connect(gain);
+                gain.connect(fanfareGain);
+
+                osc.start(time + note.time);
+                osc2.start(time + note.time);
+                osc.stop(time + note.time + note.dur + 0.1);
+                osc2.stop(time + note.time + note.dur + 0.1);
+            });
+
+            // Triumphant chord at the end
+            const chordTime = time + 1.0;
+            [NOTE.C5, NOTE.E5, NOTE.G5, NOTE.C6].forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, chordTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, chordTime + 1.0);
+                osc.connect(gain);
+                gain.connect(fanfareGain);
+                osc.start(chordTime);
+                osc.stop(chordTime + 1.2);
+            });
         }
 
         // Announcer voice system
@@ -4817,6 +5390,45 @@
         let ownedSkins = ['classic'];
         let currentShopTab = 'upgrades';
 
+        // Weapon upgrade system
+        const WEAPON_UPGRADES = {
+            laser: {
+                name: 'Laser',
+                icon: '🔵',
+                upgrades: [
+                    { level: 1, name: 'Damage I', stat: 'damage', bonus: 0.5, price: 150, desc: '+50% damage' },
+                    { level: 2, name: 'Speed I', stat: 'speed', bonus: 2, price: 200, desc: '+2 bullet speed' },
+                    { level: 3, name: 'Rapid I', stat: 'cooldown', bonus: -30, price: 250, desc: '-30ms cooldown' },
+                    { level: 4, name: 'Damage II', stat: 'damage', bonus: 0.5, price: 350, desc: '+50% more damage' },
+                    { level: 5, name: 'Rapid II', stat: 'cooldown', bonus: -30, price: 450, desc: '-30ms more cooldown' }
+                ]
+            },
+            missile: {
+                name: 'Missile',
+                icon: '🔴',
+                upgrades: [
+                    { level: 1, name: 'Blast I', stat: 'splash', bonus: 15, price: 200, desc: '+15 splash radius' },
+                    { level: 2, name: 'Damage I', stat: 'damage', bonus: 1, price: 300, desc: '+1 damage' },
+                    { level: 3, name: 'Speed I', stat: 'speed', bonus: 1, price: 350, desc: '+1 missile speed' },
+                    { level: 4, name: 'Blast II', stat: 'splash', bonus: 20, price: 500, desc: '+20 more splash' },
+                    { level: 5, name: 'Damage II', stat: 'damage', bonus: 2, price: 600, desc: '+2 more damage' }
+                ]
+            },
+            plasma: {
+                name: 'Plasma',
+                icon: '🟣',
+                upgrades: [
+                    { level: 1, name: 'Pierce I', stat: 'width', bonus: 2, price: 200, desc: '+2 beam width' },
+                    { level: 2, name: 'Speed I', stat: 'speed', bonus: 3, price: 250, desc: '+3 beam speed' },
+                    { level: 3, name: 'Rapid I', stat: 'cooldown', bonus: -20, price: 300, desc: '-20ms cooldown' },
+                    { level: 4, name: 'Pierce II', stat: 'width', bonus: 3, price: 400, desc: '+3 more beam width' },
+                    { level: 5, name: 'Rapid II', stat: 'cooldown', bonus: -20, price: 500, desc: '-20ms more cooldown' }
+                ]
+            }
+        };
+
+        let weaponUpgradeLevels = { laser: 0, missile: 0, plasma: 0 };
+
         function loadShopData() {
             try {
                 const data = localStorage.getItem(SHOP_STORAGE_KEY);
@@ -4826,6 +5438,7 @@
                     ownedUpgrades = parsed.owned || [];
                     ownedSkins = parsed.skins || ['classic'];
                     selectedSkin = parsed.selectedSkin || 'classic';
+                    weaponUpgradeLevels = parsed.weaponUpgrades || { laser: 0, missile: 0, plasma: 0 };
                     // Ensure classic is always owned
                     if (!ownedSkins.includes('classic')) {
                         ownedSkins.push('classic');
@@ -4833,6 +5446,7 @@
                 }
             } catch (e) {}
             updateCoinsDisplay();
+            applyWeaponUpgrades();
         }
 
         function saveShopData() {
@@ -4841,9 +5455,74 @@
                     coins: totalCoins,
                     owned: ownedUpgrades,
                     skins: ownedSkins,
-                    selectedSkin: selectedSkin
+                    selectedSkin: selectedSkin,
+                    weaponUpgrades: weaponUpgradeLevels
                 }));
             } catch (e) {}
+        }
+
+        function applyWeaponUpgrades() {
+            // Apply all purchased weapon upgrades
+            Object.keys(WEAPON_UPGRADES).forEach(weaponKey => {
+                const weapon = WEAPONS[weaponKey];
+                const upgradeData = WEAPON_UPGRADES[weaponKey];
+                const currentLevel = weaponUpgradeLevels[weaponKey] || 0;
+
+                // Reset to base stats first (clone from original)
+                const baseStats = {
+                    laser: { damage: 1, speed: 10, cooldown: 200, width: 4, splash: 0 },
+                    missile: { damage: 3, speed: 6, cooldown: 500, width: 8, splash: 30 },
+                    plasma: { damage: 1, speed: 12, cooldown: 150, width: 6, splash: 0 }
+                };
+
+                // Apply base stats
+                weapon.damage = baseStats[weaponKey].damage;
+                weapon.speed = baseStats[weaponKey].speed;
+                weapon.cooldown = baseStats[weaponKey].cooldown;
+                weapon.width = baseStats[weaponKey].width;
+                weapon.splash = baseStats[weaponKey].splash;
+
+                // Apply each level's upgrade
+                for (let i = 0; i < currentLevel; i++) {
+                    const upgrade = upgradeData.upgrades[i];
+                    weapon[upgrade.stat] += upgrade.bonus;
+                }
+            });
+        }
+
+        function purchaseWeaponUpgrade(weaponKey) {
+            const upgradeData = WEAPON_UPGRADES[weaponKey];
+            const currentLevel = weaponUpgradeLevels[weaponKey] || 0;
+
+            if (currentLevel >= upgradeData.upgrades.length) return;
+
+            const nextUpgrade = upgradeData.upgrades[currentLevel];
+            if (totalCoins < nextUpgrade.price) return;
+
+            totalCoins -= nextUpgrade.price;
+            weaponUpgradeLevels[weaponKey] = currentLevel + 1;
+
+            saveShopData();
+            updateCoinsDisplay();
+            applyWeaponUpgrades();
+            renderShopItems();
+            playPurchaseSound();
+            showShareToast(`${upgradeData.name} upgraded to level ${currentLevel + 1}!`);
+        }
+
+        function playPurchaseSound() {
+            if (!ensureAudio() || soundMuted) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
         }
 
         function addCoins(amount) {
@@ -4879,6 +5558,7 @@
             html += `
                 <div class="shop-tabs">
                     <button class="shop-tab ${currentShopTab === 'upgrades' ? 'active' : ''}" onclick="switchShopTab('upgrades')">⬆️ UPGRADES</button>
+                    <button class="shop-tab ${currentShopTab === 'weapons' ? 'active' : ''}" onclick="switchShopTab('weapons')">🔫 WEAPONS</button>
                     <button class="shop-tab ${currentShopTab === 'skins' ? 'active' : ''}" onclick="switchShopTab('skins')">🚀 SKINS</button>
                 </div>
             `;
@@ -4900,6 +5580,41 @@
                                 ${owned || !canAfford ? 'disabled' : ''}
                                 onclick="purchaseItem('${key}')">
                                 ${owned ? '✓ OWNED' : '🪙 ' + item.price}
+                            </button>
+                        </div>
+                    `;
+                });
+            } else if (currentShopTab === 'weapons') {
+                // Weapons tab
+                Object.keys(WEAPON_UPGRADES).forEach(weaponKey => {
+                    const weaponData = WEAPON_UPGRADES[weaponKey];
+                    const currentLevel = weaponUpgradeLevels[weaponKey] || 0;
+                    const maxLevel = weaponData.upgrades.length;
+                    const isMaxed = currentLevel >= maxLevel;
+                    const nextUpgrade = isMaxed ? null : weaponData.upgrades[currentLevel];
+                    const canAfford = nextUpgrade ? totalCoins >= nextUpgrade.price : false;
+
+                    // Progress bar
+                    const progressPercent = (currentLevel / maxLevel) * 100;
+
+                    html += `
+                        <div class="weapon-upgrade-card">
+                            <div class="weapon-upgrade-header">
+                                <span class="weapon-icon">${weaponData.icon}</span>
+                                <span class="weapon-name">${weaponData.name}</span>
+                                <span class="weapon-level">LVL ${currentLevel}/${maxLevel}</span>
+                            </div>
+                            <div class="weapon-progress-bar">
+                                <div class="weapon-progress-fill" style="width: ${progressPercent}%"></div>
+                            </div>
+                            <div class="weapon-upgrade-info">
+                                ${isMaxed ? '<span class="weapon-maxed">✨ MAXED OUT ✨</span>' :
+                                  `<span class="weapon-next-upgrade">${nextUpgrade.name}: ${nextUpgrade.desc}</span>`}
+                            </div>
+                            <button class="weapon-upgrade-btn"
+                                ${isMaxed || !canAfford ? 'disabled' : ''}
+                                onclick="purchaseWeaponUpgrade('${weaponKey}')">
+                                ${isMaxed ? '✓ MAX' : '🪙 ' + nextUpgrade.price}
                             </button>
                         </div>
                     `;
@@ -5829,6 +6544,9 @@
                 '',
                 'PREPARE FOR BATTLE!'
             ], 4000);
+
+            // Start intense boss music
+            startBossMusic();
         }
 
         // Endless mode functions
@@ -6182,6 +6900,10 @@
                 triggerChromaticAberration();
                 announce('bossDefeat');
 
+                // Stop boss music and play victory fanfare
+                stopBossMusic();
+                playVictoryFanfare();
+
                 // Check boss daily challenge (defeat boss without losing life)
                 if (dailyChallenge && dailyChallenge.id === 'boss' && dailyChallengeStats.livesLostThisRound === 0) {
                     completeDailyChallenge();
@@ -6338,6 +7060,19 @@
             color: '#0ff'
         };
 
+        // Two-player mode
+        let twoPlayerMode = false;
+        let player2Lives = 3;
+        let player2Active = false;
+        const player2 = {
+            x: canvas.width / 2 + 25,
+            y: canvas.height - 70,
+            width: 50,
+            height: 40,
+            speed: 7,
+            color: '#f0f'
+        };
+
         // Game objects
         let bullets = [];
         let enemyBullets = [];
@@ -6354,6 +7089,16 @@
             space: false
         };
         let canShoot = true;
+
+        // Player 2 Controls (WASD + Q)
+        const keys2 = {
+            left: false,
+            right: false,
+            up: false,
+            down: false,
+            shoot: false
+        };
+        let canShoot2 = true;
         let shootCooldown = 200;
 
         // Enemy settings
@@ -7191,6 +7936,15 @@
             ctx.arc(player.x + player.width - 12, player.y + player.height - 5, 5, 0, Math.PI * 2);
             ctx.fill();
 
+            // "P1" label above ship (only in 2-player mode)
+            if (twoPlayerMode) {
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#0ff';
+                ctx.font = 'bold 10px Orbitron, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('P1', player.x + player.width / 2, player.y - 5);
+            }
+
             ctx.globalAlpha = 1;
             ctx.restore();
         }
@@ -7304,6 +8058,99 @@
             ctx.lineTo(sx + player.width / 2, sy + player.height - 5);
             ctx.lineTo(sx + 10, sy + player.height - 10);
             ctx.lineTo(sx, sy + player.height);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.filter = 'none';
+            ctx.restore();
+        }
+
+        // Draw player 2 ship (distinct purple/magenta design)
+        function drawPlayer2() {
+            if (!twoPlayerMode || !player2Active) return;
+
+            ctx.save();
+
+            // Purple/magenta color scheme for Player 2
+            const bodyColor = '#f0f';
+            const cockpitColor = '#fff';
+            const engineColor = '#a0f';
+
+            // Glow effect
+            ctx.shadowColor = '#f0f';
+            ctx.shadowBlur = 12;
+
+            // Ship body
+            ctx.fillStyle = bodyColor;
+            ctx.beginPath();
+            ctx.moveTo(player2.x + player2.width / 2, player2.y);
+            ctx.lineTo(player2.x + player2.width, player2.y + player2.height);
+            ctx.lineTo(player2.x + player2.width - 10, player2.y + player2.height - 10);
+            ctx.lineTo(player2.x + player2.width / 2, player2.y + player2.height - 5);
+            ctx.lineTo(player2.x + 10, player2.y + player2.height - 10);
+            ctx.lineTo(player2.x, player2.y + player2.height);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+
+            // Cockpit (white dome)
+            ctx.fillStyle = cockpitColor;
+            ctx.beginPath();
+            ctx.ellipse(
+                player2.x + player2.width / 2,
+                player2.y + player2.height * 0.35,
+                8, 6, 0, 0, Math.PI * 2
+            );
+            ctx.fill();
+
+            // Engine flames (animated)
+            const flameHeight = 8 + Math.sin(Date.now() / 50) * 4;
+            const gradient = ctx.createLinearGradient(
+                player2.x + player2.width / 2,
+                player2.y + player2.height,
+                player2.x + player2.width / 2,
+                player2.y + player2.height + flameHeight
+            );
+            gradient.addColorStop(0, engineColor);
+            gradient.addColorStop(0.5, '#f0f');
+            gradient.addColorStop(1, 'rgba(255, 0, 255, 0)');
+
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(player2.x + player2.width / 2 - 8, player2.y + player2.height - 5);
+            ctx.lineTo(player2.x + player2.width / 2, player2.y + player2.height + flameHeight);
+            ctx.lineTo(player2.x + player2.width / 2 + 8, player2.y + player2.height - 5);
+            ctx.closePath();
+            ctx.fill();
+
+            // "P2" label above ship
+            ctx.fillStyle = '#f0f';
+            ctx.font = 'bold 10px Orbitron, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('P2', player2.x + player2.width / 2, player2.y - 5);
+
+            ctx.restore();
+        }
+
+        // Draw shadow for player 2
+        function drawPlayer2Shadow() {
+            if (!twoPlayerMode || !player2Active || !SHADOW_CONFIG.enabled) return;
+
+            ctx.save();
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+            ctx.filter = `blur(${SHADOW_CONFIG.blur}px)`;
+
+            const sx = player2.x + SHADOW_CONFIG.offsetX;
+            const sy = player2.y + SHADOW_CONFIG.offsetY + 5;
+
+            ctx.beginPath();
+            ctx.moveTo(sx + player2.width / 2, sy);
+            ctx.lineTo(sx + player2.width, sy + player2.height);
+            ctx.lineTo(sx + player2.width - 10, sy + player2.height - 10);
+            ctx.lineTo(sx + player2.width / 2, sy + player2.height - 5);
+            ctx.lineTo(sx + 10, sy + player2.height - 10);
+            ctx.lineTo(sx, sy + player2.height);
             ctx.closePath();
             ctx.fill();
 
@@ -7939,6 +8786,46 @@
             }
         }
 
+        // Update player 2 (2-player mode)
+        function updatePlayer2() {
+            if (!twoPlayerMode || !player2Active) return;
+
+            // Horizontal movement
+            if (keys2.left && player2.x > 0) {
+                player2.x -= player2.speed;
+            }
+            if (keys2.right && player2.x < canvas.width - player2.width) {
+                player2.x += player2.speed;
+            }
+            // Vertical movement (limited to bottom half of screen)
+            const minY = canvas.height * 0.4;
+            const maxY = canvas.height - player2.height - 10;
+            if (keys2.up && player2.y > minY) {
+                player2.y -= player2.speed;
+            }
+            if (keys2.down && player2.y < maxY) {
+                player2.y += player2.speed;
+            }
+            if (keys2.shoot && canShoot2) {
+                const weapon = WEAPONS[currentWeapon];
+                const bulletBase = {
+                    x: player2.x + player2.width / 2,
+                    y: player2.y,
+                    speed: weapon.speed,
+                    angle: 0,
+                    weapon: currentWeapon,
+                    damage: hasUpgrade('biggerBullets') ? Math.ceil(weapon.damage * 1.5) : weapon.damage,
+                    penetrating: weapon.penetrating,
+                    splash: weapon.splash,
+                    fromPlayer2: true
+                };
+                bullets.push(bulletBase);
+                playShootSound();
+                canShoot2 = false;
+                setTimeout(() => canShoot2 = true, shootCooldown);
+            }
+        }
+
         // Update bullets
         function updateBullets() {
             bullets = bullets.filter(b => b.y > 0 && b.x > 0 && b.x < canvas.width);
@@ -8154,7 +9041,7 @@
                 }
             });
 
-            // Enemy bullets hitting player
+            // Enemy bullets hitting player 1
             enemyBullets.forEach((bullet, bi) => {
                 if (!enemyBulletsToRemove.has(bi) &&
                     bullet.x > player.x && bullet.x < player.x + player.width &&
@@ -8181,6 +9068,39 @@
                             announce('lowHealth');
                         }
 
+                        if (lives <= 0) {
+                            // In 2-player mode, check if both players are dead
+                            if (twoPlayerMode && player2Active) {
+                                // P1 is dead but P2 still alive
+                            } else if (twoPlayerMode && !player2Active && player2Lives <= 0) {
+                                // Both players dead
+                                gameOver();
+                            } else if (!twoPlayerMode) {
+                                gameOver();
+                            }
+                        }
+                    }
+                }
+
+                // Enemy bullets hitting player 2
+                if (twoPlayerMode && player2Active && !enemyBulletsToRemove.has(bi) &&
+                    bullet.x > player2.x && bullet.x < player2.x + player2.width &&
+                    bullet.y > player2.y && bullet.y < player2.y + player2.height) {
+
+                    createExplosion(player2.x + player2.width / 2, player2.y + player2.height / 2, '#f0f', 12);
+                    playPlayerHitSound();
+                    triggerScreenShake(8, 300);
+                    triggerChromaticAberration();
+                    triggerScreenFlash('rgba(255, 0, 255, 0.3)');
+
+                    player2Lives--;
+                    updatePlayer2LivesDisplay();
+                    enemyBulletsToRemove.add(bi);
+
+                    if (player2Lives <= 0) {
+                        player2Active = false;
+                        createExplosion(player2.x + player2.width / 2, player2.y + player2.height / 2, '#f0f', 20);
+                        // Check if both players are dead
                         if (lives <= 0) {
                             gameOver();
                         }
@@ -8222,6 +9142,15 @@
         function updateLivesDisplay() {
             const hearts = '❤️'.repeat(lives);
             document.getElementById('livesValue').textContent = hearts || '💀';
+        }
+
+        // Update player 2 lives display
+        function updatePlayer2LivesDisplay() {
+            const hearts = '💜'.repeat(player2Lives);
+            const element = document.getElementById('lives2Value');
+            if (element) {
+                element.textContent = hearts || '💀';
+            }
         }
 
         // Game over
@@ -8320,6 +9249,7 @@
                 updateStars();
                 updateSparkles();
                 updatePlayer();
+                updatePlayer2();
                 updatePlayerTrail();
                 updateBullets();
                 updateEnemies();
@@ -8355,6 +9285,7 @@
                 if (currentBoss) drawBossShadow(currentBoss);
                 powerUps.forEach(p => drawPowerupShadow(p));
                 drawPlayerShadow();
+                drawPlayer2Shadow();
 
                 // Draw actual objects
                 bullets.forEach(b => drawBullet(b));
@@ -8367,6 +9298,7 @@
                 drawPowerUps();
                 drawPlayerTrail();
                 drawPlayer();
+                drawPlayer2();
                 drawShield();
                 updateParticles();
 
@@ -8384,7 +9316,7 @@
         }
 
         // Start game
-        async function startGame(isEndless = false) {
+        async function startGame(isEndless = false, isTwoPlayer = false) {
             await initAudio();
             console.log('Audio ready, starting music...');
             initMusic();
@@ -8396,6 +9328,7 @@
 
             // Set game mode
             endlessMode = isEndless;
+            twoPlayerMode = isTwoPlayer;
 
             document.getElementById('startScreen').classList.add('hidden');
             resetGame();
@@ -8415,6 +9348,14 @@
                 document.getElementById('endlessTimer').classList.add('hidden');
                 document.getElementById('endlessWave').classList.add('hidden');
                 document.getElementById('levelValue').parentElement.style.display = '';
+            }
+
+            // Show/hide 2-player UI
+            const p2LivesDisplay = document.getElementById('player2Lives');
+            if (twoPlayerMode && p2LivesDisplay) {
+                p2LivesDisplay.classList.remove('hidden');
+            } else if (p2LivesDisplay) {
+                p2LivesDisplay.classList.add('hidden');
             }
 
             // Show mobile controls on touch devices
@@ -8446,8 +9387,28 @@
             particles = [];
             powerUps = [];
             enemyDirection = 1;
-            player.x = canvas.width / 2 - 25;
             gamePaused = false;
+
+            // Position players based on mode
+            if (twoPlayerMode) {
+                player.x = canvas.width / 3 - 25;
+                player2.x = (canvas.width * 2 / 3) - 25;
+                player2.y = canvas.height - 70;
+                player2Lives = hasUpgrade('extraLife') ? 4 : 3;
+                player2Active = true;
+                player2.speed = hasUpgrade('fasterShip') ? 8.4 : 7;
+                // Reset player 2 keys
+                keys2.left = false;
+                keys2.right = false;
+                keys2.up = false;
+                keys2.down = false;
+                keys2.shoot = false;
+                canShoot2 = true;
+                updatePlayer2LivesDisplay();
+            } else {
+                player.x = canvas.width / 2 - 25;
+                player2Active = false;
+            }
 
             // Apply ship speed upgrade
             player.speed = hasUpgrade('fasterShip') ? 8.4 : 7;
@@ -8509,13 +9470,14 @@
 
         // Event listeners
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
-            if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
-            if (e.key === 'ArrowUp' || e.key === 'w') {
+            // Player 1 controls (Arrow keys + Space)
+            if (e.key === 'ArrowLeft') keys.left = true;
+            if (e.key === 'ArrowRight') keys.right = true;
+            if (e.key === 'ArrowUp') {
                 keys.up = true;
                 e.preventDefault();
             }
-            if (e.key === 'ArrowDown' || e.key === 's') {
+            if (e.key === 'ArrowDown') {
                 keys.down = true;
                 e.preventDefault();
             }
@@ -8523,6 +9485,37 @@
                 keys.space = true;
                 e.preventDefault();
             }
+
+            // Player 2 controls (WASD + Q) - only in 2-player mode, otherwise WASD controls P1
+            if (twoPlayerMode) {
+                if (e.key === 'a' || e.key === 'A') keys2.left = true;
+                if (e.key === 'd' || e.key === 'D') keys2.right = true;
+                if (e.key === 'w' || e.key === 'W') {
+                    keys2.up = true;
+                    e.preventDefault();
+                }
+                if (e.key === 's' || e.key === 'S') {
+                    keys2.down = true;
+                    e.preventDefault();
+                }
+                if (e.key === 'q' || e.key === 'Q') {
+                    keys2.shoot = true;
+                    e.preventDefault();
+                }
+            } else {
+                // Single player: WASD also controls player 1
+                if (e.key === 'a' || e.key === 'A') keys.left = true;
+                if (e.key === 'd' || e.key === 'D') keys.right = true;
+                if (e.key === 'w' || e.key === 'W') {
+                    keys.up = true;
+                    e.preventDefault();
+                }
+                if (e.key === 's' || e.key === 'S') {
+                    keys.down = true;
+                    e.preventDefault();
+                }
+            }
+
             // Pause with P
             if (e.key === 'p' || e.key === 'P') {
                 togglePause();
@@ -8538,11 +9531,27 @@
         });
 
         document.addEventListener('keyup', (e) => {
-            if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
-            if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
-            if (e.key === 'ArrowUp' || e.key === 'w') keys.up = false;
-            if (e.key === 'ArrowDown' || e.key === 's') keys.down = false;
+            // Player 1 controls
+            if (e.key === 'ArrowLeft') keys.left = false;
+            if (e.key === 'ArrowRight') keys.right = false;
+            if (e.key === 'ArrowUp') keys.up = false;
+            if (e.key === 'ArrowDown') keys.down = false;
             if (e.key === ' ') keys.space = false;
+
+            // Player 2 controls
+            if (twoPlayerMode) {
+                if (e.key === 'a' || e.key === 'A') keys2.left = false;
+                if (e.key === 'd' || e.key === 'D') keys2.right = false;
+                if (e.key === 'w' || e.key === 'W') keys2.up = false;
+                if (e.key === 's' || e.key === 'S') keys2.down = false;
+                if (e.key === 'q' || e.key === 'Q') keys2.shoot = false;
+            } else {
+                // Single player: WASD also controls player 1
+                if (e.key === 'a' || e.key === 'A') keys.left = false;
+                if (e.key === 'd' || e.key === 'D') keys.right = false;
+                if (e.key === 'w' || e.key === 'W') keys.up = false;
+                if (e.key === 's' || e.key === 'S') keys.down = false;
+            }
         });
 
         // ==========================================
@@ -9247,6 +10256,60 @@
                     handleSplashInteraction(e);
                 }
             });
+        }
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then((registration) => {
+                        console.log('Cosmic Blasterz: Service Worker registered', registration.scope);
+
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    showShareToast('New version available! Refresh to update.');
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('Cosmic Blasterz: Service Worker registration failed', error);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Show install button
+            const installBtn = document.getElementById('installPwaBtn');
+            if (installBtn) installBtn.classList.remove('hidden');
+        });
+
+        async function installPwa() {
+            if (!deferredPrompt) return;
+
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+
+            if (outcome === 'accepted') {
+                showShareToast('App installed successfully!');
+            }
+            deferredPrompt = null;
+
+            const installBtn = document.getElementById('installPwaBtn');
+            if (installBtn) installBtn.classList.add('hidden');
+        }
+
+        // Check if running as PWA
+        function isPwaInstalled() {
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true;
         }
     </script>
 </body>
