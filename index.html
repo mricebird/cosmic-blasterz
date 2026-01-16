@@ -429,46 +429,70 @@
         let level = 1;
         let playerName = 'Spiller';
 
-        // Highscore system
-        const HIGHSCORE_KEY = 'spaceInvadersHighscores';
+        // Global Highscore system using JSONBlob
+        const JSONBLOB_ID = '019bc699-3ad3-72d4-b829-0b138c882139';
+        const JSONBLOB_URL = `https://jsonblob.com/api/jsonBlob/${JSONBLOB_ID}`;
         const MAX_HIGHSCORES = 10;
+        let cachedHighscores = [];
+        let highscoresLoaded = false;
 
-        function getHighscores() {
+        async function fetchHighscores() {
             try {
-                const data = localStorage.getItem(HIGHSCORE_KEY);
-                return data ? JSON.parse(data) : [];
+                const response = await fetch(JSONBLOB_URL);
+                const data = await response.json();
+                cachedHighscores = data.highscores || [];
+                highscoresLoaded = true;
+                return cachedHighscores;
             } catch (e) {
-                return [];
+                console.log('Could not fetch highscores, using cached');
+                return cachedHighscores;
             }
         }
 
-        function saveHighscore(name, newScore) {
-            const highscores = getHighscores();
-            highscores.push({ name: name, score: newScore, date: Date.now() });
-            highscores.sort((a, b) => b.score - a.score);
-            const trimmed = highscores.slice(0, MAX_HIGHSCORES);
+        function getHighscores() {
+            return cachedHighscores;
+        }
+
+        async function saveHighscore(name, newScore) {
+            // Add new score
+            cachedHighscores.push({ name: name, score: newScore, date: Date.now() });
+            cachedHighscores.sort((a, b) => b.score - a.score);
+            cachedHighscores = cachedHighscores.slice(0, MAX_HIGHSCORES);
+
+            // Save to server
             try {
-                localStorage.setItem(HIGHSCORE_KEY, JSON.stringify(trimmed));
-            } catch (e) {}
-            return trimmed;
+                await fetch(JSONBLOB_URL, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ highscores: cachedHighscores })
+                });
+            } catch (e) {
+                console.log('Could not save highscore to server');
+            }
+
+            return cachedHighscores;
         }
 
         function isHighscore(newScore) {
-            const highscores = getHighscores();
-            if (highscores.length < MAX_HIGHSCORES) return true;
-            return newScore > highscores[highscores.length - 1].score;
+            if (cachedHighscores.length < MAX_HIGHSCORES) return true;
+            return newScore > cachedHighscores[cachedHighscores.length - 1].score;
         }
 
         function renderHighscores(containerId, currentScore = null) {
             const container = document.getElementById(containerId);
-            const highscores = getHighscores();
+            const highscores = cachedHighscores;
 
-            if (highscores.length === 0) {
-                container.innerHTML = '<h3>🏆 HIGHSCORES 🏆</h3><p style="text-align:center;opacity:0.7;">Ingen highscores endnu</p>';
+            if (!highscoresLoaded) {
+                container.innerHTML = '<h3>🏆 GLOBAL HIGHSCORES 🏆</h3><p style="text-align:center;opacity:0.7;">Indlæser...</p>';
                 return;
             }
 
-            let html = '<h3>🏆 HIGHSCORES 🏆</h3>';
+            if (highscores.length === 0) {
+                container.innerHTML = '<h3>🏆 GLOBAL HIGHSCORES 🏆</h3><p style="text-align:center;opacity:0.7;">Ingen highscores endnu - bliv den første!</p>';
+                return;
+            }
+
+            let html = '<h3>🏆 GLOBAL HIGHSCORES 🏆</h3>';
             highscores.forEach((entry, index) => {
                 const isCurrent = currentScore !== null && entry.score === currentScore && entry.name === playerName;
                 html += `
@@ -839,17 +863,14 @@
         }
 
         // Game over
-        function gameOver() {
+        async function gameOver() {
             gameRunning = false;
             playGameOverSound();
 
             // Check for new highscore
             const isNew = isHighscore(score);
-            if (score > 0) {
-                saveHighscore(playerName, score);
-            }
 
-            // Update UI
+            // Update UI immediately
             document.getElementById('playerNameDisplay').textContent = playerName;
             document.getElementById('finalScore').textContent = score;
 
@@ -857,6 +878,11 @@
                 document.getElementById('newHighscoreMsg').classList.remove('hidden');
             } else {
                 document.getElementById('newHighscoreMsg').classList.add('hidden');
+            }
+
+            // Save highscore to server
+            if (score > 0) {
+                await saveHighscore(playerName, score);
             }
 
             renderHighscores('gameOverHighscores', score);
@@ -909,8 +935,10 @@
         }
 
         // Restart game
-        function restartGame() {
+        async function restartGame() {
             document.getElementById('gameOverScreen').classList.add('hidden');
+            // Refresh highscores from server
+            await fetchHighscores();
             resetGame();
             gameRunning = true;
             requestAnimationFrame(gameLoop);
@@ -967,8 +995,13 @@
         }
         drawStartScreen();
 
-        // Show highscores on start screen
-        renderHighscores('startHighscores');
+        // Fetch and show highscores on start screen
+        async function initHighscores() {
+            renderHighscores('startHighscores'); // Show loading state
+            await fetchHighscores();
+            renderHighscores('startHighscores'); // Show actual highscores
+        }
+        initHighscores();
 
         // Allow starting game with Enter key
         document.getElementById('playerName').addEventListener('keypress', (e) => {
