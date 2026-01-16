@@ -202,6 +202,132 @@
             background: linear-gradient(180deg, #000008 0%, #000510 50%, #000815 100%);
         }
 
+        /* CRT Retro Effect Overlay */
+        .crt-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 100;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .crt-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+        }
+
+        .crt-overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                ellipse at center,
+                transparent 0%,
+                rgba(0, 0, 0, 0.2) 90%,
+                rgba(0, 0, 0, 0.4) 100%
+            );
+            pointer-events: none;
+        }
+
+        /* Subtle screen flicker animation */
+        @keyframes crtFlicker {
+            0%, 100% { opacity: 1; }
+            92% { opacity: 1; }
+            93% { opacity: 0.9; }
+            94% { opacity: 1; }
+        }
+
+        .crt-overlay.flicker {
+            animation: crtFlicker 4s infinite;
+        }
+
+        /* Screen glow effect */
+        .game-container::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(0, 150, 255, 0.1) 0%,
+                transparent 70%
+            );
+            pointer-events: none;
+            z-index: -1;
+            border-radius: 10px;
+        }
+
+        /* Chromatic aberration effect (activated on damage) */
+        .chromatic-aberration {
+            animation: chromaticShift 0.1s ease-out;
+        }
+
+        @keyframes chromaticShift {
+            0% {
+                filter: none;
+                transform: translate(0, 0);
+            }
+            25% {
+                filter: drop-shadow(-2px 0 0 rgba(255, 0, 0, 0.5)) drop-shadow(2px 0 0 rgba(0, 255, 255, 0.5));
+                transform: translate(1px, 0);
+            }
+            50% {
+                filter: drop-shadow(-3px 0 0 rgba(255, 0, 0, 0.7)) drop-shadow(3px 0 0 rgba(0, 255, 255, 0.7));
+                transform: translate(-1px, 0);
+            }
+            75% {
+                filter: drop-shadow(-1px 0 0 rgba(255, 0, 0, 0.3)) drop-shadow(1px 0 0 rgba(0, 255, 255, 0.3));
+                transform: translate(0, 0);
+            }
+            100% {
+                filter: none;
+                transform: translate(0, 0);
+            }
+        }
+
+        /* Screen flash effect */
+        .screen-flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 99;
+            opacity: 0;
+            border-radius: 8px;
+        }
+
+        .screen-flash.active {
+            animation: flashPulse 0.15s ease-out;
+        }
+
+        @keyframes flashPulse {
+            0% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+
         .ui-overlay {
             position: absolute;
             top: 12px;
@@ -2550,6 +2676,8 @@
 
     <div class="game-container">
         <canvas id="gameCanvas" width="1000" height="700"></canvas>
+        <div class="crt-overlay flicker"></div>
+        <div class="screen-flash" id="screenFlash"></div>
         <div class="ui-overlay">
             <div class="score">SCORE: <span id="scoreValue">0</span></div>
             <div class="level">LEVEL: <span id="levelValue">1</span></div>
@@ -5433,6 +5561,31 @@
             };
         }
 
+        // Chromatic aberration effect (on player damage)
+        function triggerChromaticAberration() {
+            const canvas = document.getElementById('gameCanvas');
+            if (canvas) {
+                canvas.classList.add('chromatic-aberration');
+                setTimeout(() => {
+                    canvas.classList.remove('chromatic-aberration');
+                }, 100);
+            }
+        }
+
+        // Screen flash effect (on big kills/events)
+        function triggerScreenFlash(color = '#fff') {
+            const flash = document.getElementById('screenFlash');
+            if (flash) {
+                flash.style.background = color;
+                flash.classList.remove('active');
+                void flash.offsetWidth; // Force reflow
+                flash.classList.add('active');
+                setTimeout(() => {
+                    flash.classList.remove('active');
+                }, 150);
+            }
+        }
+
         // Boss system
         let currentBoss = null;
         const BOSS_LEVELS = [5, 10, 15, 20, 25];
@@ -6025,6 +6178,8 @@
                 playExplosionSound('boss');
                 triggerScreenShake(12, 500);
                 triggerSlowMotion(0.2, 1500);
+                triggerScreenFlash('rgba(255, 255, 255, 0.5)');
+                triggerChromaticAberration();
                 announce('bossDefeat');
 
                 // Check boss daily challenge (defeat boss without losing life)
@@ -7930,6 +8085,14 @@
                             score += comboPoints;
                             document.getElementById('scoreValue').textContent = score;
 
+                            // Screen flash on multi-kills
+                            if (comboCount >= 3) {
+                                triggerScreenFlash('rgba(255, 200, 0, 0.2)');
+                            }
+                            if (comboCount >= 5) {
+                                triggerScreenFlash('rgba(255, 100, 0, 0.3)');
+                            }
+
                             // Track stats for achievements
                             updateSessionStats('kill');
                             updateSessionStats('combo', comboCount);
@@ -8005,6 +8168,8 @@
                         createExplosion(player.x + player.width / 2, player.y + player.height / 2, '#0ff', 12);
                         playPlayerHitSound();
                         triggerScreenShake(8, 300);
+                        triggerChromaticAberration();
+                        triggerScreenFlash('rgba(255, 0, 0, 0.3)');
 
                         lives--;
                         updateLivesDisplay();
