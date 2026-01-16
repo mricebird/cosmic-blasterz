@@ -8552,9 +8552,15 @@
         let splashMusicNodes = [];
 
         function createSplashMusic() {
-            if (splashAudioCtx) return;
+            if (splashMusicPlaying) return;
 
-            splashAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            try {
+                splashAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+                // Resume if suspended (browser autoplay policy)
+                if (splashAudioCtx.state === 'suspended') {
+                    splashAudioCtx.resume();
+                }
 
             // Classic Amiga-style arpeggio melody
             const melody = [
@@ -8657,6 +8663,9 @@
 
             splashMusicPlaying = true;
             playMelody(0);
+            } catch (e) {
+                console.log('Could not start splash music:', e);
+            }
         }
 
         function stopSplashMusic() {
@@ -8825,35 +8834,40 @@
             initSplashStars();
             startScroller();
 
+            // Track if music has started (for two-step interaction)
+            let musicStartedByUser = false;
+
             // Try to autostart music (may be blocked by browser)
             setTimeout(() => {
                 startSplashMusicOnce();
+                // If autostart worked, allow single click to proceed
+                if (splashMusicPlaying) {
+                    musicStartedByUser = true;
+                }
             }, 100);
 
-            // Also start music on any interaction (fallback for autoplay block)
-            function ensureMusicPlaying() {
-                startSplashMusicOnce();
-                document.removeEventListener('click', ensureMusicPlaying);
-                document.removeEventListener('touchstart', ensureMusicPlaying);
-                document.removeEventListener('keydown', ensureMusicPlaying);
-            }
-            document.addEventListener('click', ensureMusicPlaying, { once: true });
-            document.addEventListener('touchstart', ensureMusicPlaying, { once: true });
-            document.addEventListener('keydown', ensureMusicPlaying, { once: true });
-
-            // Single click to start game
+            // Handle splash interaction: first click starts music, second click starts game
             function handleSplashInteraction(e) {
-                hideSplashScreen();
+                if (!musicStartedByUser) {
+                    // First interaction: start music
+                    startSplashMusicOnce();
+                    musicStartedByUser = true;
+                    // Update prompt
+                    const prompt = splashScreen.querySelector('.splash-prompt');
+                    if (prompt) prompt.textContent = 'Press Again to Start';
+                } else {
+                    // Music already playing: start game
+                    hideSplashScreen();
+                }
             }
 
             splashScreen.addEventListener('click', handleSplashInteraction);
             splashScreen.addEventListener('touchstart', handleSplashInteraction);
-            // Any key to start game
+            // Any key to interact
             document.addEventListener('keydown', function splashKeyHandler(e) {
                 if (!splashScreen.classList.contains('hidden')) {
                     e.preventDefault();
-                    hideSplashScreen();
-                    document.removeEventListener('keydown', splashKeyHandler);
+                    handleSplashInteraction(e);
                 }
             });
         }
