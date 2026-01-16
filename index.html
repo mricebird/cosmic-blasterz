@@ -106,15 +106,51 @@
             50% { opacity: 1; }
         }
 
+        /* Amiga Sine Wave Scroller */
+        .splash-scroller {
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            right: 0;
+            height: 80px;
+            overflow: hidden;
+        }
+
+        .splash-scroller canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Copyright */
+        .splash-copyright {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
         /* Mobile splash adjustments */
         @media (max-width: 600px) {
             .splash-logo {
                 max-width: 95%;
-                max-height: 50vh;
+                max-height: 45vh;
             }
             .splash-prompt {
                 font-size: 14px;
                 letter-spacing: 2px;
+            }
+            .splash-scroller {
+                bottom: 60px;
+                height: 60px;
+            }
+            .splash-copyright {
+                font-size: 10px;
+                bottom: 15px;
             }
         }
 
@@ -2473,6 +2509,10 @@
         <div class="splash-stars" id="splashStars"></div>
         <img src="logo.png" alt="Cosmic Blasterz" class="splash-logo">
         <div class="splash-prompt">Click or Tap to Start</div>
+        <div class="splash-scroller">
+            <canvas id="scrollerCanvas"></canvas>
+        </div>
+        <div class="splash-copyright">Copyright © 2026 | Invincible.as | All Rights Reserved.</div>
     </div>
 
     <div class="game-container">
@@ -8255,6 +8295,104 @@
         // SPLASH SCREEN
         // ==========================================
 
+        // Amiga-style Sine Wave Scroller
+        const scrollerCanvas = document.getElementById('scrollerCanvas');
+        let scrollerCtx = null;
+        let scrollerAnimationId = null;
+        let scrollX = 0;
+        const scrollText = "     WELCOME TO COSMIC BLASTERZ! ....... THE ULTIMATE RETRO SPACE SHOOTER EXPERIENCE ....... DODGE, SHOOT AND SURVIVE THE ALIEN INVASION ....... COLLECT POWER-UPS AND DEFEAT EPIC BOSSES ....... GREETINGS TO ALL RETRO GAMING FANS OUT THERE! ....... PRESS FIRE TO START YOUR MISSION ....... ";
+
+        function initScrollerCanvas() {
+            if (!scrollerCanvas) return;
+            const container = scrollerCanvas.parentElement;
+            scrollerCanvas.width = container.offsetWidth || window.innerWidth;
+            scrollerCanvas.height = container.offsetHeight || 80;
+            scrollerCtx = scrollerCanvas.getContext('2d');
+        }
+
+        function drawAmigaScroller() {
+            if (!scrollerCtx || !scrollerCanvas) return;
+
+            const width = scrollerCanvas.width;
+            const height = scrollerCanvas.height;
+
+            // Clear canvas
+            scrollerCtx.clearRect(0, 0, width, height);
+
+            // Font settings - classic Amiga style
+            const fontSize = Math.min(40, height * 0.6);
+            scrollerCtx.font = `bold ${fontSize}px "Orbitron", sans-serif`;
+            scrollerCtx.textBaseline = 'middle';
+
+            // Calculate text width for looping
+            const charWidth = fontSize * 0.7;
+            const totalWidth = scrollText.length * charWidth;
+
+            // Draw each character with sine wave offset
+            const time = Date.now() * 0.003;
+
+            for (let i = 0; i < scrollText.length; i++) {
+                const char = scrollText[i];
+                const x = i * charWidth - scrollX;
+
+                // Skip if off screen
+                if (x < -charWidth || x > width + charWidth) continue;
+
+                // Sine wave for Y position (bouncing effect)
+                const waveOffset = Math.sin(time + i * 0.3) * 15;
+                const y = height / 2 + waveOffset;
+
+                // Color gradient cycling (Amiga copper bar style)
+                const hue = (time * 50 + i * 8) % 360;
+                const saturation = 100;
+                const lightness = 50 + Math.sin(time + i * 0.2) * 15;
+
+                // Draw shadow
+                scrollerCtx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                scrollerCtx.fillText(char, x + 3, y + 3);
+
+                // Draw main character with gradient
+                const gradient = scrollerCtx.createLinearGradient(x, y - fontSize/2, x, y + fontSize/2);
+                gradient.addColorStop(0, `hsl(${hue}, ${saturation}%, ${lightness + 20}%)`);
+                gradient.addColorStop(0.5, `hsl(${hue}, ${saturation}%, ${lightness}%)`);
+                gradient.addColorStop(1, `hsl(${hue + 30}, ${saturation}%, ${lightness - 10}%)`);
+
+                scrollerCtx.fillStyle = gradient;
+                scrollerCtx.fillText(char, x, y);
+
+                // Chrome/metallic highlight
+                scrollerCtx.fillStyle = `rgba(255, 255, 255, ${0.3 + Math.sin(time * 2 + i * 0.5) * 0.2})`;
+                scrollerCtx.fillText(char, x, y - 2);
+            }
+
+            // Move scroll position
+            scrollX += 3;
+            if (scrollX > totalWidth) {
+                scrollX = 0;
+            }
+
+            // Continue animation if splash screen is visible
+            const splash = document.getElementById('splashScreen');
+            if (splash && !splash.classList.contains('hidden')) {
+                scrollerAnimationId = requestAnimationFrame(drawAmigaScroller);
+            }
+        }
+
+        function startScroller() {
+            initScrollerCanvas();
+            if (scrollerCtx) {
+                drawAmigaScroller();
+            }
+        }
+
+        // Handle resize for scroller
+        window.addEventListener('resize', () => {
+            const splash = document.getElementById('splashScreen');
+            if (splash && !splash.classList.contains('hidden')) {
+                initScrollerCanvas();
+            }
+        });
+
         // Create stars for splash screen
         function initSplashStars() {
             const container = document.getElementById('splashStars');
@@ -8279,6 +8417,11 @@
             const splash = document.getElementById('splashScreen');
             if (splash) {
                 splash.classList.add('hidden');
+                // Stop scroller animation
+                if (scrollerAnimationId) {
+                    cancelAnimationFrame(scrollerAnimationId);
+                    scrollerAnimationId = null;
+                }
                 // Play a sound effect when entering
                 if (typeof initAudio === 'function') {
                     initAudio();
@@ -8290,6 +8433,7 @@
         const splashScreen = document.getElementById('splashScreen');
         if (splashScreen) {
             initSplashStars();
+            startScroller();
             splashScreen.addEventListener('click', hideSplashScreen);
             splashScreen.addEventListener('touchstart', hideSplashScreen);
             // Also allow Enter or Space to dismiss
