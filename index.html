@@ -729,6 +729,130 @@
             75% { transform: translateX(3px) rotate(5deg); }
         }
 
+        .mode-card.roguelike:hover {
+            border-color: rgba(255, 200, 0, 0.6);
+            box-shadow: 0 0 20px rgba(255, 200, 0, 0.3);
+        }
+
+        .mode-card.roguelike .mode-title {
+            color: #fc0;
+        }
+
+        .mode-card.roguelike .mode-icon {
+            animation: diceRoll 1.5s ease-in-out infinite;
+        }
+
+        @keyframes diceRoll {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-15deg); }
+        }
+
+        /* Roguelike Upgrade Modal */
+        .roguelike-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .roguelike-modal.hidden {
+            display: none;
+        }
+
+        .roguelike-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            color: #fc0;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(255, 200, 0, 0.7);
+        }
+
+        .upgrade-cards {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .upgrade-card {
+            background: linear-gradient(180deg, rgba(30, 30, 50, 0.9) 0%, rgba(20, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(255, 200, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px 20px;
+            width: 180px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upgrade-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: #fc0;
+            box-shadow: 0 10px 30px rgba(255, 200, 0, 0.3);
+        }
+
+        .upgrade-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .upgrade-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            color: #fc0;
+            margin-bottom: 10px;
+        }
+
+        .upgrade-desc {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+        }
+
+        .upgrade-rarity-common {
+            border-color: rgba(150, 150, 150, 0.5);
+        }
+        .upgrade-rarity-common .upgrade-name {
+            color: #aaa;
+        }
+
+        .upgrade-rarity-rare {
+            border-color: rgba(0, 150, 255, 0.5);
+        }
+        .upgrade-rarity-rare .upgrade-name {
+            color: #0af;
+        }
+
+        .upgrade-rarity-epic {
+            border-color: rgba(200, 0, 255, 0.5);
+        }
+        .upgrade-rarity-epic .upgrade-name {
+            color: #c0f;
+        }
+
+        .upgrade-rarity-legendary {
+            border-color: rgba(255, 200, 0, 0.5);
+            animation: legendaryGlow 2s ease-in-out infinite;
+        }
+        .upgrade-rarity-legendary .upgrade-name {
+            color: #fc0;
+        }
+
+        @keyframes legendaryGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 200, 0, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 200, 0, 0.6); }
+        }
+
         .mode-desc {
             font-family: 'Rajdhani', sans-serif;
             font-size: 12px;
@@ -2021,6 +2145,38 @@
             text-transform: uppercase;
         }
 
+        .highscore-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .highscore-tab {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: #0ff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .highscore-tab:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .highscore-tab.active {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.4), rgba(255, 0, 255, 0.4));
+            border-color: #f0f;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+        }
+
         .highscore-entry {
             display: flex;
             justify-content: space-between;
@@ -2572,6 +2728,33 @@
             100% {
                 opacity: 0;
                 transform: translateY(-100%) translateX(50px);
+            }
+        }
+
+        /* Level Up Screen Flash */
+        .level-up-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 9999;
+            animation: levelFlash 0.6s ease-out forwards;
+        }
+
+        @keyframes levelFlash {
+            0% {
+                background: radial-gradient(circle at center, rgba(255, 255, 255, 0.9), rgba(0, 255, 255, 0.7), transparent 70%);
+            }
+            20% {
+                background: radial-gradient(circle at center, rgba(0, 255, 255, 0.8), rgba(255, 0, 255, 0.5), transparent 80%);
+            }
+            40% {
+                background: radial-gradient(circle at center, rgba(255, 0, 255, 0.6), rgba(0, 200, 255, 0.4), transparent 85%);
+            }
+            100% {
+                background: transparent;
             }
         }
 
@@ -3524,6 +3707,43 @@
         .menu-music-btn.muted {
             color: rgba(255, 100, 100, 0.8);
             border-color: rgba(255, 100, 100, 0.4);
+        }
+
+        .ghost-race-btn {
+            position: absolute;
+            bottom: 15px;
+            left: 130px;
+            background: linear-gradient(180deg, rgba(100, 100, 150, 0.4) 0%, rgba(60, 60, 100, 0.5) 100%);
+            border: 2px solid rgba(150, 150, 255, 0.4);
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            color: #aaf;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .ghost-race-btn:hover {
+            background: linear-gradient(180deg, rgba(150, 150, 200, 0.5) 0%, rgba(100, 100, 150, 0.6) 100%);
+            border-color: #aaf;
+            transform: scale(1.05);
+        }
+
+        .ghost-race-btn.active {
+            background: linear-gradient(180deg, rgba(0, 200, 100, 0.4) 0%, rgba(0, 150, 80, 0.5) 100%);
+            border-color: rgba(0, 255, 150, 0.6);
+            color: #0f0;
+        }
+
+        .ghost-race-btn small {
+            font-size: 8px;
+            opacity: 0.7;
         }
 
         .stats-btn {
@@ -5063,6 +5283,7 @@
         <div class="start-screen" id="startScreen">
             <!-- Menu controls -->
             <button class="menu-music-btn" id="menuMusicBtn" onclick="toggleMenuMusic()">🎵 Music</button>
+            <button class="ghost-race-btn" id="ghostRaceBtn" onclick="toggleGhostRace()">👻 Ghost Race</button>
             <button class="stats-btn" onclick="openStats()">📊 Stats</button>
 
             <!-- Amiga-style effects -->
@@ -5187,6 +5408,11 @@
                     <div class="mode-icon">👹</div>
                     <div class="mode-title">BOSS RUSH</div>
                     <div class="mode-desc">Fight all bosses back-to-back! No waves, pure chaos!</div>
+                </div>
+                <div class="mode-card roguelike" onclick="startRoguelike()">
+                    <div class="mode-icon">🎲</div>
+                    <div class="mode-title">ROGUELIKE</div>
+                    <div class="mode-desc">Choose upgrades on level up! Build your perfect ship!</div>
                 </div>
             </div>
             <div class="controls-info">
@@ -5345,6 +5571,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Roguelike Upgrade Modal -->
+        <div class="roguelike-modal hidden" id="roguelikeModal">
+            <div class="roguelike-title">🎲 CHOOSE AN UPGRADE 🎲</div>
+            <div class="upgrade-cards" id="upgradeCards">
+                <!-- Upgrade cards will be inserted here dynamically -->
             </div>
         </div>
 
@@ -5683,6 +5917,12 @@
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+
+        // Stub function for daily challenge progress tracking (defined early to ensure availability)
+        function updateDailyChallengeProgress(type, value) {
+            // Progress is tracked via checkDailyChallenge() during gameplay
+            // This stub prevents "not defined" errors
+        }
 
         // Audio context for sound effects
         let audioCtx = null;
@@ -8907,12 +9147,6 @@
 
         loadDailyChallenge();
 
-        // Stub function for daily challenge progress tracking
-        function updateDailyChallengeProgress(type, value) {
-            // Progress is tracked via checkDailyChallenge() during gameplay
-            // This stub exists to prevent errors from removed code
-        }
-
         // Weapon system
         const WEAPONS = {
             laser: {
@@ -10112,6 +10346,25 @@
         const LOCAL_STORAGE_KEY = 'spaceInvadersHighscores';
         let cachedHighscores = [];
         let highscoresLoaded = false;
+        let highscoreViewMode = 'alltime'; // 'alltime' or 'weekly'
+
+        // Get ISO week number from a date
+        function getWeekNumber(d) {
+            const date = new Date(d);
+            date.setHours(0, 0, 0, 0);
+            date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+            const week1 = new Date(date.getFullYear(), 0, 4);
+            return {
+                year: date.getFullYear(),
+                week: 1 + Math.round(((date - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7)
+            };
+        }
+
+        // Get current week identifier
+        function getCurrentWeek() {
+            const { year, week } = getWeekNumber(new Date());
+            return `${year}-W${week.toString().padStart(2, '0')}`;
+        }
 
         // Load from localStorage as fallback
         function loadLocalHighscores() {
@@ -10163,8 +10416,13 @@
         }
 
         async function saveHighscore(name, newScore) {
-            // Add new score
-            cachedHighscores.push({ name: name, score: newScore, date: Date.now() });
+            // Add new score with week tracking
+            cachedHighscores.push({
+                name: name,
+                score: newScore,
+                date: Date.now(),
+                week: getCurrentWeek()
+            });
             cachedHighscores.sort((a, b) => b.score - a.score);
             cachedHighscores = cachedHighscores.slice(0, MAX_HIGHSCORES);
 
@@ -10192,20 +10450,43 @@
 
         function renderHighscores(containerId, currentScore = null) {
             const container = document.getElementById(containerId);
-            const highscores = cachedHighscores;
+            const currentWeek = getCurrentWeek();
 
             if (!highscoresLoaded) {
                 container.innerHTML = '<h3>🏆 GLOBAL HIGHSCORES 🏆</h3><p style="text-align:center;opacity:0.7;">Loading...</p>';
                 return;
             }
 
-            if (highscores.length === 0) {
-                container.innerHTML = '<h3>🏆 GLOBAL HIGHSCORES 🏆</h3><p style="text-align:center;opacity:0.7;">No highscores yet - be the first!</p>';
+            // Filter scores based on view mode
+            let displayScores = cachedHighscores;
+            if (highscoreViewMode === 'weekly') {
+                displayScores = cachedHighscores.filter(entry => entry.week === currentWeek);
+            }
+
+            // Create tabs HTML
+            let html = `
+                <div class="highscore-tabs">
+                    <button class="highscore-tab ${highscoreViewMode === 'alltime' ? 'active' : ''}"
+                            onclick="setHighscoreView('alltime', '${containerId}')">
+                        🏆 All Time
+                    </button>
+                    <button class="highscore-tab ${highscoreViewMode === 'weekly' ? 'active' : ''}"
+                            onclick="setHighscoreView('weekly', '${containerId}')">
+                        📅 This Week
+                    </button>
+                </div>
+            `;
+
+            const title = highscoreViewMode === 'weekly' ? 'WEEKLY LEADERBOARD' : 'GLOBAL HIGHSCORES';
+
+            if (displayScores.length === 0) {
+                html += `<h3>🏆 ${title} 🏆</h3><p style="text-align:center;opacity:0.7;">${highscoreViewMode === 'weekly' ? 'No scores this week - be the first!' : 'No highscores yet - be the first!'}</p>`;
+                container.innerHTML = html;
                 return;
             }
 
-            let html = '<h3>🏆 GLOBAL HIGHSCORES 🏆</h3>';
-            highscores.forEach((entry, index) => {
+            html += `<h3>🏆 ${title} 🏆</h3>`;
+            displayScores.slice(0, MAX_HIGHSCORES).forEach((entry, index) => {
                 const isCurrent = currentScore !== null && entry.score === currentScore && entry.name === playerName;
                 html += `
                     <div class="highscore-entry ${isCurrent ? 'current' : ''}">
@@ -10216,6 +10497,11 @@
                 `;
             });
             container.innerHTML = html;
+        }
+
+        function setHighscoreView(mode, containerId) {
+            highscoreViewMode = mode;
+            renderHighscores(containerId);
         }
 
         // Player
@@ -10472,6 +10758,16 @@
                 }
             };
             animate();
+        }
+
+        // Level up screen flash effect
+        function triggerLevelUpFlash() {
+            const flash = document.createElement('div');
+            flash.className = 'level-up-flash';
+            document.body.appendChild(flash);
+
+            // Remove after animation completes
+            setTimeout(() => flash.remove(), 600);
         }
 
         function drawWarpEffect() {
@@ -11974,11 +12270,30 @@
         // Create explosion particles
         function createExplosion(x, y, color, count = 10) {
             // Limit total particles
-            if (particles.length > 100) return;
+            if (particles.length > 150) return;
 
+            // Inner core flash (bright center)
+            const coreCount = Math.floor(count / 2);
+            for (let i = 0; i < coreCount; i++) {
+                const angle = (Math.PI * 2 / coreCount) * i + Math.random() * 0.5;
+                const speed = 1 + Math.random() * 2;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 1,
+                    color: '#fff',
+                    size: 4 + Math.random() * 2,
+                    type: 'core',
+                    decay: 0.08
+                });
+            }
+
+            // Main debris particles
             for (let i = 0; i < count; i++) {
-                const angle = (Math.PI * 2 / count) * i;
-                const speed = 2 + Math.random() * 3;
+                const angle = (Math.PI * 2 / count) * i + Math.random() * 0.3;
+                const speed = 2 + Math.random() * 4;
                 particles.push({
                     x: x,
                     y: y,
@@ -11986,7 +12301,43 @@
                     vy: Math.sin(angle) * speed,
                     life: 1,
                     color: color,
-                    size: 3
+                    size: 2 + Math.random() * 3,
+                    type: 'debris',
+                    decay: 0.025 + Math.random() * 0.015
+                });
+            }
+
+            // Spark trails (small fast particles)
+            const sparkCount = Math.floor(count * 0.6);
+            for (let i = 0; i < sparkCount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 4 + Math.random() * 5;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 0.6 + Math.random() * 0.4,
+                    color: '#ff0',
+                    size: 1 + Math.random() * 2,
+                    type: 'spark',
+                    decay: 0.04 + Math.random() * 0.02
+                });
+            }
+
+            // Expanding ring (for larger explosions)
+            if (count >= 8) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: 0,
+                    vy: 0,
+                    life: 1,
+                    color: color,
+                    size: 5,
+                    type: 'ring',
+                    decay: 0.04,
+                    radius: 5
                 });
             }
         }
@@ -11998,13 +12349,54 @@
             particles.forEach(p => {
                 p.x += p.vx;
                 p.y += p.vy;
-                p.life -= 0.03;
-                p.vx *= 0.97;
-                p.vy *= 0.97;
+                p.life -= p.decay || 0.03;
+                p.vx *= 0.96;
+                p.vy *= 0.96;
+
+                // Add gravity to debris
+                if (p.type === 'debris') {
+                    p.vy += 0.1;
+                }
 
                 ctx.globalAlpha = p.life;
-                ctx.fillStyle = p.color;
-                ctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
+
+                if (p.type === 'ring') {
+                    // Expanding ring effect
+                    p.radius += 3;
+                    ctx.strokeStyle = p.color;
+                    ctx.lineWidth = 2 * p.life;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.stroke();
+                } else if (p.type === 'spark') {
+                    // Spark with trail
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                    ctx.fill();
+                    // Trail
+                    ctx.globalAlpha = p.life * 0.3;
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p.x - p.vx * 2, p.y - p.vy * 2);
+                    ctx.strokeStyle = p.color;
+                    ctx.lineWidth = p.size * 0.5;
+                    ctx.stroke();
+                } else if (p.type === 'core') {
+                    // Bright core glow
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = p.color;
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                } else {
+                    // Regular debris squares
+                    ctx.fillStyle = p.color;
+                    const size = p.size * (0.5 + p.life * 0.5);
+                    ctx.fillRect(p.x - size/2, p.y - size/2, size, size);
+                }
             });
             ctx.globalAlpha = 1;
         }
@@ -12159,8 +12551,16 @@
                 // Trigger 3D warp effect for level transition
                 triggerWarpEffect(1200);
 
+                // Trigger screen flash effect
+                triggerLevelUpFlash();
+
                 // Show 3D rotating level text
                 show3DRotatingText(`LEVEL ${level}`, 2000);
+
+                // Roguelike mode: show upgrade selection
+                if (roguelikeMode && level > 1) {
+                    setTimeout(() => showRoguelikeUpgradeModal(), 500);
+                }
 
                 // Don't spawn enemies if it's a boss level - boss will spawn in game loop
                 if (!BOSS_LEVELS.includes(level)) {
@@ -12446,6 +12846,9 @@
             gameRunning = false;
             stopMusic();
 
+            // Save ghost recording if enabled
+            finishGhostRecording();
+
             // Play different sound for victory vs game over
             if (isVictory) {
                 playVictoryFanfare();
@@ -12463,6 +12866,12 @@
             if (bossRushMode) {
                 bossRushMode = false;
                 document.getElementById('bossRushDisplay').classList.add('hidden');
+            }
+
+            // End Roguelike mode if active
+            if (roguelikeMode) {
+                roguelikeMode = false;
+                document.getElementById('roguelikeModal').classList.add('hidden');
             }
 
             // Hide mobile controls and reset touch state
@@ -12607,6 +13016,10 @@
                 updatePlayer();
                 updatePlayer2();
                 updatePlayerTrail();
+
+                // Ghost race recording and playback
+                recordGhostFrame();
+                updateGhostPlayback();
                 updateBullets();
                 updateEnemies();
                 updatePowerUps();
@@ -12652,6 +13065,7 @@
                 drawUFO();
                 drawBarriers();
                 drawPowerUps();
+                drawGhost();
                 drawPlayerTrail();
                 drawPlayer();
                 drawPlayer2();
@@ -12692,11 +13106,20 @@
             endlessMode = isEndless;
             twoPlayerMode = isTwoPlayer;
 
+            // Reset roguelike if not in roguelike mode
+            if (!roguelikeMode) {
+                resetRoguelikeUpgrades();
+            }
+
             document.getElementById('startScreen').classList.add('hidden');
             resetGame();
             gameRunning = true;
             gameStartTime = Date.now();
             announce('gameStart');
+
+            // Initialize ghost race
+            startGhostRecording();
+            startGhostPlayback();
 
             // Track lifetime stats
             updateLifetimeStat('gamesPlayed', 1, 'add');
@@ -13094,6 +13517,303 @@
             }
 
             animate();
+        }
+
+        // Ghost Race Mode
+        let ghostRaceEnabled = false;
+        let ghostRecording = [];
+        let ghostPlayback = null;
+        let ghostPlaybackIndex = 0;
+        let ghostRecordFrame = 0;
+        const GHOST_STORAGE_KEY = 'cosmicBlasterzGhost';
+        const GHOST_RECORD_INTERVAL = 3; // Record every 3 frames for performance
+
+        function loadGhostData() {
+            try {
+                const data = localStorage.getItem(GHOST_STORAGE_KEY);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    return parsed;
+                }
+            } catch (e) {}
+            return null;
+        }
+
+        function saveGhostData(recording, finalScore) {
+            try {
+                const data = {
+                    recording: recording,
+                    score: finalScore,
+                    date: Date.now(),
+                    playerName: playerName
+                };
+                localStorage.setItem(GHOST_STORAGE_KEY, JSON.stringify(data));
+            } catch (e) {}
+        }
+
+        function startGhostRecording() {
+            ghostRecording = [];
+            ghostRecordFrame = 0;
+        }
+
+        function recordGhostFrame() {
+            if (!ghostRaceEnabled) return;
+
+            ghostRecordFrame++;
+            if (ghostRecordFrame % GHOST_RECORD_INTERVAL !== 0) return;
+
+            ghostRecording.push({
+                x: player.x,
+                y: player.y,
+                score: score,
+                level: level,
+                frame: ghostRecordFrame
+            });
+        }
+
+        function startGhostPlayback() {
+            const ghostData = loadGhostData();
+            if (ghostData && ghostData.recording) {
+                ghostPlayback = ghostData;
+                ghostPlaybackIndex = 0;
+            } else {
+                ghostPlayback = null;
+            }
+        }
+
+        function updateGhostPlayback() {
+            if (!ghostRaceEnabled || !ghostPlayback) return;
+
+            // Find the ghost frame that matches our current recording frame
+            while (ghostPlaybackIndex < ghostPlayback.recording.length - 1 &&
+                   ghostPlayback.recording[ghostPlaybackIndex + 1].frame <= ghostRecordFrame) {
+                ghostPlaybackIndex++;
+            }
+        }
+
+        function drawGhost() {
+            if (!ghostRaceEnabled || !ghostPlayback || ghostPlaybackIndex >= ghostPlayback.recording.length) return;
+
+            const ghostFrame = ghostPlayback.recording[ghostPlaybackIndex];
+            if (!ghostFrame) return;
+
+            ctx.save();
+            ctx.globalAlpha = 0.4;
+
+            // Draw ghost ship outline
+            const gx = ghostFrame.x;
+            const gy = ghostFrame.y;
+
+            // Outer glow
+            ctx.shadowColor = '#888';
+            ctx.shadowBlur = 15;
+
+            // Ghost ship body
+            ctx.fillStyle = 'rgba(150, 150, 150, 0.5)';
+            ctx.beginPath();
+            ctx.moveTo(gx + player.width / 2, gy);
+            ctx.lineTo(gx + player.width, gy + player.height);
+            ctx.lineTo(gx + player.width * 0.75, gy + player.height * 0.7);
+            ctx.lineTo(gx + player.width / 2, gy + player.height * 0.85);
+            ctx.lineTo(gx + player.width * 0.25, gy + player.height * 0.7);
+            ctx.lineTo(gx, gy + player.height);
+            ctx.closePath();
+            ctx.fill();
+
+            // "GHOST" label
+            ctx.shadowBlur = 0;
+            ctx.font = '10px Orbitron';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.textAlign = 'center';
+            ctx.fillText('GHOST', gx + player.width / 2, gy - 8);
+
+            // Ghost score comparison
+            const scoreDiff = score - ghostFrame.score;
+            const diffColor = scoreDiff >= 0 ? '#0f0' : '#f00';
+            const diffText = scoreDiff >= 0 ? `+${scoreDiff}` : `${scoreDiff}`;
+            ctx.fillStyle = diffColor;
+            ctx.font = 'bold 12px Orbitron';
+            ctx.fillText(diffText, gx + player.width / 2, gy - 20);
+
+            ctx.restore();
+        }
+
+        function finishGhostRecording() {
+            if (!ghostRaceEnabled || ghostRecording.length === 0) return;
+
+            // Only save if this is a new best score
+            const existingGhost = loadGhostData();
+            if (!existingGhost || score > existingGhost.score) {
+                saveGhostData(ghostRecording, score);
+                console.log('New ghost saved! Score:', score);
+            }
+        }
+
+        function toggleGhostRace() {
+            ghostRaceEnabled = !ghostRaceEnabled;
+            localStorage.setItem('ghostRaceEnabled', ghostRaceEnabled);
+            updateGhostRaceButton();
+        }
+
+        function loadGhostRaceSetting() {
+            try {
+                const setting = localStorage.getItem('ghostRaceEnabled');
+                ghostRaceEnabled = setting === 'true';
+            } catch (e) {
+                ghostRaceEnabled = false;
+            }
+            updateGhostRaceButton();
+        }
+
+        function updateGhostRaceButton() {
+            const btn = document.getElementById('ghostRaceBtn');
+            if (btn) {
+                const ghostData = loadGhostData();
+                const hasGhost = ghostData && ghostData.recording;
+                if (ghostRaceEnabled && hasGhost) {
+                    btn.innerHTML = `<span style="color:#0f0;">👻 Ghost ON</span><br><small>${ghostData.playerName}: ${ghostData.score}</small>`;
+                } else if (hasGhost) {
+                    btn.innerHTML = `<span>👻 Ghost OFF</span><br><small>Best: ${ghostData.score}</small>`;
+                } else {
+                    btn.innerHTML = '👻 Ghost Race<br><small>No ghost yet</small>';
+                }
+                btn.classList.toggle('active', ghostRaceEnabled);
+            }
+        }
+
+        // Initialize ghost race setting
+        loadGhostRaceSetting();
+
+        // Roguelike Mode
+        let roguelikeMode = false;
+        let roguelikeUpgrades = [];
+
+        const ROGUELIKE_UPGRADES = [
+            // Common upgrades
+            { id: 'speed_boost', name: 'Thruster Boost', icon: '🚀', desc: '+15% movement speed', rarity: 'common', effect: () => { player.speed *= 1.15; } },
+            { id: 'damage_up', name: 'Weapon Amp', icon: '💥', desc: '+20% damage', rarity: 'common', effect: () => { roguelikeDamageBonus += 0.2; } },
+            { id: 'fire_rate', name: 'Rapid Fire', icon: '⚡', desc: '+25% fire rate', rarity: 'common', effect: () => { roguelikeFireRateBonus += 0.25; } },
+            { id: 'armor', name: 'Hull Plating', icon: '🛡️', desc: 'Reduce incoming damage', rarity: 'common', effect: () => { roguelikeArmor += 0.1; } },
+
+            // Rare upgrades
+            { id: 'extra_life', name: 'Extra Life', icon: '❤️', desc: '+1 life', rarity: 'rare', effect: () => { lives++; updateLivesDisplay(); } },
+            { id: 'magnet', name: 'Power Magnet', icon: '🧲', desc: 'Attract power-ups from further away', rarity: 'rare', effect: () => { roguelikeMagnetRange += 100; } },
+            { id: 'double_coins', name: 'Greed Module', icon: '💰', desc: '2x coins this run', rarity: 'rare', effect: () => { roguelikeCoinMultiplier *= 2; } },
+            { id: 'bullet_size', name: 'Big Bullets', icon: '🔵', desc: '+50% bullet size', rarity: 'rare', effect: () => { roguelikeBulletSizeBonus += 0.5; } },
+
+            // Epic upgrades
+            { id: 'multi_shot', name: 'Multi-Shot', icon: '🔱', desc: 'Fire 2 extra bullets', rarity: 'epic', effect: () => { roguelikeExtraBullets += 2; } },
+            { id: 'homing', name: 'Homing Bullets', icon: '🎯', desc: 'Bullets slightly track enemies', rarity: 'epic', effect: () => { roguelikeHoming = true; } },
+            { id: 'regen', name: 'Auto-Repair', icon: '🔧', desc: 'Slowly regenerate health', rarity: 'epic', effect: () => { roguelikeRegen = true; } },
+            { id: 'crit', name: 'Critical Hit', icon: '💢', desc: '20% chance for 3x damage', rarity: 'epic', effect: () => { roguelikeCritChance += 0.2; } },
+
+            // Legendary upgrades
+            { id: 'invuln', name: 'Phase Shift', icon: '👻', desc: '1 second invulnerability after hit', rarity: 'legendary', effect: () => { roguelikeInvulnTime = 60; } },
+            { id: 'nuke', name: 'Screen Clear', icon: '☢️', desc: 'Start each level with a free bomb', rarity: 'legendary', effect: () => { roguelikeStartBomb = true; } },
+            { id: 'vampiric', name: 'Life Steal', icon: '🧛', desc: '5% chance to heal on kill', rarity: 'legendary', effect: () => { roguelikeVampiric = true; } }
+        ];
+
+        // Roguelike upgrade stats
+        let roguelikeDamageBonus = 0;
+        let roguelikeFireRateBonus = 0;
+        let roguelikeArmor = 0;
+        let roguelikeMagnetRange = 0;
+        let roguelikeCoinMultiplier = 1;
+        let roguelikeBulletSizeBonus = 0;
+        let roguelikeExtraBullets = 0;
+        let roguelikeHoming = false;
+        let roguelikeRegen = false;
+        let roguelikeCritChance = 0;
+        let roguelikeInvulnTime = 0;
+        let roguelikeStartBomb = false;
+        let roguelikeVampiric = false;
+        let roguelikeRegenTimer = 0;
+
+        function resetRoguelikeUpgrades() {
+            roguelikeUpgrades = [];
+            roguelikeDamageBonus = 0;
+            roguelikeFireRateBonus = 0;
+            roguelikeArmor = 0;
+            roguelikeMagnetRange = 0;
+            roguelikeCoinMultiplier = 1;
+            roguelikeBulletSizeBonus = 0;
+            roguelikeExtraBullets = 0;
+            roguelikeHoming = false;
+            roguelikeRegen = false;
+            roguelikeCritChance = 0;
+            roguelikeInvulnTime = 0;
+            roguelikeStartBomb = false;
+            roguelikeVampiric = false;
+            roguelikeRegenTimer = 0;
+            player.speed = 7; // Reset to default
+        }
+
+        function getRandomUpgrades(count = 3) {
+            // Weight by rarity
+            const weights = { common: 50, rare: 30, epic: 15, legendary: 5 };
+            const weighted = [];
+
+            ROGUELIKE_UPGRADES.forEach(upgrade => {
+                // Don't offer upgrades already at max or already chosen (for some)
+                if (roguelikeUpgrades.includes(upgrade.id) &&
+                    ['homing', 'regen', 'vampiric', 'nuke'].includes(upgrade.id)) {
+                    return; // Skip one-time upgrades already chosen
+                }
+                for (let i = 0; i < weights[upgrade.rarity]; i++) {
+                    weighted.push(upgrade);
+                }
+            });
+
+            // Shuffle and pick
+            const shuffled = weighted.sort(() => Math.random() - 0.5);
+            const selected = [];
+            const usedIds = new Set();
+
+            for (const upgrade of shuffled) {
+                if (!usedIds.has(upgrade.id) && selected.length < count) {
+                    selected.push(upgrade);
+                    usedIds.add(upgrade.id);
+                }
+            }
+
+            return selected;
+        }
+
+        function showRoguelikeUpgradeModal() {
+            if (!roguelikeMode) return;
+
+            gamePaused = true;
+            const modal = document.getElementById('roguelikeModal');
+            const container = document.getElementById('upgradeCards');
+
+            const upgrades = getRandomUpgrades(3);
+            container.innerHTML = upgrades.map(upgrade => `
+                <div class="upgrade-card upgrade-rarity-${upgrade.rarity}" onclick="selectRoguelikeUpgrade('${upgrade.id}')">
+                    <div class="upgrade-icon">${upgrade.icon}</div>
+                    <div class="upgrade-name">${upgrade.name}</div>
+                    <div class="upgrade-desc">${upgrade.desc}</div>
+                </div>
+            `).join('');
+
+            modal.classList.remove('hidden');
+        }
+
+        function selectRoguelikeUpgrade(upgradeId) {
+            const upgrade = ROGUELIKE_UPGRADES.find(u => u.id === upgradeId);
+            if (upgrade) {
+                roguelikeUpgrades.push(upgradeId);
+                upgrade.effect();
+                playPowerUpSound();
+            }
+
+            document.getElementById('roguelikeModal').classList.add('hidden');
+            gamePaused = false;
+        }
+
+        async function startRoguelike() {
+            roguelikeMode = true;
+            resetRoguelikeUpgrades();
+            await startGame(false, false);
         }
 
         // AI Demo Mode
