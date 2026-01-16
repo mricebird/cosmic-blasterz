@@ -15218,41 +15218,65 @@
             }
         }
 
-        let menuMusicMuted = false;
+        // ==========================================
+        // MUSIC CONTROL - Single source of truth
+        // ==========================================
+        let isMusicEnabled = true;
 
-        function toggleMenuMusic() {
-            menuMusicMuted = !menuMusicMuted;
-            const btn = document.getElementById('menuMusicBtn');
-
-            if (menuMusicMuted) {
-                stopSplashMusic();
-                if (btn) {
-                    btn.textContent = '🔇 Music Off';
-                    btn.classList.add('muted');
-                }
+        function initMusic() {
+            // Load saved preference from localStorage
+            const saved = localStorage.getItem('musicEnabled');
+            if (saved !== null) {
+                isMusicEnabled = saved === 'true';
             } else {
-                createSplashMusic();
-                if (btn) {
-                    btn.textContent = '🎵 Music';
-                    btn.classList.remove('muted');
-                }
+                isMusicEnabled = true; // Default to enabled
             }
+            updateMusicButton();
+        }
+
+        function toggleMusic() {
+            isMusicEnabled = !isMusicEnabled;
 
             // Save preference
-            localStorage.setItem('menuMusicMuted', menuMusicMuted);
+            localStorage.setItem('musicEnabled', isMusicEnabled.toString());
+
+            // Update audio state
+            if (isMusicEnabled) {
+                try {
+                    createSplashMusic();
+                } catch (e) {
+                    console.log('Could not start music:', e);
+                }
+            } else {
+                stopSplashMusic();
+            }
+
+            updateMusicButton();
             playSelectSound();
         }
 
-        function loadMenuMusicSetting() {
-            const saved = localStorage.getItem('menuMusicMuted');
-            if (saved === 'true') {
-                menuMusicMuted = true;
-                const btn = document.getElementById('menuMusicBtn');
-                if (btn) {
-                    btn.textContent = '🔇 Music Off';
-                    btn.classList.add('muted');
-                }
+        function updateMusicButton() {
+            const btn = document.getElementById('menuMusicBtn');
+            if (!btn) return;
+
+            if (isMusicEnabled) {
+                // Music is ON - button shows option to turn OFF
+                btn.textContent = '🔇 Music Off';
+                btn.classList.remove('muted');
+            } else {
+                // Music is OFF - button shows option to turn ON
+                btn.textContent = '🎶 Music On';
+                btn.classList.add('muted');
             }
+        }
+
+        // Legacy compatibility wrapper
+        function toggleMenuMusic() {
+            toggleMusic();
+        }
+
+        function loadMenuMusicSetting() {
+            initMusic();
         }
 
         // Amiga-style Sine Wave Scroller
@@ -15862,9 +15886,13 @@
         // Start music on first interaction (browser autoplay policy)
         let splashMusicStarted = false;
         function startSplashMusicOnce() {
-            if (!splashMusicStarted && !menuMusicMuted) {
+            if (!splashMusicStarted && isMusicEnabled) {
                 splashMusicStarted = true;
-                createSplashMusic();
+                try {
+                    createSplashMusic();
+                } catch (e) {
+                    console.log('Could not start splash music:', e);
+                }
             }
         }
 
