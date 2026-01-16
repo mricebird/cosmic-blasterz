@@ -17,11 +17,12 @@
         body {
             background: radial-gradient(ellipse at center, #0a0a1a 0%, #000 70%);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             font-family: 'Rajdhani', 'Courier New', monospace;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         .game-container {
@@ -1483,6 +1484,10 @@
 
         /* Footer */
         .game-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             text-align: center;
             padding: 15px 20px;
             font-family: 'Rajdhani', sans-serif;
@@ -1490,6 +1495,7 @@
             font-weight: 500;
             color: rgba(255, 255, 255, 0.4);
             letter-spacing: 0.5px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
         }
 
         .game-footer a {
