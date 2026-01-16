@@ -8008,8 +8008,9 @@
         }
 
         // Start game
-        function startGame(isEndless = false) {
-            initAudio();
+        async function startGame(isEndless = false) {
+            await initAudio();
+            console.log('Audio ready, starting music...');
             initMusic();
             initAmbientSounds();
 
