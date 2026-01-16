@@ -1732,6 +1732,36 @@
             color: #0f8;
         }
 
+        .garage-upgrade-btn {
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: linear-gradient(180deg, rgba(255, 200, 0, 0.3) 0%, rgba(255, 150, 0, 0.4) 100%);
+            border: 1px solid rgba(255, 200, 0, 0.5);
+            border-radius: 6px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            color: #fc0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .garage-upgrade-btn:hover:not(.disabled):not(.maxed) {
+            background: linear-gradient(180deg, rgba(255, 200, 0, 0.5) 0%, rgba(255, 150, 0, 0.6) 100%);
+            transform: scale(1.05);
+        }
+
+        .garage-upgrade-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .garage-upgrade-btn.maxed {
+            background: linear-gradient(180deg, rgba(0, 255, 100, 0.2) 0%, rgba(0, 200, 80, 0.3) 100%);
+            border-color: rgba(0, 255, 100, 0.5);
+            color: #0f8;
+            cursor: default;
+        }
+
         .garage-equipped {
             padding: 15px 30px;
             background: rgba(0, 0, 0, 0.5);
@@ -9583,6 +9613,19 @@
             playShootSound();
         }
 
+        // Calculate weapon damage including shop upgrades
+        // Note: Weapon upgrade levels are already applied to WEAPONS via applyWeaponUpgrades()
+        function calculateWeaponDamage(weapon, weaponKey) {
+            let damage = weapon.damage;
+
+            // Apply Bigger Bullets shop upgrade (+50% damage)
+            if (hasUpgrade('biggerBullets')) {
+                damage *= 1.5;
+            }
+
+            return Math.ceil(damage);
+        }
+
         // Power-up system
         let powerUps = [];
         let activePowerUp = null;
@@ -12755,7 +12798,7 @@
                     speed: weapon.speed,
                     angle: 0,
                     weapon: currentWeapon,
-                    damage: hasUpgrade('biggerBullets') ? Math.ceil(weapon.damage * 1.5) : weapon.damage,
+                    damage: calculateWeaponDamage(weapon, currentWeapon),
                     penetrating: weapon.penetrating,
                     splash: weapon.splash
                 };
@@ -12804,7 +12847,7 @@
                     speed: weapon.speed,
                     angle: 0,
                     weapon: currentWeapon,
-                    damage: hasUpgrade('biggerBullets') ? Math.ceil(weapon.damage * 1.5) : weapon.damage,
+                    damage: calculateWeaponDamage(weapon, currentWeapon),
                     penetrating: weapon.penetrating,
                     splash: weapon.splash,
                     fromPlayer2: true
@@ -13631,13 +13674,25 @@
                     const weapon = WEAPONS[key];
                     const isSelected = currentWeapon === key;
                     const level = weaponUpgradeLevels[key] || 0;
+                    const upgradeData = WEAPON_UPGRADES[key];
+                    const maxLevel = upgradeData.upgrades.length;
+                    const isMaxed = level >= maxLevel;
+                    const nextUpgrade = isMaxed ? null : upgradeData.upgrades[level];
+                    const canAfford = nextUpgrade ? totalCoins >= nextUpgrade.price : false;
 
                     html += `
                         <div class="garage-item ${isSelected ? 'selected' : ''}"
                              onclick="garageSelectWeapon('${key}')">
                             <div class="garage-item-icon">${weaponIcons[key] || '🔫'}</div>
                             <div class="garage-item-name">${weapon.name}</div>
-                            <div class="garage-item-price owned">LVL ${level}</div>
+                            <div class="garage-item-price owned">LVL ${level}/${maxLevel}</div>
+                            ${isMaxed ?
+                                '<div class="garage-upgrade-btn maxed">MAXED</div>' :
+                                `<div class="garage-upgrade-btn ${canAfford ? '' : 'disabled'}"
+                                     onclick="event.stopPropagation(); garageUpgradeWeapon('${key}')">
+                                    🪙 ${nextUpgrade.price}
+                                </div>`
+                            }
                         </div>
                     `;
                 });
@@ -13712,6 +13767,28 @@
             renderGarageItems();
             updateEquippedDisplay();
             playSelectSound();
+        }
+
+        function garageUpgradeWeapon(key) {
+            const upgradeData = WEAPON_UPGRADES[key];
+            const currentLevel = weaponUpgradeLevels[key] || 0;
+
+            if (currentLevel >= upgradeData.upgrades.length) return;
+
+            const nextUpgrade = upgradeData.upgrades[currentLevel];
+            if (totalCoins < nextUpgrade.price) return;
+
+            totalCoins -= nextUpgrade.price;
+            weaponUpgradeLevels[key] = currentLevel + 1;
+
+            saveShopData();
+            document.getElementById('garageCoins').textContent = totalCoins;
+            updateCoinsDisplay();
+            applyWeaponUpgrades();
+            renderGarageItems();
+            updateEquippedDisplay();
+            playLevelUpSound();
+            showShareToast(`${upgradeData.name} upgraded to level ${currentLevel + 1}!`);
         }
 
         function garageBuyUpgrade(key) {
