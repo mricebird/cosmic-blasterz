@@ -5295,6 +5295,16 @@
             document.getElementById('bossName').textContent = bossData.name;
             updateBossHealthBar();
             announce('bossAppear');
+
+            // 3D Boss entrance effects
+            show3DRotatingText('⚠️ BOSS ⚠️', 2500);
+            show3DScrollText([
+                '- WARNING -',
+                bossData.name.toUpperCase(),
+                'APPROACHING',
+                '',
+                'PREPARE FOR BATTLE!'
+            ], 4000);
         }
 
         // Endless mode functions
@@ -5839,6 +5849,363 @@
 
         let starLayers = [];
         let shootingStars = [];
+
+        // ==========================================
+        // 3D EFFECTS SYSTEM
+        // ==========================================
+
+        // 3D Grid Floor (Mode 7 style)
+        const GRID_3D = {
+            enabled: true,
+            horizonY: 0.65,          // Where horizon starts (% of canvas height)
+            lineCount: 20,           // Horizontal lines
+            verticalLines: 30,       // Vertical lines
+            scrollSpeed: 3,          // Scroll speed
+            color: 'rgba(0, 255, 255, 0.15)',
+            glowColor: 'rgba(0, 255, 255, 0.4)',
+            offset: 0
+        };
+
+        function draw3DGrid() {
+            if (!GRID_3D.enabled) return;
+
+            const horizonY = canvas.height * GRID_3D.horizonY;
+            const bottomY = canvas.height;
+            const gridHeight = bottomY - horizonY;
+
+            ctx.save();
+
+            // Draw horizontal lines with perspective
+            for (let i = 0; i <= GRID_3D.lineCount; i++) {
+                const t = i / GRID_3D.lineCount;
+                // Exponential spacing for perspective effect
+                const perspectiveT = Math.pow(t, 2.5);
+                const y = horizonY + perspectiveT * gridHeight;
+
+                // Lines get more opaque and thicker as they get closer
+                const alpha = 0.05 + t * 0.2;
+                const lineWidth = 0.5 + t * 1.5;
+
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0, 255, 255, ${alpha})`;
+                ctx.lineWidth = lineWidth;
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            // Draw vertical lines with perspective (converging to center horizon)
+            const centerX = canvas.width / 2;
+            const scrollOffset = (GRID_3D.offset % 100) / 100;
+
+            for (let i = -GRID_3D.verticalLines; i <= GRID_3D.verticalLines; i++) {
+                const baseOffset = (i + scrollOffset) / GRID_3D.verticalLines;
+
+                // Calculate where line hits bottom of screen
+                const bottomX = centerX + baseOffset * canvas.width * 1.5;
+
+                // Skip lines that are off screen
+                if (bottomX < -50 || bottomX > canvas.width + 50) continue;
+
+                // Line converges toward center at horizon
+                const horizonX = centerX + baseOffset * 50;
+
+                const alpha = 0.1 - Math.abs(baseOffset) * 0.08;
+                if (alpha <= 0) continue;
+
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0, 255, 255, ${Math.max(0.02, alpha)})`;
+                ctx.lineWidth = 1;
+                ctx.moveTo(horizonX, horizonY);
+                ctx.lineTo(bottomX, bottomY);
+                ctx.stroke();
+            }
+
+            // Horizon glow line
+            const gradient = ctx.createLinearGradient(0, horizonY - 5, 0, horizonY + 10);
+            gradient.addColorStop(0, 'transparent');
+            gradient.addColorStop(0.5, GRID_3D.glowColor);
+            gradient.addColorStop(1, 'transparent');
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, horizonY - 5, canvas.width, 15);
+
+            ctx.restore();
+
+            // Update scroll offset
+            GRID_3D.offset += GRID_3D.scrollSpeed;
+        }
+
+        // 3D Warp/Hyperspace effect
+        let warpActive = false;
+        let warpStars = [];
+        let warpIntensity = 0;
+
+        function initWarpEffect() {
+            warpStars = [];
+            for (let i = 0; i < 150; i++) {
+                warpStars.push({
+                    x: (Math.random() - 0.5) * 2,
+                    y: (Math.random() - 0.5) * 2,
+                    z: Math.random() * 1000,
+                    speed: 5 + Math.random() * 15
+                });
+            }
+        }
+
+        function triggerWarpEffect(duration = 1500) {
+            warpActive = true;
+            warpIntensity = 0;
+
+            const startTime = Date.now();
+            const animate = () => {
+                const elapsed = Date.now() - startTime;
+                const progress = elapsed / duration;
+
+                if (progress < 0.3) {
+                    warpIntensity = progress / 0.3;
+                } else if (progress < 0.7) {
+                    warpIntensity = 1;
+                } else {
+                    warpIntensity = 1 - (progress - 0.7) / 0.3;
+                }
+
+                if (elapsed < duration) {
+                    requestAnimationFrame(animate);
+                } else {
+                    warpActive = false;
+                    warpIntensity = 0;
+                }
+            };
+            animate();
+        }
+
+        function drawWarpEffect() {
+            if (!warpActive || warpIntensity <= 0) return;
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            ctx.save();
+
+            warpStars.forEach(star => {
+                // Update z position
+                star.z -= star.speed * warpIntensity * 2;
+                if (star.z <= 1) {
+                    star.z = 1000;
+                    star.x = (Math.random() - 0.5) * 2;
+                    star.y = (Math.random() - 0.5) * 2;
+                }
+
+                // Project to 2D
+                const scale = 500 / star.z;
+                const x = centerX + star.x * scale * canvas.width;
+                const y = centerY + star.y * scale * canvas.height;
+
+                // Previous position for trail
+                const prevZ = star.z + star.speed * warpIntensity * 2;
+                const prevScale = 500 / prevZ;
+                const prevX = centerX + star.x * prevScale * canvas.width;
+                const prevY = centerY + star.y * prevScale * canvas.height;
+
+                // Draw star trail
+                const alpha = Math.min(1, (1000 - star.z) / 500) * warpIntensity;
+                const trailLength = Math.min(100, 1000 / star.z) * warpIntensity;
+
+                const gradient = ctx.createLinearGradient(prevX, prevY, x, y);
+                gradient.addColorStop(0, `rgba(100, 150, 255, 0)`);
+                gradient.addColorStop(1, `rgba(200, 220, 255, ${alpha})`);
+
+                ctx.beginPath();
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = Math.max(1, 3 - star.z / 400);
+                ctx.moveTo(prevX, prevY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+
+                // Bright point at end
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                ctx.arc(x, y, Math.max(1, 2 - star.z / 500), 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Central glow
+            const glowGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 100);
+            glowGradient.addColorStop(0, `rgba(150, 200, 255, ${0.3 * warpIntensity})`);
+            glowGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = glowGradient;
+            ctx.fillRect(centerX - 100, centerY - 100, 200, 200);
+
+            ctx.restore();
+        }
+
+        // 3D Scroll Text (Star Wars style)
+        let scrollText3D = {
+            active: false,
+            text: [],
+            offset: 0,
+            speed: 1
+        };
+
+        function show3DScrollText(lines, duration = 5000) {
+            scrollText3D.active = true;
+            scrollText3D.text = lines;
+            scrollText3D.offset = 0;
+
+            const startTime = Date.now();
+            const animate = () => {
+                const elapsed = Date.now() - startTime;
+                scrollText3D.offset = elapsed * 0.05;
+
+                if (elapsed < duration) {
+                    requestAnimationFrame(animate);
+                } else {
+                    scrollText3D.active = false;
+                }
+            };
+            animate();
+        }
+
+        function draw3DScrollText() {
+            if (!scrollText3D.active) return;
+
+            const centerX = canvas.width / 2;
+            const startY = canvas.height * 0.9;
+            const vanishY = canvas.height * 0.2;
+
+            ctx.save();
+
+            scrollText3D.text.forEach((line, index) => {
+                const baseY = startY - scrollText3D.offset + index * 40;
+
+                // Skip if above vanish point
+                if (baseY < vanishY) return;
+
+                // Calculate perspective
+                const progress = (startY - baseY) / (startY - vanishY);
+                const scale = 1 - progress * 0.7;
+                const y = baseY;
+
+                // Fade out as it approaches horizon
+                const alpha = Math.max(0, 1 - progress * 1.2);
+
+                if (alpha <= 0 || scale <= 0.1) return;
+
+                ctx.save();
+                ctx.translate(centerX, y);
+                ctx.scale(scale, scale * 0.6); // Squash vertically for 3D effect
+
+                ctx.font = `bold 24px 'Orbitron', sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                // Glow effect
+                ctx.shadowColor = 'rgba(255, 200, 50, 0.8)';
+                ctx.shadowBlur = 20;
+                ctx.fillStyle = `rgba(255, 220, 100, ${alpha})`;
+                ctx.fillText(line, 0, 0);
+
+                // Solid text on top
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = `rgba(255, 255, 200, ${alpha})`;
+                ctx.fillText(line, 0, 0);
+
+                ctx.restore();
+            });
+
+            ctx.restore();
+        }
+
+        // 3D Rotating text announcement
+        let rotating3DText = {
+            active: false,
+            text: '',
+            rotation: 0,
+            scale: 0,
+            alpha: 0
+        };
+
+        function show3DRotatingText(text, duration = 2000) {
+            rotating3DText.active = true;
+            rotating3DText.text = text;
+            rotating3DText.rotation = -Math.PI / 2;
+            rotating3DText.scale = 0;
+            rotating3DText.alpha = 0;
+
+            const startTime = Date.now();
+            const animate = () => {
+                const elapsed = Date.now() - startTime;
+                const progress = elapsed / duration;
+
+                if (progress < 0.3) {
+                    // Zoom in and rotate
+                    const t = progress / 0.3;
+                    rotating3DText.scale = t * 1.2;
+                    rotating3DText.rotation = -Math.PI / 2 + t * Math.PI / 2;
+                    rotating3DText.alpha = t;
+                } else if (progress < 0.7) {
+                    // Hold
+                    rotating3DText.scale = 1.2 - (progress - 0.3) * 0.5;
+                    rotating3DText.rotation = 0;
+                    rotating3DText.alpha = 1;
+                } else {
+                    // Zoom out
+                    const t = (progress - 0.7) / 0.3;
+                    rotating3DText.scale = 1 + t * 2;
+                    rotating3DText.alpha = 1 - t;
+                }
+
+                if (elapsed < duration) {
+                    requestAnimationFrame(animate);
+                } else {
+                    rotating3DText.active = false;
+                }
+            };
+            animate();
+        }
+
+        function draw3DRotatingText() {
+            if (!rotating3DText.active) return;
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.scale(rotating3DText.scale, rotating3DText.scale);
+
+            // Apply 3D rotation (fake with skew)
+            const skew = Math.sin(rotating3DText.rotation) * 0.3;
+            ctx.transform(1, skew, 0, 1, 0, 0);
+
+            ctx.font = `bold 48px 'Orbitron', sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Multiple layers for 3D depth
+            for (let i = 5; i >= 0; i--) {
+                const offset = i * 2;
+                const layerAlpha = rotating3DText.alpha * (1 - i * 0.15);
+
+                ctx.fillStyle = i === 0
+                    ? `rgba(255, 255, 255, ${layerAlpha})`
+                    : `rgba(0, 150, 255, ${layerAlpha * 0.3})`;
+
+                ctx.fillText(rotating3DText.text, offset, offset);
+            }
+
+            // Glow
+            ctx.shadowColor = 'rgba(0, 200, 255, 0.8)';
+            ctx.shadowBlur = 30;
+            ctx.fillStyle = `rgba(255, 255, 255, ${rotating3DText.alpha})`;
+            ctx.fillText(rotating3DText.text, 0, 0);
+
+            ctx.restore();
+        }
+
+        // Initialize 3D effects
+        initWarpEffect();
 
         // Initialize multi-layer parallax stars
         function initStars() {
@@ -6869,6 +7236,13 @@
                 playLevelUpSound();
                 announce('levelUp');
                 updateSessionStats('level', level);
+
+                // Trigger 3D warp effect for level transition
+                triggerWarpEffect(1200);
+
+                // Show 3D rotating level text
+                show3DRotatingText(`LEVEL ${level}`, 2000);
+
                 // Don't spawn enemies if it's a boss level - boss will spawn in game loop
                 if (!BOSS_LEVELS.includes(level)) {
                     initEnemies();
@@ -7195,10 +7569,16 @@
                     spawnBoss();
                 }
 
-                // Draw
+                // Draw background layers
                 drawNebula();
                 drawAsteroids();
                 drawStars();
+
+                // Draw 3D grid floor
+                draw3DGrid();
+
+                // Draw warp effect (hyperspace)
+                drawWarpEffect();
 
                 // Draw shadows first (3D depth effect)
                 bullets.forEach(b => drawBulletShadow(b));
@@ -7221,6 +7601,10 @@
                 drawPlayer();
                 drawShield();
                 updateParticles();
+
+                // Draw 3D text effects (on top of everything)
+                draw3DScrollText();
+                draw3DRotatingText();
 
                 // Restore context after shake
                 ctx.restore();
