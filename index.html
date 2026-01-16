@@ -17,7 +17,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14890,13 +14890,13 @@
             // Clear canvas
             scrollerCtx.clearRect(0, 0, width, height);
 
-            // Font settings - classic Amiga pixel style
-            const fontSize = Math.min(28, height * 0.45);
-            scrollerCtx.font = `${fontSize}px "Press Start 2P", monospace`;
+            // Font settings - retro terminal style
+            const fontSize = Math.min(32, height * 0.5);
+            scrollerCtx.font = `${fontSize}px "Share Tech Mono", monospace`;
             scrollerCtx.textBaseline = 'middle';
 
-            // Calculate text width for looping (pixel font is wider)
-            const charWidth = fontSize * 1.1;
+            // Calculate text width for looping
+            const charWidth = fontSize * 0.6;
             const totalWidth = scrollText.length * charWidth;
 
             // Draw each character with sine wave offset
