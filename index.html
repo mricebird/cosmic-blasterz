@@ -10227,7 +10227,14 @@
         if (splashScreen) {
             try {
                 initSplashStars();
-                startScroller();
+                // Small delay to ensure canvas container has dimensions
+                setTimeout(() => {
+                    try {
+                        startScroller();
+                    } catch (e) {
+                        console.error('Scroller start error:', e);
+                    }
+                }, 50);
             } catch (e) {
                 console.error('Splash init error:', e);
             }
