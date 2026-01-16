@@ -115,6 +115,213 @@
             box-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
         }
 
+        .mode-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .mode-buttons .start-btn {
+            padding: 12px 25px;
+            font-size: 16px;
+        }
+
+        .endless-btn {
+            border-color: #f80 !important;
+            color: #f80 !important;
+        }
+
+        .endless-btn:hover {
+            background: #f80 !important;
+            color: #000 !important;
+            box-shadow: 0 0 20px #f80, 0 0 40px #f80 !important;
+        }
+
+        .tutorial-btn {
+            border-color: #0f0 !important;
+            color: #0f0 !important;
+        }
+
+        .tutorial-btn:hover {
+            background: #0f0 !important;
+            color: #000 !important;
+            box-shadow: 0 0 20px #0f0, 0 0 40px #0f0 !important;
+        }
+
+        .tutorial-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .tutorial-box {
+            background: rgba(0, 20, 40, 0.95);
+            border: 3px solid #0ff;
+            border-radius: 15px;
+            padding: 25px 35px;
+            max-width: 400px;
+            text-align: center;
+            animation: tutorialPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes tutorialPulse {
+            0%, 100% { box-shadow: 0 0 20px #0ff; }
+            50% { box-shadow: 0 0 40px #0ff, 0 0 60px #0ff; }
+        }
+
+        .tutorial-title {
+            color: #0ff;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .tutorial-text {
+            color: #fff;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tutorial-highlight {
+            color: #ff0;
+            font-weight: bold;
+        }
+
+        .tutorial-progress {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tutorial-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #333;
+            border: 1px solid #0ff;
+        }
+
+        .tutorial-dot.active {
+            background: #0ff;
+        }
+
+        .tutorial-dot.completed {
+            background: #0f0;
+            border-color: #0f0;
+        }
+
+        .tutorial-btn-next {
+            padding: 10px 30px;
+            background: #0ff;
+            border: none;
+            border-radius: 5px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .tutorial-btn-skip {
+            padding: 8px 20px;
+            background: transparent;
+            border: 1px solid #666;
+            border-radius: 5px;
+            color: #666;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        /* Share buttons */
+        .game-over-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .share-btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            background: transparent;
+            color: #0f0;
+            border: 2px solid #0f0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        .share-options {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .share-option-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #666;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .share-option-btn:hover {
+            background: #333;
+            border-color: #0ff;
+        }
+
+        .share-copied {
+            margin-top: 10px;
+            color: #0f0;
+            font-size: 14px;
+        }
+
+        .endless-timer {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            color: #f80;
+            font-weight: bold;
+            text-shadow: 0 0 10px #f80;
+        }
+
+        .endless-wave {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #ff0;
+        }
+
+        .endless-survival {
+            font-size: 18px;
+            color: #f80;
+            margin: 10px 0;
+        }
+
         .controls-info {
             margin-top: 20px;
             font-size: 14px;
@@ -606,6 +813,92 @@
             cursor: pointer;
         }
 
+        /* Daily Challenge */
+        .daily-challenge-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #f80;
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 12px;
+            min-width: 180px;
+        }
+
+        .daily-challenge-header {
+            color: #f80;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .daily-challenge-name {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .daily-challenge-desc {
+            color: #aaa;
+            font-size: 11px;
+            margin: 3px 0;
+        }
+
+        .daily-challenge-progress {
+            color: #0f0;
+            margin-top: 5px;
+        }
+
+        .daily-challenge-reward {
+            color: #ff0;
+            font-size: 11px;
+        }
+
+        .daily-challenge-complete {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #f80, #ff0);
+            border-radius: 20px;
+            padding: 30px 50px;
+            text-align: center;
+            z-index: 1000;
+            animation: dailyPopIn 0.5s ease;
+        }
+
+        @keyframes dailyPopIn {
+            from { transform: translate(-50%, -50%) scale(0); }
+            to { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .daily-challenge-complete.fade-out {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .daily-complete-icon {
+            font-size: 50px;
+        }
+
+        .daily-complete-title {
+            color: #000;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .daily-complete-name {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .daily-complete-reward {
+            color: #060;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
         /* Responsive */
         @media (max-width: 850px) {
             .game-container {
@@ -642,7 +935,11 @@
             <h1>🚀 SPACE INVADERS 👾</h1>
             <p style="font-size: 18px; margin-bottom: 20px; opacity: 0.8;">Forsvar Jorden mod alien-invasionen!</p>
             <input type="text" id="playerName" class="name-input" placeholder="Indtast dit navn" maxlength="15">
-            <button class="start-btn" onclick="startGame()">START SPIL</button>
+            <div class="mode-buttons">
+                <button class="start-btn" onclick="startGame(false)">NORMAL MODE</button>
+                <button class="start-btn endless-btn" onclick="startGame(true)">♾️ ENDLESS MODE</button>
+                <button class="start-btn tutorial-btn" onclick="startTutorial()">📖 TUTORIAL</button>
+            </div>
             <div class="controls-info">
                 <p>← → Piletaster for at bevæge dig</p>
                 <p>MELLEMRUM for at skyde</p>
@@ -655,12 +952,22 @@
             <h1>GAME OVER</h1>
             <div id="newHighscoreMsg" class="new-highscore hidden">NY HIGHSCORE!</div>
             <div class="final-score"><span id="playerNameDisplay"></span> score: <span id="finalScore">0</span></div>
+            <div class="endless-survival hidden" id="endlessSurvival">⏱️ Overlevede: <span id="survivalTime">00:00</span> | Bølge: <span id="finalWave">1</span></div>
             <div class="highscore-list" id="gameOverHighscores"></div>
             <div class="achievements-section">
                 <h4>🏆 ACHIEVEMENTS</h4>
                 <div class="achievement-badges" id="achievementBadges"></div>
             </div>
-            <button class="restart-btn" onclick="restartGame()">SPIL IGEN</button>
+            <div class="game-over-buttons">
+                <button class="restart-btn" onclick="restartGame()">SPIL IGEN</button>
+                <button class="share-btn" onclick="shareScore()">📤 DEL SCORE</button>
+            </div>
+            <div class="share-options hidden" id="shareOptions">
+                <button class="share-option-btn" onclick="shareToTwitter()">🐦 Twitter</button>
+                <button class="share-option-btn" onclick="shareToFacebook()">📘 Facebook</button>
+                <button class="share-option-btn" onclick="copyShareLink()">📋 Kopiér</button>
+            </div>
+            <div class="share-copied hidden" id="shareCopied">✅ Kopieret til udklipsholder!</div>
         </div>
 
         <!-- Pause screen -->
@@ -671,7 +978,9 @@
 
         <!-- Game controls (pause/mute) -->
         <div class="game-controls" id="gameControls">
-            <button class="control-btn" id="muteBtn" onclick="toggleMute()" title="Mute (M)">🔊</button>
+            <button class="control-btn" id="muteBtn" onclick="toggleMute()" title="Mute Lyd (M)">🔊</button>
+            <button class="control-btn" id="musicBtn" onclick="toggleMusic()" title="Mute Musik">🎶</button>
+            <button class="control-btn" id="announcerBtn" onclick="toggleAnnouncer()" title="Announcer">🎙️</button>
             <button class="control-btn" id="pauseBtn" onclick="togglePause()" title="Pause (P)">⏸️</button>
         </div>
 
@@ -731,6 +1040,26 @@
             <button class="shop-close" onclick="toggleShop()">✕</button>
             <h2>🛒 SHOP</h2>
             <div id="shopItems"></div>
+        </div>
+
+        <!-- Daily Challenge -->
+        <div class="daily-challenge-container" id="dailyChallengeContainer"></div>
+
+        <!-- Endless Mode UI -->
+        <div class="endless-timer hidden" id="endlessTimer">⏱️ 00:00</div>
+        <div class="endless-wave hidden" id="endlessWave">Bølge 1</div>
+
+        <!-- Tutorial overlay -->
+        <div class="tutorial-overlay hidden" id="tutorialOverlay">
+            <div class="tutorial-box">
+                <div class="tutorial-progress" id="tutorialProgress"></div>
+                <div class="tutorial-title" id="tutorialTitle">Velkommen!</div>
+                <div class="tutorial-text" id="tutorialText">Lær at spille Space Invaders!</div>
+                <div>
+                    <button class="tutorial-btn-next" onclick="nextTutorialStep()">Næste</button>
+                    <button class="tutorial-btn-skip" onclick="skipTutorial()">Spring over</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -930,10 +1259,376 @@
         let gameRunning = false;
         let gamePaused = false;
         let soundMuted = false;
+        let musicMuted = false;
         let score = 0;
         let lives = 3;
         let level = 1;
         let playerName = 'Spiller';
+
+        // Background music system
+        let musicOscillators = [];
+        let musicGain = null;
+        let musicPlaying = false;
+        let musicBeat = 0;
+        const MUSIC_BPM = 120;
+        const BEAT_INTERVAL = 60000 / MUSIC_BPM;
+
+        function initMusic() {
+            if (!audioCtx || musicPlaying) return;
+            musicPlaying = true;
+
+            // Create master gain for music
+            musicGain = audioCtx.createGain();
+            musicGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            musicGain.connect(audioCtx.destination);
+
+            // Start the music loop
+            playMusicLoop();
+        }
+
+        function playMusicLoop() {
+            if (!musicPlaying || musicMuted || !audioCtx) return;
+
+            // Simple bass line pattern (low frequency)
+            const bassNotes = [55, 55, 65.4, 55, 55, 65.4, 73.4, 65.4]; // A1, A1, C2, etc.
+            const bassNote = bassNotes[musicBeat % bassNotes.length];
+
+            // Create bass note
+            const bassOsc = audioCtx.createOscillator();
+            const bassGain = audioCtx.createGain();
+            bassOsc.type = 'triangle';
+            bassOsc.frequency.setValueAtTime(bassNote, audioCtx.currentTime);
+            bassGain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            bassGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            bassOsc.connect(bassGain);
+            bassGain.connect(musicGain);
+            bassOsc.start(audioCtx.currentTime);
+            bassOsc.stop(audioCtx.currentTime + 0.25);
+
+            // Add melody on certain beats
+            if (musicBeat % 4 === 0 || musicBeat % 4 === 3) {
+                const melodyNotes = [440, 523.25, 659.25, 523.25, 587.33, 659.25, 523.25, 440];
+                const melodyNote = melodyNotes[Math.floor(musicBeat / 4) % melodyNotes.length];
+
+                const melodyOsc = audioCtx.createOscillator();
+                const melodyGain = audioCtx.createGain();
+                melodyOsc.type = 'square';
+                melodyOsc.frequency.setValueAtTime(melodyNote, audioCtx.currentTime);
+                melodyGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                melodyGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                melodyOsc.connect(melodyGain);
+                melodyGain.connect(musicGain);
+                melodyOsc.start(audioCtx.currentTime);
+                melodyOsc.stop(audioCtx.currentTime + 0.2);
+            }
+
+            // Kick drum on beats 0 and 4
+            if (musicBeat % 4 === 0) {
+                const kickOsc = audioCtx.createOscillator();
+                const kickGain = audioCtx.createGain();
+                kickOsc.type = 'sine';
+                kickOsc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                kickOsc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.1);
+                kickGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                kickGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                kickOsc.connect(kickGain);
+                kickGain.connect(musicGain);
+                kickOsc.start(audioCtx.currentTime);
+                kickOsc.stop(audioCtx.currentTime + 0.2);
+            }
+
+            // Hi-hat on off-beats
+            if (musicBeat % 2 === 1) {
+                const hihatOsc = audioCtx.createOscillator();
+                const hihatGain = audioCtx.createGain();
+                hihatOsc.type = 'square';
+                hihatOsc.frequency.setValueAtTime(8000, audioCtx.currentTime);
+                hihatGain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                hihatGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                hihatOsc.connect(hihatGain);
+                hihatGain.connect(musicGain);
+                hihatOsc.start(audioCtx.currentTime);
+                hihatOsc.stop(audioCtx.currentTime + 0.05);
+            }
+
+            musicBeat++;
+
+            // Schedule next beat
+            if (musicPlaying && !musicMuted) {
+                setTimeout(playMusicLoop, BEAT_INTERVAL / 2);
+            }
+        }
+
+        function stopMusic() {
+            musicPlaying = false;
+            musicOscillators.forEach(osc => {
+                try { osc.stop(); } catch(e) {}
+            });
+            musicOscillators = [];
+        }
+
+        function toggleMusic() {
+            musicMuted = !musicMuted;
+            document.getElementById('musicBtn').textContent = musicMuted ? '🎵' : '🎶';
+            if (!musicMuted && gameRunning && !gamePaused) {
+                playMusicLoop();
+            }
+        }
+
+        // Announcer voice system
+        let announcerEnabled = true;
+        let lastAnnouncement = 0;
+        const ANNOUNCEMENT_COOLDOWN = 2000;
+
+        const ANNOUNCEMENTS = {
+            gameStart: ['Forsvar Jorden!', 'Klar til kamp!', 'Vis dem hvem der bestemmer!'],
+            levelUp: ['Niveau op!', 'Godt klaret!', 'Næste bølge!', 'Fortsæt sådan!'],
+            bossAppear: ['Advarsel! Boss opdaget!', 'Stor fjende!', 'Boss kamp!'],
+            bossDefeat: ['Boss elimineret!', 'Fantastisk!', 'Boss besejret!'],
+            combo5: ['Combo mester!', 'Utroligt!', 'Fem i træk!'],
+            combo7: ['Legendarisk combo!', 'Ustoppelig!', 'Super combo!'],
+            powerUp: ['Power op!', 'Bonus aktiveret!'],
+            ufoKill: ['UFO nedskudt!', 'Bonus point!'],
+            lowHealth: ['Advarsel! Lavt liv!', 'Pas på!'],
+            gameOver: ['Spil slut!', 'Bedre held næste gang!'],
+            newHighscore: ['Ny rekord!', 'Fantastisk score!']
+        };
+
+        function announce(type) {
+            if (!announcerEnabled || soundMuted) return;
+            if (Date.now() - lastAnnouncement < ANNOUNCEMENT_COOLDOWN) return;
+
+            const messages = ANNOUNCEMENTS[type];
+            if (!messages || messages.length === 0) return;
+
+            const message = messages[Math.floor(Math.random() * messages.length)];
+
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(message);
+                utterance.lang = 'da-DK';
+                utterance.rate = 1.1;
+                utterance.pitch = 1.0;
+                utterance.volume = 0.8;
+
+                // Try to find a Danish voice
+                const voices = window.speechSynthesis.getVoices();
+                const danishVoice = voices.find(v => v.lang.startsWith('da'));
+                if (danishVoice) {
+                    utterance.voice = danishVoice;
+                }
+
+                window.speechSynthesis.speak(utterance);
+                lastAnnouncement = Date.now();
+            }
+        }
+
+        function toggleAnnouncer() {
+            announcerEnabled = !announcerEnabled;
+            document.getElementById('announcerBtn').textContent = announcerEnabled ? '🎙️' : '🔇';
+        }
+
+        // Load voices when available
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
+        }
+
+        // Endless mode
+        let endlessMode = false;
+        let endlessStartTime = 0;
+        let endlessWave = 1;
+        let endlessSpawnTimer = 0;
+        let endlessSpawnInterval = 3000;
+
+        // Tutorial system
+        let tutorialActive = false;
+        let tutorialStep = 0;
+        const TUTORIAL_STEPS = [
+            {
+                title: '🚀 Velkommen til Space Invaders!',
+                text: 'I dette spil skal du forsvare Jorden mod bølger af rumvæsner. Lad os lære de grundlæggende kontroller!'
+            },
+            {
+                title: '⬅️ ➡️ Bevægelse',
+                text: 'Brug <span class="tutorial-highlight">venstre og højre piletaster</span> til at bevæge dit rumskib. Prøv det nu!',
+                action: 'move'
+            },
+            {
+                title: '🔫 Skydning',
+                text: 'Tryk på <span class="tutorial-highlight">MELLEMRUM</span> for at skyde lasere mod fjenderne. Skyd nu!',
+                action: 'shoot'
+            },
+            {
+                title: '⚡ Våbensystem',
+                text: 'Du har 3 våben: <span class="tutorial-highlight">1=Laser</span>, <span class="tutorial-highlight">2=Missile</span>, <span class="tutorial-highlight">3=Plasma</span>. Hver har unikke egenskaber!'
+            },
+            {
+                title: '🎁 Power-ups',
+                text: 'Saml power-ups der falder fra fjender: <span class="tutorial-highlight">Shield</span> beskytter dig, <span class="tutorial-highlight">Rapid Fire</span> øger skudhastighed, <span class="tutorial-highlight">Spread Shot</span> skyder 3 kugler, og <span class="tutorial-highlight">Bomb</span> rydder skærmen!'
+            },
+            {
+                title: '👾 Boss Kampe',
+                text: 'Hvert 5. niveau møder du en <span class="tutorial-highlight">BOSS</span>. Bosser har meget liv og skyder hurtigere!'
+            },
+            {
+                title: '🛡️ Barrierer',
+                text: 'De grønne <span class="tutorial-highlight">barrierer</span> beskytter dig mod fjendeskud, men de kan også blive ødelagt!'
+            },
+            {
+                title: '🛸 UFO Bonus',
+                text: 'Lejlighedsvis flyver en <span class="tutorial-highlight">UFO</span> hen over skærmen. Skyd den for bonuspoint og power-ups!'
+            },
+            {
+                title: '💰 Coins & Shop',
+                text: 'Du tjener <span class="tutorial-highlight">coins</span> ved at dræbe fjender. Brug dem i <span class="tutorial-highlight">SHOP</span> til permanente opgraderinger!'
+            },
+            {
+                title: '🎯 Combo System',
+                text: 'Dræb fjender hurtigt efter hinanden for at opbygge <span class="tutorial-highlight">combo</span> og tjene flere point!'
+            },
+            {
+                title: '🏆 Du er klar!',
+                text: 'Nu kender du det grundlæggende! Husk: P=Pause, M=Mute. God fornøjelse med spillet!'
+            }
+        ];
+
+        function startTutorial() {
+            tutorialActive = true;
+            tutorialStep = 0;
+            document.getElementById('startScreen').classList.add('hidden');
+
+            // Start the game in tutorial mode
+            initAudio();
+            playerName = 'Tutorial';
+            endlessMode = false;
+            resetGame();
+            gameRunning = true;
+            gamePaused = true; // Pause initially
+
+            showTutorialStep();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function showTutorialStep() {
+            const step = TUTORIAL_STEPS[tutorialStep];
+            document.getElementById('tutorialTitle').textContent = step.title;
+            document.getElementById('tutorialText').innerHTML = step.text;
+
+            // Update progress dots
+            let dots = '';
+            for (let i = 0; i < TUTORIAL_STEPS.length; i++) {
+                let dotClass = 'tutorial-dot';
+                if (i < tutorialStep) dotClass += ' completed';
+                if (i === tutorialStep) dotClass += ' active';
+                dots += `<div class="${dotClass}"></div>`;
+            }
+            document.getElementById('tutorialProgress').innerHTML = dots;
+
+            // Show overlay
+            document.getElementById('tutorialOverlay').classList.remove('hidden');
+
+            // Check if this step requires action
+            if (step.action) {
+                gamePaused = false;
+            } else {
+                gamePaused = true;
+            }
+        }
+
+        function nextTutorialStep() {
+            tutorialStep++;
+
+            if (tutorialStep >= TUTORIAL_STEPS.length) {
+                endTutorial();
+            } else {
+                showTutorialStep();
+            }
+        }
+
+        function skipTutorial() {
+            endTutorial();
+        }
+
+        function endTutorial() {
+            tutorialActive = false;
+            gameRunning = false;
+            gamePaused = false;
+            document.getElementById('tutorialOverlay').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+
+        function checkTutorialAction(action) {
+            if (!tutorialActive) return;
+
+            const step = TUTORIAL_STEPS[tutorialStep];
+            if (step && step.action === action) {
+                // Small delay before advancing
+                setTimeout(() => {
+                    if (tutorialActive && tutorialStep < TUTORIAL_STEPS.length - 1) {
+                        nextTutorialStep();
+                    }
+                }, 500);
+            }
+        }
+
+        // Share score system
+        function shareScore() {
+            document.getElementById('shareOptions').classList.toggle('hidden');
+            document.getElementById('shareCopied').classList.add('hidden');
+        }
+
+        function getShareText() {
+            let text = `🚀 Jeg scorede ${score} point i Space Invaders! 👾`;
+            if (endlessMode) {
+                const elapsed = Math.floor((Date.now() - endlessStartTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                text += ` (Endless Mode: ${minutes}m ${seconds}s, Bølge ${endlessWave})`;
+            } else {
+                text += ` (Niveau ${level})`;
+            }
+            text += `\nKan du slå mig? 🎮`;
+            return text;
+        }
+
+        function shareToTwitter() {
+            const text = encodeURIComponent(getShareText());
+            const url = `https://twitter.com/intent/tweet?text=${text}`;
+            window.open(url, '_blank', 'width=550,height=420');
+        }
+
+        function shareToFacebook() {
+            const text = encodeURIComponent(getShareText());
+            const url = `https://www.facebook.com/sharer/sharer.php?quote=${text}`;
+            window.open(url, '_blank', 'width=550,height=420');
+        }
+
+        async function copyShareLink() {
+            const text = getShareText();
+            try {
+                await navigator.clipboard.writeText(text);
+                document.getElementById('shareCopied').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('shareCopied').classList.add('hidden');
+                }, 2000);
+            } catch (err) {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                document.getElementById('shareCopied').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('shareCopied').classList.add('hidden');
+                }, 2000);
+            }
+        }
 
         // Combo system
         let comboCount = 0;
@@ -961,8 +1656,12 @@
                 comboEl.classList.add('active');
 
                 // Change color based on combo level
-                if (comboCount >= 5) {
+                if (comboCount >= 7) {
                     comboEl.style.color = '#f0f';
+                    announce('combo7');
+                } else if (comboCount >= 5) {
+                    comboEl.style.color = '#f0f';
+                    announce('combo5');
                 } else if (comboCount >= 3) {
                     comboEl.style.color = '#f80';
                 } else {
@@ -1264,6 +1963,176 @@
         // Load shop data on start
         loadShopData();
 
+        // Daily Challenges system
+        const DAILY_CHALLENGES = [
+            { id: 'speed', name: 'Hurtighedsmester', desc: 'Dræb 30 fjender på 60 sekunder', goal: 30, timeLimit: 60, reward: 100 },
+            { id: 'combo', name: 'Combo Kong', desc: 'Opnå en 7x combo', goal: 7, reward: 150 },
+            { id: 'boss', name: 'Boss Jæger', desc: 'Besejr en boss uden at miste liv', goal: 1, reward: 200 },
+            { id: 'accuracy', name: 'Skarpskytter', desc: 'Opnå 80% præcision i en runde', goal: 80, reward: 125 },
+            { id: 'survival', name: 'Overlever', desc: 'Nå niveau 5 uden at miste liv', goal: 5, reward: 175 },
+            { id: 'powerup', name: 'Power Samler', desc: 'Saml 10 power-ups i én runde', goal: 10, reward: 100 },
+            { id: 'ufo', name: 'UFO Jæger', desc: 'Skyd 3 UFOer ned i én runde', goal: 3, reward: 150 }
+        ];
+
+        let dailyChallenge = null;
+        let dailyChallengeProgress = 0;
+        let dailyChallengeCompleted = false;
+        let dailyChallengeStats = {
+            killsInTime: 0,
+            timeStarted: 0,
+            shotsFired: 0,
+            shotsHit: 0,
+            livesLostThisRound: 0,
+            powerupsCollected: 0,
+            ufosKilled: 0
+        };
+
+        function getDailyChallenge() {
+            const today = new Date();
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+            const index = dayOfYear % DAILY_CHALLENGES.length;
+            return DAILY_CHALLENGES[index];
+        }
+
+        function loadDailyChallenge() {
+            const saved = localStorage.getItem('spaceInvadersDailyChallenge');
+            const today = new Date().toDateString();
+
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data.date === today) {
+                    dailyChallengeCompleted = data.completed;
+                }
+            }
+
+            dailyChallenge = getDailyChallenge();
+            updateDailyChallengeUI();
+        }
+
+        function saveDailyChallenge() {
+            const today = new Date().toDateString();
+            localStorage.setItem('spaceInvadersDailyChallenge', JSON.stringify({
+                date: today,
+                completed: dailyChallengeCompleted
+            }));
+        }
+
+        function resetDailyChallengeStats() {
+            dailyChallengeStats = {
+                killsInTime: 0,
+                timeStarted: Date.now(),
+                shotsFired: 0,
+                shotsHit: 0,
+                livesLostThisRound: 0,
+                powerupsCollected: 0,
+                ufosKilled: 0
+            };
+            dailyChallengeProgress = 0;
+        }
+
+        function checkDailyChallenge() {
+            if (!dailyChallenge || dailyChallengeCompleted) return;
+
+            let completed = false;
+
+            switch (dailyChallenge.id) {
+                case 'speed':
+                    const elapsed = (Date.now() - dailyChallengeStats.timeStarted) / 1000;
+                    if (elapsed <= dailyChallenge.timeLimit) {
+                        dailyChallengeProgress = dailyChallengeStats.killsInTime;
+                        if (dailyChallengeStats.killsInTime >= dailyChallenge.goal) {
+                            completed = true;
+                        }
+                    }
+                    break;
+                case 'combo':
+                    dailyChallengeProgress = comboCount;
+                    if (comboCount >= dailyChallenge.goal) {
+                        completed = true;
+                    }
+                    break;
+                case 'boss':
+                    break;
+                case 'accuracy':
+                    if (dailyChallengeStats.shotsFired > 0) {
+                        const accuracy = Math.round((dailyChallengeStats.shotsHit / dailyChallengeStats.shotsFired) * 100);
+                        dailyChallengeProgress = accuracy;
+                    }
+                    break;
+                case 'survival':
+                    if (dailyChallengeStats.livesLostThisRound === 0) {
+                        dailyChallengeProgress = level;
+                        if (level >= dailyChallenge.goal) {
+                            completed = true;
+                        }
+                    }
+                    break;
+                case 'powerup':
+                    dailyChallengeProgress = dailyChallengeStats.powerupsCollected;
+                    if (dailyChallengeStats.powerupsCollected >= dailyChallenge.goal) {
+                        completed = true;
+                    }
+                    break;
+                case 'ufo':
+                    dailyChallengeProgress = dailyChallengeStats.ufosKilled;
+                    if (dailyChallengeStats.ufosKilled >= dailyChallenge.goal) {
+                        completed = true;
+                    }
+                    break;
+            }
+
+            if (completed) {
+                completeDailyChallenge();
+            }
+
+            updateDailyChallengeUI();
+        }
+
+        function completeDailyChallenge() {
+            if (dailyChallengeCompleted) return;
+
+            dailyChallengeCompleted = true;
+            playerCoins += dailyChallenge.reward;
+            saveDailyChallenge();
+            saveShopData();
+
+            showDailyChallengeComplete();
+        }
+
+        function showDailyChallengeComplete() {
+            const popup = document.createElement('div');
+            popup.className = 'daily-challenge-complete';
+            popup.innerHTML = `
+                <div class="daily-complete-icon">🏆</div>
+                <div class="daily-complete-title">Daglig Udfordring Fuldført!</div>
+                <div class="daily-complete-name">${dailyChallenge.name}</div>
+                <div class="daily-complete-reward">+${dailyChallenge.reward} coins</div>
+            `;
+            document.body.appendChild(popup);
+
+            setTimeout(() => {
+                popup.classList.add('fade-out');
+                setTimeout(() => popup.remove(), 500);
+            }, 3000);
+        }
+
+        function updateDailyChallengeUI() {
+            const container = document.getElementById('dailyChallengeContainer');
+            if (!container || !dailyChallenge) return;
+
+            container.innerHTML = `
+                <div class="daily-challenge-header">📅 Daglig Udfordring</div>
+                <div class="daily-challenge-name">${dailyChallenge.name}</div>
+                <div class="daily-challenge-desc">${dailyChallenge.desc}</div>
+                <div class="daily-challenge-progress">
+                    ${dailyChallengeCompleted ? '✅ Fuldført!' : `Fremskridt: ${dailyChallengeProgress}/${dailyChallenge.goal}`}
+                </div>
+                <div class="daily-challenge-reward">Belønning: ${dailyChallenge.reward} coins</div>
+            `;
+        }
+
+        loadDailyChallenge();
+
         // Weapon system
         const WEAPONS = {
             laser: {
@@ -1490,6 +2359,8 @@
                 document.getElementById('scoreValue').textContent = score;
                 updateSessionStats('kill');
                 updateSessionStats('score', score);
+                dailyChallengeStats.ufosKilled++;
+                announce('ufoKill');
 
                 // Higher chance for power-up
                 if (Math.random() < 0.5) {
@@ -1629,6 +2500,7 @@
             document.getElementById('powerupIndicator').textContent = pu.name + ' ACTIVE';
             document.getElementById('powerupIndicator').style.color = pu.color;
             document.getElementById('powerupIndicator').classList.remove('hidden');
+            announce('powerUp');
 
             if (type === 'rapidFire') {
                 shootCooldown = 80;
@@ -1645,6 +2517,7 @@
                     activatePowerUp(pu.type);
                     playLevelUpSound();
                     updateSessionStats('powerUp');
+                    dailyChallengeStats.powerupsCollected++;
                     return false;
                 }
                 return pu.y < canvas.height;
@@ -1691,6 +2564,58 @@
             };
             document.getElementById('bossHealth').classList.remove('hidden');
             updateBossHealthBar();
+            announce('bossAppear');
+        }
+
+        // Endless mode functions
+        function updateEndlessMode() {
+            if (!endlessMode) return;
+
+            // Update timer display
+            const elapsed = Math.floor((Date.now() - endlessStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            document.getElementById('endlessTimer').textContent = `⏱️ ${minutes}:${seconds}`;
+            document.getElementById('endlessWave').textContent = `Bølge ${endlessWave}`;
+
+            // Spawn new enemies continuously
+            if (Date.now() - endlessSpawnTimer > endlessSpawnInterval) {
+                spawnEndlessWave();
+                endlessSpawnTimer = Date.now();
+            }
+
+            // Increase difficulty over time
+            if (elapsed > 0 && elapsed % 30 === 0) {
+                endlessSpawnInterval = Math.max(1000, endlessSpawnInterval - 100);
+            }
+        }
+
+        function spawnEndlessWave() {
+            const numEnemies = Math.min(3 + Math.floor(endlessWave / 2), 8);
+
+            for (let i = 0; i < numEnemies; i++) {
+                const x = Math.random() * (canvas.width - 40);
+                const types = ['basic', 'basic', 'medium'];
+                if (endlessWave >= 5) types.push('medium');
+                if (endlessWave >= 10) types.push('medium');
+
+                const type = types[Math.floor(Math.random() * types.length)];
+                const enemyData = type === 'medium' ?
+                    { width: 35, height: 25, points: 20, color: '#0f0' } :
+                    { width: 30, height: 20, points: 10, color: '#ff0' };
+
+                enemies.push({
+                    x: x,
+                    y: -30 - (i * 40),
+                    width: enemyData.width,
+                    height: enemyData.height,
+                    type: type,
+                    points: enemyData.points,
+                    shootChance: 0.003 + endlessWave * 0.0005
+                });
+            }
+
+            endlessWave++;
         }
 
         function updateBoss() {
@@ -1758,6 +2683,12 @@
                 playExplosionSound('boss');
                 triggerScreenShake(12, 500);
                 triggerSlowMotion(0.2, 1500);
+                announce('bossDefeat');
+
+                // Check boss daily challenge (defeat boss without losing life)
+                if (dailyChallenge && dailyChallenge.id === 'boss' && dailyChallengeStats.livesLostThisRound === 0) {
+                    completeDailyChallenge();
+                }
 
                 // Spawn power-up from boss (guaranteed)
                 powerUps.push({
@@ -2312,9 +3243,11 @@
         function updatePlayer() {
             if (keys.left && player.x > 0) {
                 player.x -= player.speed;
+                checkTutorialAction('move');
             }
             if (keys.right && player.x < canvas.width - player.width) {
                 player.x += player.speed;
+                checkTutorialAction('move');
             }
             if (keys.space && canShoot) {
                 const weapon = WEAPONS[currentWeapon];
@@ -2338,6 +3271,8 @@
                     bullets.push(bulletBase);
                 }
                 playShootSound();
+                dailyChallengeStats.shotsFired++;
+                checkTutorialAction('shoot');
                 canShoot = false;
                 setTimeout(() => canShoot = true, shootCooldown);
             }
@@ -2359,10 +3294,14 @@
 
         // Update enemies
         function updateEnemies() {
-            if (enemies.length === 0 && !currentBoss) {
+            // In endless mode, don't use level-based progression
+            if (endlessMode) {
+                // Just update existing enemies
+            } else if (enemies.length === 0 && !currentBoss) {
                 level++;
                 document.getElementById('levelValue').textContent = level;
                 playLevelUpSound();
+                announce('levelUp');
                 updateSessionStats('level', level);
                 // Don't spawn enemies if it's a boss level - boss will spawn in game loop
                 if (!BOSS_LEVELS.includes(level)) {
@@ -2432,6 +3371,10 @@
                         updateSessionStats('combo', comboCount);
                         updateSessionStats('score', score);
 
+                        // Track for daily challenges
+                        dailyChallengeStats.shotsHit++;
+                        dailyChallengeStats.killsInTime++;
+
                         // Earn coins
                         addCoins(Math.floor(enemy.points / 2));
 
@@ -2457,6 +3400,7 @@
                                     const splashPoints = addComboKill(nearEnemy.points);
                                     score += splashPoints;
                                     updateSessionStats('kill');
+                                    dailyChallengeStats.killsInTime++;
                                     spawnPowerUp(nearEnemy.x + nearEnemy.width / 2, nearEnemy.y + nearEnemy.height / 2);
                                     enemiesToRemove.add(nei);
                                 }
@@ -2497,6 +3441,11 @@
                         updateLivesDisplay();
                         enemyBulletsToRemove.add(bi);
                         updateSessionStats('damage');
+                        dailyChallengeStats.livesLostThisRound++;
+
+                        if (lives === 1) {
+                            announce('lowHealth');
+                        }
 
                         if (lives <= 0) {
                             gameOver();
@@ -2544,10 +3493,20 @@
         // Game over
         async function gameOver() {
             gameRunning = false;
+            stopMusic();
             playGameOverSound();
 
             // Final score update for achievements
             updateSessionStats('score', score);
+
+            // Check accuracy challenge at game over
+            if (dailyChallenge && dailyChallenge.id === 'accuracy' &&
+                dailyChallengeStats.shotsFired > 0 && !dailyChallengeCompleted) {
+                const accuracy = Math.round((dailyChallengeStats.shotsHit / dailyChallengeStats.shotsFired) * 100);
+                if (accuracy >= dailyChallenge.goal) {
+                    completeDailyChallenge();
+                }
+            }
 
             // Check for new highscore
             const isNew = isHighscore(score);
@@ -2556,10 +3515,24 @@
             document.getElementById('playerNameDisplay').textContent = playerName;
             document.getElementById('finalScore').textContent = score;
 
+            // Show endless mode stats
+            if (endlessMode) {
+                const elapsed = Math.floor((Date.now() - endlessStartTime) / 1000);
+                const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const seconds = (elapsed % 60).toString().padStart(2, '0');
+                document.getElementById('survivalTime').textContent = `${minutes}:${seconds}`;
+                document.getElementById('finalWave').textContent = endlessWave;
+                document.getElementById('endlessSurvival').classList.remove('hidden');
+            } else {
+                document.getElementById('endlessSurvival').classList.add('hidden');
+            }
+
             if (isNew && score > 0) {
                 document.getElementById('newHighscoreMsg').classList.remove('hidden');
+                announce('newHighscore');
             } else {
                 document.getElementById('newHighscoreMsg').classList.add('hidden');
+                announce('gameOver');
             }
 
             // Save highscore to server
@@ -2616,9 +3589,11 @@
                 updateUFO();
                 updateCombo();
                 checkCollisions();
+                checkDailyChallenge();
+                updateEndlessMode();
 
-                // Check for boss spawn (only when no enemies and no current boss)
-                if (enemies.length === 0 && !currentBoss && BOSS_LEVELS.includes(level)) {
+                // Check for boss spawn (only when no enemies and no current boss, not in endless mode)
+                if (!endlessMode && enemies.length === 0 && !currentBoss && BOSS_LEVELS.includes(level)) {
                     spawnBoss();
                 }
 
@@ -2650,16 +3625,37 @@
         }
 
         // Start game
-        function startGame() {
+        function startGame(isEndless = false) {
             initAudio();
+            initMusic();
 
             // Get player name
             const nameInput = document.getElementById('playerName');
             playerName = nameInput.value.trim() || 'Spiller';
 
+            // Set game mode
+            endlessMode = isEndless;
+
             document.getElementById('startScreen').classList.add('hidden');
             resetGame();
             gameRunning = true;
+            announce('gameStart');
+
+            // Show/hide endless mode UI
+            if (endlessMode) {
+                document.getElementById('endlessTimer').classList.remove('hidden');
+                document.getElementById('endlessWave').classList.remove('hidden');
+                document.getElementById('levelValue').parentElement.style.display = 'none';
+                endlessStartTime = Date.now();
+                endlessWave = 1;
+                endlessSpawnTimer = Date.now();
+                endlessSpawnInterval = 3000;
+            } else {
+                document.getElementById('endlessTimer').classList.add('hidden');
+                document.getElementById('endlessWave').classList.add('hidden');
+                document.getElementById('levelValue').parentElement.style.display = '';
+            }
+
             requestAnimationFrame(gameLoop);
         }
 
@@ -2670,6 +3666,7 @@
             await fetchHighscores();
             resetGame();
             gameRunning = true;
+            initMusic();
             requestAnimationFrame(gameLoop);
         }
 
@@ -2715,6 +3712,9 @@
 
             // Reset session stats for achievements
             resetSessionStats();
+
+            // Reset daily challenge stats
+            resetDailyChallengeStats();
 
             // Reset weapon
             currentWeapon = 'laser';
