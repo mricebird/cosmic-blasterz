@@ -13684,22 +13684,31 @@
             });
         }
 
-        // Start loading sequence immediately
-        runLoadingSequence().then(() => {
-            // Splash screen will be shown after loading
-            console.log('Loading complete, showing splash screen');
-            // Start the amiga-style scroller and music after splash is visible
-            setTimeout(() => {
-                initSplashStars();
-                startScroller();
-                // Try to start splash music
-                try {
-                    startSplashMusicOnce();
-                } catch (e) {
-                    console.log('Music autostart blocked by browser');
-                }
-            }, 100);
-        });
+        // Start loading sequence after DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startLoadingProcess);
+        } else {
+            // DOM already loaded
+            setTimeout(startLoadingProcess, 50);
+        }
+
+        function startLoadingProcess() {
+            runLoadingSequence().then(() => {
+                // Splash screen will be shown after loading
+                console.log('Loading complete, showing splash screen');
+                // Start the amiga-style scroller and music after splash is visible
+                setTimeout(() => {
+                    initSplashStars();
+                    startScroller();
+                    // Try to start splash music
+                    try {
+                        startSplashMusicOnce();
+                    } catch (e) {
+                        console.log('Music autostart blocked by browser');
+                    }
+                }, 100);
+            });
+        }
 
         // ========================================
         // UI Particles System
