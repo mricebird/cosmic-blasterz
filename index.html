@@ -12980,7 +12980,13 @@
         // Main game loop
         let lastChallengeTimeUpdate = 0;
         function gameLoop() {
-            if (!gameRunning || gamePaused) return;
+            // Always keep the loop running, but skip updates when paused
+            if (!gameRunning) return;
+
+            if (gamePaused) {
+                requestAnimationFrame(gameLoop);
+                return;
+            }
 
             // Poll gamepads for input
             pollGamepads();
