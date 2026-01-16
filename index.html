@@ -496,6 +496,116 @@
             opacity: 0.7;
         }
 
+        /* Shop button and panel */
+        .shop-btn {
+            position: absolute;
+            top: 10px;
+            right: 120px;
+            padding: 5px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ff0;
+            border-radius: 5px;
+            color: #ff0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 60;
+        }
+
+        .shop-btn:hover {
+            background: rgba(255, 255, 0, 0.2);
+        }
+
+        .coins-display {
+            position: absolute;
+            top: 10px;
+            right: 200px;
+            color: #ff0;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 0, 0.3);
+            z-index: 60;
+        }
+
+        .shop-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #ff0;
+            border-radius: 10px;
+            padding: 20px;
+            color: #fff;
+            z-index: 200;
+            min-width: 350px;
+        }
+
+        .shop-panel h2 {
+            color: #ff0;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            border: 1px solid #333;
+        }
+
+        .shop-item.owned {
+            border-color: #0f0;
+            opacity: 0.7;
+        }
+
+        .shop-item-info {
+            flex: 1;
+        }
+
+        .shop-item-name {
+            color: #0ff;
+            font-weight: bold;
+        }
+
+        .shop-item-desc {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .shop-item-btn {
+            padding: 5px 15px;
+            background: #ff0;
+            border: none;
+            border-radius: 5px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .shop-item-btn:disabled {
+            background: #555;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .shop-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #f00;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
         /* Responsive */
         @media (max-width: 850px) {
             .game-container {
@@ -608,6 +718,19 @@
                 <span class="weapon-icon">🔮</span>
                 <span class="weapon-key">3</span>
             </button>
+        </div>
+
+        <!-- Coins display -->
+        <div class="coins-display" id="coinsDisplay">🪙 0</div>
+
+        <!-- Shop button -->
+        <button class="shop-btn" id="shopBtn" onclick="toggleShop()">🛒 SHOP</button>
+
+        <!-- Shop panel -->
+        <div class="shop-panel hidden" id="shopPanel">
+            <button class="shop-close" onclick="toggleShop()">✕</button>
+            <h2>🛒 SHOP</h2>
+            <div id="shopItems"></div>
         </div>
     </div>
 
@@ -1035,6 +1158,112 @@
         // Load achievements on start
         loadAchievements();
 
+        // Shop system
+        const SHOP_STORAGE_KEY = 'spaceInvadersShop';
+        let totalCoins = 0;
+        let ownedUpgrades = [];
+
+        const SHOP_ITEMS = {
+            extraLife: { name: 'Ekstra Liv', desc: 'Start med 4 liv i stedet for 3', price: 500, effect: 'startLives' },
+            fasterShip: { name: 'Hurtigere Skib', desc: '+20% bevægelseshastighed', price: 300, effect: 'shipSpeed' },
+            biggerBullets: { name: 'Større Kugler', desc: '+50% skade på alle våben', price: 400, effect: 'bulletDamage' },
+            longerPowerups: { name: 'Længere Power-ups', desc: 'Power-ups varer 50% længere', price: 350, effect: 'powerupDuration' },
+            coinMagnet: { name: 'Coin Magnet', desc: '+25% flere coins per kill', price: 250, effect: 'coinBonus' },
+            startShield: { name: 'Start Shield', desc: 'Start med shield i 5 sekunder', price: 600, effect: 'startShield' }
+        };
+
+        function loadShopData() {
+            try {
+                const data = localStorage.getItem(SHOP_STORAGE_KEY);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    totalCoins = parsed.coins || 0;
+                    ownedUpgrades = parsed.owned || [];
+                }
+            } catch (e) {}
+            updateCoinsDisplay();
+        }
+
+        function saveShopData() {
+            try {
+                localStorage.setItem(SHOP_STORAGE_KEY, JSON.stringify({
+                    coins: totalCoins,
+                    owned: ownedUpgrades
+                }));
+            } catch (e) {}
+        }
+
+        function addCoins(amount) {
+            // Apply coin bonus if owned
+            if (ownedUpgrades.includes('coinMagnet')) {
+                amount = Math.floor(amount * 1.25);
+            }
+            totalCoins += amount;
+            updateCoinsDisplay();
+            saveShopData();
+        }
+
+        function updateCoinsDisplay() {
+            document.getElementById('coinsDisplay').textContent = '🪙 ' + totalCoins;
+        }
+
+        function toggleShop() {
+            const panel = document.getElementById('shopPanel');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) {
+                renderShopItems();
+                if (gameRunning && !gamePaused) {
+                    togglePause();
+                }
+            }
+        }
+
+        function renderShopItems() {
+            const container = document.getElementById('shopItems');
+            let html = '';
+
+            Object.keys(SHOP_ITEMS).forEach(key => {
+                const item = SHOP_ITEMS[key];
+                const owned = ownedUpgrades.includes(key);
+                const canAfford = totalCoins >= item.price;
+
+                html += `
+                    <div class="shop-item ${owned ? 'owned' : ''}">
+                        <div class="shop-item-info">
+                            <div class="shop-item-name">${item.name}</div>
+                            <div class="shop-item-desc">${item.desc}</div>
+                        </div>
+                        <button class="shop-item-btn"
+                            ${owned || !canAfford ? 'disabled' : ''}
+                            onclick="purchaseItem('${key}')">
+                            ${owned ? '✓ KØBT' : '🪙 ' + item.price}
+                        </button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function purchaseItem(key) {
+            const item = SHOP_ITEMS[key];
+            if (ownedUpgrades.includes(key) || totalCoins < item.price) return;
+
+            totalCoins -= item.price;
+            ownedUpgrades.push(key);
+            saveShopData();
+            updateCoinsDisplay();
+            renderShopItems();
+            playLevelUpSound();
+        }
+
+        function hasUpgrade(key) {
+            return ownedUpgrades.includes(key);
+        }
+
+        // Load shop data on start
+        loadShopData();
+
         // Weapon system
         const WEAPONS = {
             laser: {
@@ -1395,7 +1624,8 @@
             }
 
             activePowerUp = type;
-            powerUpTimer = Date.now() + pu.duration;
+            const duration = hasUpgrade('longerPowerups') ? Math.floor(pu.duration * 1.5) : pu.duration;
+            powerUpTimer = Date.now() + duration;
             document.getElementById('powerupIndicator').textContent = pu.name + ' ACTIVE';
             document.getElementById('powerupIndicator').style.color = pu.color;
             document.getElementById('powerupIndicator').classList.remove('hidden');
@@ -1702,6 +1932,10 @@
         let enemyDropAmount = 30;
         let enemyShootChance = 0.002;
 
+        // Background elements
+        let asteroids = [];
+        let nebulaClouds = [];
+
         // Initialize stars
         function initStars() {
             stars = [];
@@ -1713,6 +1947,156 @@
                     speed: Math.random() * 1 + 0.3
                 });
             }
+        }
+
+        // Initialize asteroids
+        function initAsteroids() {
+            asteroids = [];
+            for (let i = 0; i < 5; i++) {
+                asteroids.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 15 + 10,
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: Math.random() * 0.3 + 0.1,
+                    rotation: 0,
+                    rotationSpeed: (Math.random() - 0.5) * 0.02,
+                    vertices: Math.floor(Math.random() * 4) + 6
+                });
+            }
+        }
+
+        // Initialize nebula clouds
+        function initNebula() {
+            nebulaClouds = [];
+            for (let i = 0; i < 3; i++) {
+                nebulaClouds.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height * 0.5,
+                    size: Math.random() * 150 + 100,
+                    color: ['#301030', '#103030', '#303010'][i % 3],
+                    speed: Math.random() * 0.1 + 0.05,
+                    alpha: Math.random() * 0.1 + 0.05
+                });
+            }
+        }
+
+        // Draw nebula clouds (behind everything)
+        function drawNebula() {
+            nebulaClouds.forEach(cloud => {
+                ctx.globalAlpha = cloud.alpha;
+                const gradient = ctx.createRadialGradient(
+                    cloud.x, cloud.y, 0,
+                    cloud.x, cloud.y, cloud.size
+                );
+                gradient.addColorStop(0, cloud.color);
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(cloud.x, cloud.y, cloud.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        // Update nebula
+        function updateNebula() {
+            nebulaClouds.forEach(cloud => {
+                cloud.y += cloud.speed * slowMotionFactor;
+                if (cloud.y > canvas.height + cloud.size) {
+                    cloud.y = -cloud.size;
+                    cloud.x = Math.random() * canvas.width;
+                }
+            });
+        }
+
+        // Draw asteroids
+        function drawAsteroids() {
+            ctx.fillStyle = '#444';
+            asteroids.forEach(asteroid => {
+                ctx.save();
+                ctx.translate(asteroid.x, asteroid.y);
+                ctx.rotate(asteroid.rotation);
+
+                // Draw irregular polygon
+                ctx.beginPath();
+                for (let i = 0; i < asteroid.vertices; i++) {
+                    const angle = (i / asteroid.vertices) * Math.PI * 2;
+                    const variance = 0.7 + Math.sin(i * 2) * 0.3;
+                    const x = Math.cos(angle) * asteroid.size * variance;
+                    const y = Math.sin(angle) * asteroid.size * variance;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.fill();
+
+                // Highlight
+                ctx.fillStyle = '#555';
+                ctx.beginPath();
+                ctx.arc(-asteroid.size * 0.2, -asteroid.size * 0.2, asteroid.size * 0.3, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            });
+        }
+
+        // Player trail system
+        let playerTrail = [];
+        const MAX_TRAIL_LENGTH = 10;
+
+        function updatePlayerTrail() {
+            // Add current position to trail
+            playerTrail.unshift({
+                x: player.x + player.width / 2,
+                y: player.y + player.height / 2,
+                alpha: 1
+            });
+
+            // Limit trail length
+            if (playerTrail.length > MAX_TRAIL_LENGTH) {
+                playerTrail.pop();
+            }
+
+            // Fade out trail
+            playerTrail.forEach((point, i) => {
+                point.alpha = 1 - (i / MAX_TRAIL_LENGTH);
+            });
+        }
+
+        function drawPlayerTrail() {
+            if (playerTrail.length < 2) return;
+
+            ctx.lineCap = 'round';
+            for (let i = 1; i < playerTrail.length; i++) {
+                const prev = playerTrail[i - 1];
+                const curr = playerTrail[i];
+
+                ctx.strokeStyle = `rgba(0, 255, 255, ${curr.alpha * 0.5})`;
+                ctx.lineWidth = (MAX_TRAIL_LENGTH - i) * 1.5;
+
+                ctx.beginPath();
+                ctx.moveTo(prev.x, prev.y);
+                ctx.lineTo(curr.x, curr.y);
+                ctx.stroke();
+            }
+        }
+
+        // Update asteroids
+        function updateAsteroids() {
+            asteroids.forEach(asteroid => {
+                asteroid.x += asteroid.speedX * slowMotionFactor;
+                asteroid.y += asteroid.speedY * slowMotionFactor;
+                asteroid.rotation += asteroid.rotationSpeed * slowMotionFactor;
+
+                // Wrap around screen
+                if (asteroid.y > canvas.height + asteroid.size) {
+                    asteroid.y = -asteroid.size;
+                    asteroid.x = Math.random() * canvas.width;
+                }
+                if (asteroid.x < -asteroid.size) asteroid.x = canvas.width + asteroid.size;
+                if (asteroid.x > canvas.width + asteroid.size) asteroid.x = -asteroid.size;
+            });
         }
 
         // Initialize enemies
@@ -1940,7 +2324,7 @@
                     speed: weapon.speed,
                     angle: 0,
                     weapon: currentWeapon,
-                    damage: weapon.damage,
+                    damage: hasUpgrade('biggerBullets') ? Math.ceil(weapon.damage * 1.5) : weapon.damage,
                     penetrating: weapon.penetrating,
                     splash: weapon.splash
                 };
@@ -2047,6 +2431,9 @@
                         updateSessionStats('kill');
                         updateSessionStats('combo', comboCount);
                         updateSessionStats('score', score);
+
+                        // Earn coins
+                        addCoins(Math.floor(enemy.points / 2));
 
                         // Chance to spawn power-up
                         spawnPowerUp(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
@@ -2217,8 +2604,11 @@
                 updateSlowMotion();
 
                 // Update
+                updateNebula();
+                updateAsteroids();
                 updateStars();
                 updatePlayer();
+                updatePlayerTrail();
                 updateBullets();
                 updateEnemies();
                 updatePowerUps();
@@ -2233,6 +2623,8 @@
                 }
 
                 // Draw
+                drawNebula();
+                drawAsteroids();
                 drawStars();
 
                 bullets.forEach(b => drawBullet(b));
@@ -2243,6 +2635,7 @@
                 drawUFO();
                 drawBarriers();
                 drawPowerUps();
+                drawPlayerTrail();
                 drawPlayer();
                 drawShield();
                 updateParticles();
@@ -2283,7 +2676,8 @@
         // Reset game state
         function resetGame() {
             score = 0;
-            lives = 3;
+            // Apply extra life upgrade
+            lives = hasUpgrade('extraLife') ? 4 : 3;
             level = 1;
             bullets = [];
             enemyBullets = [];
@@ -2293,16 +2687,31 @@
             player.x = canvas.width / 2 - 25;
             gamePaused = false;
 
+            // Apply ship speed upgrade
+            player.speed = hasUpgrade('fasterShip') ? 8.4 : 7;
+
             // Reset power-ups
             activePowerUp = null;
             powerUpTimer = 0;
             shootCooldown = 200;
             document.getElementById('powerupIndicator').classList.add('hidden');
 
+            // Apply start shield upgrade (after reset)
+            if (hasUpgrade('startShield')) {
+                activePowerUp = 'shield';
+                powerUpTimer = Date.now() + 5000;
+                document.getElementById('powerupIndicator').textContent = 'SHIELD ACTIVE';
+                document.getElementById('powerupIndicator').style.color = '#0ff';
+                document.getElementById('powerupIndicator').classList.remove('hidden');
+            }
+
             // Reset combo
             comboCount = 0;
             comboTimer = 0;
             document.getElementById('comboDisplay').classList.remove('active');
+
+            // Reset player trail
+            playerTrail = [];
 
             // Reset session stats for achievements
             resetSessionStats();
@@ -2409,6 +2818,8 @@
 
         // Initialize
         initStars();
+        initAsteroids();
+        initNebula();
 
         // Animation frame ID for cleanup
         let animationId = null;
