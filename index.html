@@ -4077,6 +4077,37 @@
             background: rgba(25, 40, 65, 0.95);
         }
 
+        .weapon-preview-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .weapon-preview-container canvas {
+            border-radius: 4px;
+        }
+
+        .weapon-desc {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .weapon-stats {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            color: #0ff;
+            text-align: center;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
         .weapon-upgrade-header {
             display: flex;
             align-items: center;
@@ -8277,9 +8308,16 @@
                     `;
                 });
             } else if (currentShopTab === 'weapons') {
-                // Weapons tab
+                // Weapons tab with visual previews
+                const weaponInfo = {
+                    laser: { color: '#0ff', desc: 'Fast, precise shots', stats: 'Speed: ★★★★★ | Damage: ★★☆☆☆' },
+                    missile: { color: '#f80', desc: 'Explosive splash damage', stats: 'Speed: ★★☆☆☆ | Damage: ★★★★☆' },
+                    plasma: { color: '#f0f', desc: 'Penetrates enemies', stats: 'Speed: ★★★★☆ | Damage: ★★★☆☆' }
+                };
+
                 Object.keys(WEAPON_UPGRADES).forEach(weaponKey => {
                     const weaponData = WEAPON_UPGRADES[weaponKey];
+                    const wInfo = weaponInfo[weaponKey];
                     const currentLevel = weaponUpgradeLevels[weaponKey] || 0;
                     const maxLevel = weaponData.upgrades.length;
                     const isMaxed = currentLevel >= maxLevel;
@@ -8291,11 +8329,16 @@
 
                     html += `
                         <div class="weapon-upgrade-card">
+                            <div class="weapon-preview-container">
+                                <canvas id="weaponPreview_${weaponKey}" width="120" height="60"></canvas>
+                            </div>
                             <div class="weapon-upgrade-header">
                                 <span class="weapon-icon">${weaponData.icon}</span>
                                 <span class="weapon-name">${weaponData.name}</span>
                                 <span class="weapon-level">LVL ${currentLevel}/${maxLevel}</span>
                             </div>
+                            <div class="weapon-desc">${wInfo.desc}</div>
+                            <div class="weapon-stats">${wInfo.stats}</div>
                             <div class="weapon-progress-bar">
                                 <div class="weapon-progress-fill" style="width: ${progressPercent}%"></div>
                             </div>
@@ -8361,6 +8404,9 @@
             // Render skin previews if on skins tab
             if (currentShopTab === 'skins') {
                 setTimeout(() => renderSkinPreviews(), 10);
+            }
+            if (currentShopTab === 'weapons') {
+                setTimeout(() => renderWeaponPreviews(), 10);
             }
         }
 
@@ -8436,6 +8482,123 @@
                 skinCtx.lineTo(x + w - 10, y + h);
                 skinCtx.closePath();
                 skinCtx.fill();
+            });
+        }
+
+        // Animated weapon previews
+        let weaponPreviewAnimations = {};
+
+        function renderWeaponPreviews() {
+            // Clear existing animations
+            Object.values(weaponPreviewAnimations).forEach(id => cancelAnimationFrame(id));
+            weaponPreviewAnimations = {};
+
+            const weaponVisuals = {
+                laser: { color: '#0ff', width: 4, height: 12, speed: 3, glow: '#0ff' },
+                missile: { color: '#f80', width: 8, height: 16, speed: 2, glow: '#f80', trail: true },
+                plasma: { color: '#f0f', width: 6, height: 20, speed: 2.5, glow: '#f0f', penetrating: true }
+            };
+
+            Object.keys(weaponVisuals).forEach(weaponKey => {
+                const canvas = document.getElementById(`weaponPreview_${weaponKey}`);
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                const visual = weaponVisuals[weaponKey];
+                let bullets = [];
+                let frame = 0;
+
+                function spawnBullet() {
+                    bullets.push({
+                        x: 60 + Math.random() * 20 - 10,
+                        y: 55,
+                        width: visual.width,
+                        height: visual.height
+                    });
+                }
+
+                function animate() {
+                    ctx.clearRect(0, 0, 120, 60);
+
+                    // Draw dark background with grid
+                    ctx.fillStyle = 'rgba(0, 10, 20, 0.9)';
+                    ctx.fillRect(0, 0, 120, 60);
+
+                    // Grid lines
+                    ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
+                    ctx.lineWidth = 1;
+                    for (let i = 0; i < 120; i += 15) {
+                        ctx.beginPath();
+                        ctx.moveTo(i, 0);
+                        ctx.lineTo(i, 60);
+                        ctx.stroke();
+                    }
+                    for (let i = 0; i < 60; i += 15) {
+                        ctx.beginPath();
+                        ctx.moveTo(0, i);
+                        ctx.lineTo(120, i);
+                        ctx.stroke();
+                    }
+
+                    // Update and draw bullets
+                    bullets = bullets.filter(b => b.y > -20);
+                    bullets.forEach(b => {
+                        b.y -= visual.speed;
+
+                        // Glow effect
+                        ctx.shadowColor = visual.glow;
+                        ctx.shadowBlur = 8;
+
+                        // Draw bullet based on type
+                        ctx.fillStyle = visual.color;
+
+                        if (weaponKey === 'laser') {
+                            // Simple rectangle
+                            ctx.fillRect(b.x - b.width/2, b.y, b.width, b.height);
+                        } else if (weaponKey === 'missile') {
+                            // Missile shape with trail
+                            ctx.beginPath();
+                            ctx.moveTo(b.x, b.y);
+                            ctx.lineTo(b.x - b.width/2, b.y + b.height);
+                            ctx.lineTo(b.x + b.width/2, b.y + b.height);
+                            ctx.closePath();
+                            ctx.fill();
+
+                            // Trail
+                            ctx.fillStyle = '#ff0';
+                            ctx.beginPath();
+                            ctx.moveTo(b.x - 2, b.y + b.height);
+                            ctx.lineTo(b.x, b.y + b.height + 8);
+                            ctx.lineTo(b.x + 2, b.y + b.height);
+                            ctx.closePath();
+                            ctx.fill();
+                        } else if (weaponKey === 'plasma') {
+                            // Elongated beam
+                            const gradient = ctx.createLinearGradient(b.x, b.y, b.x, b.y + b.height);
+                            gradient.addColorStop(0, '#fff');
+                            gradient.addColorStop(0.3, visual.color);
+                            gradient.addColorStop(1, 'rgba(255,0,255,0.3)');
+                            ctx.fillStyle = gradient;
+                            ctx.fillRect(b.x - b.width/2, b.y, b.width, b.height);
+                        }
+
+                        ctx.shadowBlur = 0;
+                    });
+
+                    // Spawn new bullet periodically
+                    frame++;
+                    if (frame % 25 === 0) {
+                        spawnBullet();
+                    }
+
+                    weaponPreviewAnimations[weaponKey] = requestAnimationFrame(animate);
+                }
+
+                // Initial bullets
+                spawnBullet();
+                setTimeout(() => spawnBullet(), 200);
+
+                animate();
             });
         }
 
