@@ -10225,38 +10225,52 @@
         // Initialize splash screen
         const splashScreen = document.getElementById('splashScreen');
         if (splashScreen) {
-            initSplashStars();
-            startScroller();
+            try {
+                initSplashStars();
+                startScroller();
+            } catch (e) {
+                console.error('Splash init error:', e);
+            }
 
             // Track if music has started (for two-step interaction)
             let musicStartedByUser = false;
 
             // Try to autostart music (may be blocked by browser)
             setTimeout(() => {
-                startSplashMusicOnce();
-                // If autostart worked, allow single click to proceed
-                if (splashMusicPlaying) {
-                    musicStartedByUser = true;
+                try {
+                    startSplashMusicOnce();
+                    if (splashMusicPlaying) {
+                        musicStartedByUser = true;
+                    }
+                } catch (e) {
+                    console.error('Music autostart error:', e);
                 }
             }, 100);
 
-            // Handle splash interaction: first click starts music, second click starts game
+            // Handle splash interaction: click to proceed
             function handleSplashInteraction(e) {
-                if (!musicStartedByUser) {
-                    // First interaction: start music
-                    startSplashMusicOnce();
-                    musicStartedByUser = true;
-                    // Update prompt
-                    const prompt = splashScreen.querySelector('.splash-prompt');
-                    if (prompt) prompt.textContent = 'Press Again to Start';
-                } else {
-                    // Music already playing: start game
+                e.preventDefault();
+                e.stopPropagation();
+
+                try {
+                    if (!musicStartedByUser) {
+                        startSplashMusicOnce();
+                        musicStartedByUser = true;
+                        const prompt = splashScreen.querySelector('.splash-prompt');
+                        if (prompt) prompt.textContent = 'Press Again to Start';
+                    } else {
+                        hideSplashScreen();
+                    }
+                } catch (err) {
+                    console.error('Splash interaction error:', err);
+                    // Fallback: always hide splash on error
                     hideSplashScreen();
                 }
             }
 
             splashScreen.addEventListener('click', handleSplashInteraction);
-            splashScreen.addEventListener('touchstart', handleSplashInteraction);
+            splashScreen.addEventListener('touchstart', handleSplashInteraction, { passive: false });
+
             // Any key to interact
             document.addEventListener('keydown', function splashKeyHandler(e) {
                 if (!splashScreen.classList.contains('hidden')) {
