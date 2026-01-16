@@ -5810,6 +5810,8 @@
         const keys = {
             left: false,
             right: false,
+            up: false,
+            down: false,
             space: false
         };
         let canShoot = true;
@@ -7133,12 +7135,24 @@
 
         // Update player
         function updatePlayer() {
+            // Horizontal movement
             if (keys.left && player.x > 0) {
                 player.x -= player.speed;
                 checkTutorialAction('move');
             }
             if (keys.right && player.x < canvas.width - player.width) {
                 player.x += player.speed;
+                checkTutorialAction('move');
+            }
+            // Vertical movement (limited to bottom half of screen)
+            const minY = canvas.height * 0.4; // Can't go above 40% of screen
+            const maxY = canvas.height - player.height - 10;
+            if (keys.up && player.y > minY) {
+                player.y -= player.speed;
+                checkTutorialAction('move');
+            }
+            if (keys.down && player.y < maxY) {
+                player.y += player.speed;
                 checkTutorialAction('move');
             }
             if (keys.space && canShoot) {
@@ -7729,6 +7743,14 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
             if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
+            if (e.key === 'ArrowUp' || e.key === 'w') {
+                keys.up = true;
+                e.preventDefault();
+            }
+            if (e.key === 'ArrowDown' || e.key === 's') {
+                keys.down = true;
+                e.preventDefault();
+            }
             if (e.key === ' ') {
                 keys.space = true;
                 e.preventDefault();
@@ -7750,6 +7772,8 @@
         document.addEventListener('keyup', (e) => {
             if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
             if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
+            if (e.key === 'ArrowUp' || e.key === 'w') keys.up = false;
+            if (e.key === 'ArrowDown' || e.key === 's') keys.down = false;
             if (e.key === ' ') keys.space = false;
         });
 
@@ -7837,6 +7861,8 @@
             joystickTouchId = null;
             keys.left = false;
             keys.right = false;
+            keys.up = false;
+            keys.down = false;
 
             if (joystickStick) {
                 joystickStick.classList.remove('active');
@@ -7883,10 +7909,13 @@
             if (distance > joystickConfig.deadzone) {
                 keys.left = normalizedX < -0.3;
                 keys.right = normalizedX > 0.3;
-                // Could add vertical movement here if needed
+                keys.up = normalizedY < -0.3;
+                keys.down = normalizedY > 0.3;
             } else {
                 keys.left = false;
                 keys.right = false;
+                keys.up = false;
+                keys.down = false;
             }
         }
 
