@@ -96,6 +96,69 @@
             animation: titleGlow 2s ease-in-out infinite;
         }
 
+        .game-over-screen h1 {
+            font-size: 56px;
+            color: #ff3333;
+            text-shadow:
+                0 0 20px rgba(255, 0, 0, 0.8),
+                0 0 40px rgba(255, 0, 0, 0.6),
+                0 0 60px rgba(255, 0, 0, 0.4),
+                0 0 80px rgba(255, 0, 0, 0.2);
+            animation: gameOverPulse 1.5s ease-in-out infinite, gameOverEntry 0.5s ease-out;
+            letter-spacing: 8px;
+            margin-bottom: 8px;
+        }
+
+        .game-over-subtitle {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            color: rgba(255, 100, 100, 0.8);
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes gameOverPulse {
+            0%, 100% {
+                text-shadow:
+                    0 0 20px rgba(255, 0, 0, 0.8),
+                    0 0 40px rgba(255, 0, 0, 0.6),
+                    0 0 60px rgba(255, 0, 0, 0.4);
+                transform: scale(1);
+            }
+            50% {
+                text-shadow:
+                    0 0 30px rgba(255, 50, 50, 1),
+                    0 0 60px rgba(255, 0, 0, 0.8),
+                    0 0 90px rgba(255, 0, 0, 0.5);
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes gameOverEntry {
+            0% {
+                opacity: 0;
+                transform: scale(1.5);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .start-screen h1 {
             font-size: 38px;
             background: linear-gradient(135deg, #0ff 0%, #f0f 50%, #0ff 100%);
@@ -1609,8 +1672,9 @@
         </div>
 
         <div class="game-over-screen hidden" id="gameOverScreen">
-            <h1>GAME OVER</h1>
-            <div id="newHighscoreMsg" class="new-highscore hidden">NEW HIGHSCORE!</div>
+            <h1>💀 GAME OVER 💀</h1>
+            <p class="game-over-subtitle">The aliens have won this battle...</p>
+            <div id="newHighscoreMsg" class="new-highscore hidden">🎉 NEW HIGHSCORE! 🎉</div>
             <div class="final-score"><span id="playerNameDisplay"></span>'s Score: <span id="finalScore">0</span></div>
             <div class="endless-survival hidden" id="endlessSurvival">⏱️ Survived: <span id="survivalTime">00:00</span> | Wave: <span id="finalWave">1</span></div>
             <div class="highscore-list" id="gameOverHighscores"></div>
