@@ -709,6 +709,25 @@
             50% { transform: scale(1.1); }
         }
 
+        .mode-card.bossrush:hover {
+            border-color: rgba(255, 50, 50, 0.6);
+            box-shadow: 0 0 20px rgba(255, 50, 50, 0.3);
+        }
+
+        .mode-card.bossrush .mode-title {
+            color: #f33;
+        }
+
+        .mode-card.bossrush .mode-icon {
+            animation: bossShake 0.5s ease-in-out infinite;
+        }
+
+        @keyframes bossShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px) rotate(-5deg); }
+            75% { transform: translateX(3px) rotate(5deg); }
+        }
+
         .mode-desc {
             font-family: 'Rajdhani', sans-serif;
             font-size: 12px;
@@ -991,6 +1010,45 @@
             margin: 12px 0;
         }
 
+        .boss-rush-display {
+            position: fixed;
+            top: 60px;
+            right: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: linear-gradient(135deg, rgba(255, 50, 50, 0.2) 0%, rgba(150, 0, 0, 0.3) 100%);
+            border: 2px solid rgba(255, 50, 50, 0.5);
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            z-index: 50;
+            animation: bossRushPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes bossRushPulse {
+            0%, 100% { border-color: rgba(255, 50, 50, 0.5); }
+            50% { border-color: rgba(255, 100, 100, 0.8); }
+        }
+
+        .boss-rush-icon {
+            font-size: 20px;
+            animation: bossIconShake 0.3s ease-in-out infinite;
+        }
+
+        @keyframes bossIconShake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        .boss-rush-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f55;
+            text-shadow: 0 0 10px rgba(255, 50, 50, 0.5);
+        }
+
         .game-subtitle {
             font-family: 'Rajdhani', sans-serif;
             font-size: 18px;
@@ -1148,6 +1206,37 @@
         @keyframes inviteShine {
             0% { left: -100%; }
             50%, 100% { left: 100%; }
+        }
+
+        .creator-btn {
+            padding: 12px 24px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #0077b5 0%, #00a0dc 50%, #0077b5 100%);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 119, 181, 0.4),
+                        0 0 20px rgba(0, 160, 220, 0.2);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .creator-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(0, 119, 181, 0.6),
+                        0 0 40px rgba(0, 160, 220, 0.4);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .creator-btn:active {
+            transform: translateY(0) scale(1);
         }
 
         .invite-friend-text {
@@ -1365,14 +1454,14 @@
         .highscore-list {
             margin-top: 22px;
             text-align: left;
-            background: linear-gradient(135deg, rgba(0, 20, 40, 0.8) 0%, rgba(0, 10, 25, 0.9) 100%);
-            padding: 18px 25px;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            max-height: 150px;
+            background: linear-gradient(135deg, rgba(0, 20, 40, 0.95) 0%, rgba(0, 10, 25, 0.98) 100%);
+            padding: 20px 30px;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 255, 255, 0.4);
+            max-height: 250px;
             overflow-y: auto;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
-            width: 280px;
+            box-shadow: inset 0 2px 15px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 255, 255, 0.2);
+            width: 350px;
         }
 
         .highscore-list::-webkit-scrollbar {
@@ -1392,22 +1481,23 @@
         .highscore-list h3 {
             font-family: 'Orbitron', sans-serif;
             text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             color: #f0f;
-            font-size: 15px;
-            font-weight: 600;
-            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+            font-size: 18px;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.6);
+            letter-spacing: 2px;
         }
 
         .highscore-entry {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            padding: 10px 5px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.15);
             font-family: 'Rajdhani', sans-serif;
-            font-size: 15px;
-            font-weight: 500;
-            transition: background 0.2s ease;
+            font-size: 17px;
+            font-weight: 600;
+            transition: all 0.2s ease;
         }
 
         .highscore-entry:last-child {
@@ -2444,6 +2534,27 @@
             height: 100%;
         }
 
+        .trail-preview {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 8px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px currentColor;
+            animation: trailPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes trailPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .trail-desc {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 4px;
+        }
+
         .skin-name {
             font-family: 'Rajdhani', sans-serif;
             font-size: 13px;
@@ -3304,6 +3415,11 @@
                     <div class="mode-title">AI DEMO</div>
                     <div class="mode-desc">Watch AI play! See how the game works before you try.</div>
                 </div>
+                <div class="mode-card bossrush" onclick="startBossRush()">
+                    <div class="mode-icon">👹</div>
+                    <div class="mode-title">BOSS RUSH</div>
+                    <div class="mode-desc">Fight all bosses back-to-back! No waves, pure chaos!</div>
+                </div>
             </div>
             <div class="controls-info">
                 <p class="controls-title">⌨️ Controls</p>
@@ -3326,6 +3442,9 @@
                 <button class="invite-friend-btn" onclick="openInviteModal()">
                     👥 Invite Friend
                 </button>
+                <a href="https://www.linkedin.com/in/mricebird/" target="_blank" class="creator-btn">
+                    👨‍💻 Who created this?
+                </a>
                 <span class="invite-friend-text">Challenge your friends to beat your score!</span>
                 <button class="install-pwa-btn hidden" id="installPwaBtn" onclick="installPwa()">
                     📲 Install App
@@ -3354,8 +3473,8 @@
         </div>
 
         <div class="game-over-screen hidden" id="gameOverScreen">
-            <h1>💀 GAME OVER 💀</h1>
-            <p class="game-over-subtitle">The aliens have won this battle...</p>
+            <h1 id="gameOverTitle">💀 GAME OVER 💀</h1>
+            <p class="game-over-subtitle" id="gameOverSubtitle">The aliens have won this battle...</p>
             <div id="newHighscoreMsg" class="new-highscore hidden">🎉 NEW HIGHSCORE! 🎉</div>
             <div class="final-score"><span id="playerNameDisplay"></span>'s Score: <span id="finalScore">0</span></div>
             <div class="endless-survival hidden" id="endlessSurvival">⏱️ Survived: <span id="survivalTime">00:00</span> | Wave: <span id="finalWave">1</span></div>
@@ -3572,6 +3691,12 @@
         <!-- Endless Mode UI -->
         <div class="endless-timer hidden" id="endlessTimer">⏱️ 00:00</div>
         <div class="endless-wave hidden" id="endlessWave">Wave 1</div>
+
+        <!-- Boss Rush UI -->
+        <div class="boss-rush-display hidden" id="bossRushDisplay">
+            <span class="boss-rush-icon">👹</span>
+            <span class="boss-rush-text">BOSS <span id="bossRushCurrent">1</span> of <span id="bossRushTotal">5</span></span>
+        </div>
 
         <!-- Tutorial overlay -->
         <div class="tutorial-overlay hidden" id="tutorialOverlay">
@@ -4664,6 +4789,63 @@
         const ROWS_PER_BEAT = 4;
         const ROW_TIME = (60000 / MUSIC_BPM) / ROWS_PER_BEAT;
 
+        // ==========================================
+        // DYNAMIC MUSIC SYSTEM
+        // ==========================================
+        let musicIntensity = 0; // 0-100
+        let musicFilterNode = null;
+        let musicTargetIntensity = 0;
+
+        function updateMusicIntensity() {
+            // Calculate music intensity based on game state
+            let intensity = 0;
+
+            // Base intensity from level
+            intensity += Math.min(level * 3, 30);
+
+            // High combo increases intensity
+            if (comboCount >= 3) intensity += 15;
+            if (comboCount >= 5) intensity += 15;
+            if (comboCount >= 10) intensity += 20;
+
+            // Low health increases tension
+            if (lives === 1) intensity += 30;
+            if (lives === 2) intensity += 15;
+
+            // Boss fight maxes intensity
+            if (currentBoss) intensity = 100;
+
+            // Enemy proximity increases tension
+            const lowestEnemy = enemies.reduce((lowest, e) =>
+                e.y + e.height > lowest ? e.y + e.height : lowest, 0);
+            if (lowestEnemy > canvas.height * 0.6) intensity += 20;
+            if (lowestEnemy > canvas.height * 0.75) intensity += 20;
+
+            // Bullet time reduces intensity for dramatic effect
+            if (bulletTimeActive) intensity = 20;
+
+            musicTargetIntensity = Math.min(intensity, 100);
+
+            // Smoothly interpolate to target
+            musicIntensity += (musicTargetIntensity - musicIntensity) * 0.1;
+
+            // Update filter if exists (creates tension through filter sweep)
+            if (musicFilterNode && audioCtx) {
+                const baseFreq = 800;
+                const maxFreq = 4000;
+                const filterFreq = baseFreq + (musicIntensity / 100) * (maxFreq - baseFreq);
+                musicFilterNode.frequency.setTargetAtTime(filterFreq, audioCtx.currentTime, 0.1);
+            }
+        }
+
+        function getMusicTempoMultiplier() {
+            // Tempo speeds up slightly with intensity
+            if (bossMode) return 0.8; // Boss always fast
+            if (bulletTimeActive) return 1.5; // Slow music during bullet time
+            // Subtle tempo increase: 1.0 at 0 intensity, 0.9 at 100 intensity
+            return 1.0 - (musicIntensity / 100) * 0.1;
+        }
+
         // Note frequencies (Amiga style - A4 = 440Hz)
         const NOTE = {
             C2: 65.41, D2: 73.42, E2: 82.41, F2: 87.31, G2: 98.00, A2: 110.0, B2: 123.5,
@@ -4764,14 +4946,24 @@
             musicPlaying = true;
             musicPattern = 0;
             musicRow = 0;
+            musicIntensity = 0;
+
+            // Create dynamic music filter for intensity control
+            musicFilterNode = audioCtx.createBiquadFilter();
+            musicFilterNode.type = 'lowpass';
+            musicFilterNode.frequency.value = 800;
+            musicFilterNode.Q.value = 1;
 
             // Create master gain for music
             musicGain = audioCtx.createGain();
             const musicVol = Math.max(0.01, 0.12 * (musicVolumeLevel / 100));
             musicGain.gain.setValueAtTime(musicVol, audioCtx.currentTime);
-            musicGain.connect(audioCtx.destination);
 
-            console.log('Amiga music initialized');
+            // Route through filter for dynamic control
+            musicGain.connect(musicFilterNode);
+            musicFilterNode.connect(audioCtx.destination);
+
+            console.log('Amiga music initialized with dynamic intensity system');
             playMusicRow();
         }
 
@@ -4964,8 +5156,8 @@
                 musicPattern++;
             }
 
-            // Schedule next row (faster tempo for boss)
-            const rowTime = bossMode ? ROW_TIME * 0.8 : ROW_TIME;
+            // Schedule next row with dynamic tempo
+            const rowTime = ROW_TIME * getMusicTempoMultiplier();
             if (musicPlaying && !musicMuted) {
                 musicTimerId = setTimeout(playMusicRow, rowTime);
             }
@@ -5684,6 +5876,72 @@
         let ownedSkins = ['classic'];
         let currentShopTab = 'upgrades';
 
+        // Trail styles system
+        const TRAIL_STYLES = {
+            classic: {
+                name: 'Classic',
+                rarity: 'common',
+                price: 0,
+                color1: '#0ff',
+                color2: '#008',
+                desc: 'Standard cyan engine trail'
+            },
+            fire: {
+                name: 'Fire',
+                rarity: 'common',
+                price: 200,
+                color1: '#f80',
+                color2: '#f00',
+                desc: 'Blazing orange flame trail'
+            },
+            plasma: {
+                name: 'Plasma',
+                rarity: 'rare',
+                price: 350,
+                color1: '#f0f',
+                color2: '#808',
+                desc: 'Purple plasma energy trail'
+            },
+            neon: {
+                name: 'Neon',
+                rarity: 'rare',
+                price: 400,
+                color1: '#0f0',
+                color2: '#080',
+                desc: 'Bright green neon glow'
+            },
+            rainbow: {
+                name: 'Rainbow',
+                rarity: 'epic',
+                price: 600,
+                color1: '#f00',
+                color2: '#00f',
+                rainbow: true,
+                desc: 'Color-cycling rainbow trail'
+            },
+            electric: {
+                name: 'Electric',
+                rarity: 'epic',
+                price: 700,
+                color1: '#0af',
+                color2: '#fff',
+                electric: true,
+                desc: 'Crackling electric sparks'
+            },
+            galaxy: {
+                name: 'Galaxy',
+                rarity: 'legendary',
+                price: 1200,
+                color1: '#a0f',
+                color2: '#05a',
+                starfield: true,
+                desc: 'Cosmic starfield trail'
+            }
+        };
+
+        let selectedTrail = 'classic';
+        let ownedTrails = ['classic'];
+
         // Weapon upgrade system
         const WEAPON_UPGRADES = {
             laser: {
@@ -5732,10 +5990,15 @@
                     ownedUpgrades = parsed.owned || [];
                     ownedSkins = parsed.skins || ['classic'];
                     selectedSkin = parsed.selectedSkin || 'classic';
+                    ownedTrails = parsed.trails || ['classic'];
+                    selectedTrail = parsed.selectedTrail || 'classic';
                     weaponUpgradeLevels = parsed.weaponUpgrades || { laser: 0, missile: 0, plasma: 0 };
                     // Ensure classic is always owned
                     if (!ownedSkins.includes('classic')) {
                         ownedSkins.push('classic');
+                    }
+                    if (!ownedTrails.includes('classic')) {
+                        ownedTrails.push('classic');
                     }
                 }
             } catch (e) {}
@@ -5750,6 +6013,8 @@
                     owned: ownedUpgrades,
                     skins: ownedSkins,
                     selectedSkin: selectedSkin,
+                    trails: ownedTrails,
+                    selectedTrail: selectedTrail,
                     weaponUpgrades: weaponUpgradeLevels
                 }));
             } catch (e) {}
@@ -5859,6 +6124,7 @@
                     <button class="shop-tab ${currentShopTab === 'upgrades' ? 'active' : ''}" onclick="switchShopTab('upgrades')">⬆️ UPGRADES</button>
                     <button class="shop-tab ${currentShopTab === 'weapons' ? 'active' : ''}" onclick="switchShopTab('weapons')">🔫 WEAPONS</button>
                     <button class="shop-tab ${currentShopTab === 'skins' ? 'active' : ''}" onclick="switchShopTab('skins')">🚀 SKINS</button>
+                    <button class="shop-tab ${currentShopTab === 'trails' ? 'active' : ''}" onclick="switchShopTab('trails')">✨ TRAILS</button>
                 </div>
             `;
 
@@ -5918,7 +6184,7 @@
                         </div>
                     `;
                 });
-            } else {
+            } else if (currentShopTab === 'skins') {
                 // Skins tab
                 html += '<div class="skins-grid">';
                 Object.keys(SHIP_SKINS).forEach(key => {
@@ -5936,6 +6202,27 @@
                             <div class="skin-name">${skin.name}</div>
                             <div class="skin-price ${owned ? 'owned' : ''}">${owned ? (isSelected ? '✓ EQUIPPED' : 'OWNED') : '🪙 ' + skin.price}</div>
                             <div class="skin-rarity ${skin.rarity}">${skin.rarity.toUpperCase()}</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            } else if (currentShopTab === 'trails') {
+                // Trails tab
+                html += '<div class="skins-grid">';
+                Object.keys(TRAIL_STYLES).forEach(key => {
+                    const trail = TRAIL_STYLES[key];
+                    const owned = ownedTrails.includes(key);
+                    const isSelected = selectedTrail === key;
+                    const canAfford = totalCoins >= trail.price;
+
+                    html += `
+                        <div class="skin-card trail-card ${isSelected ? 'selected' : ''} ${!owned ? 'locked' : ''}"
+                             onclick="${owned ? `selectTrail('${key}')` : (canAfford ? `purchaseTrail('${key}')` : '')}">
+                            <div class="trail-preview" style="background: linear-gradient(135deg, ${trail.color1}, ${trail.color2});"></div>
+                            <div class="skin-name">${trail.name}</div>
+                            <div class="trail-desc">${trail.desc}</div>
+                            <div class="skin-price ${owned ? 'owned' : ''}">${owned ? (isSelected ? '✓ EQUIPPED' : 'OWNED') : '🪙 ' + trail.price}</div>
+                            <div class="skin-rarity ${trail.rarity}">${trail.rarity.toUpperCase()}</div>
                         </div>
                     `;
                 });
@@ -6045,6 +6332,28 @@
             renderShopItems();
             playLevelUpSound();
             announce(`New ship skin unlocked: ${skin.name}!`);
+        }
+
+        function selectTrail(key) {
+            if (!ownedTrails.includes(key)) return;
+            selectedTrail = key;
+            saveShopData();
+            renderShopItems();
+            playSelectSound();
+        }
+
+        function purchaseTrail(key) {
+            const trail = TRAIL_STYLES[key];
+            if (ownedTrails.includes(key) || totalCoins < trail.price) return;
+
+            totalCoins -= trail.price;
+            ownedTrails.push(key);
+            selectedTrail = key;
+            saveShopData();
+            updateCoinsDisplay();
+            renderShopItems();
+            playLevelUpSound();
+            announce(`New trail style unlocked: ${trail.name}!`);
         }
 
         function playSelectSound() {
@@ -6547,6 +6856,107 @@
             // Gradually return to normal speed
             const progress = elapsed / slowMotionDuration;
             slowMotionFactor = slowMotionFactor + (slowMotionTargetFactor - slowMotionFactor) * progress * 0.1;
+        }
+
+        // ==========================================
+        // BULLET TIME KILL-CAM
+        // ==========================================
+        let bulletTimeActive = false;
+        let bulletTimeFocusX = 0;
+        let bulletTimeFocusY = 0;
+        let bulletTimeStartTime = 0;
+        let bulletTimeDuration = 1500;
+
+        function triggerBulletTimeKillCam(x, y) {
+            bulletTimeActive = true;
+            bulletTimeFocusX = x;
+            bulletTimeFocusY = y;
+            bulletTimeStartTime = Date.now();
+
+            // Trigger slow motion
+            triggerSlowMotion(0.15, bulletTimeDuration);
+
+            // Screen shake for impact
+            triggerScreenShake(10, 300);
+
+            // Play dramatic sound
+            if (audioContext) {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(150, audioContext.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.5);
+                gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                osc.start();
+                osc.stop(audioContext.currentTime + 0.5);
+            }
+
+            // Show dramatic text
+            show3DRotatingText('WAVE CLEARED!', 2000);
+        }
+
+        function drawBulletTimeEffect() {
+            if (!bulletTimeActive) return;
+
+            const elapsed = Date.now() - bulletTimeStartTime;
+            if (elapsed >= bulletTimeDuration) {
+                bulletTimeActive = false;
+                return;
+            }
+
+            const progress = elapsed / bulletTimeDuration;
+
+            // Vignette effect - dark edges focusing on kill location
+            const vignetteRadius = canvas.width * (0.8 - progress * 0.3);
+            const gradient = ctx.createRadialGradient(
+                bulletTimeFocusX, bulletTimeFocusY, 0,
+                bulletTimeFocusX, bulletTimeFocusY, vignetteRadius
+            );
+            gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+            gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)');
+            gradient.addColorStop(0.8, `rgba(0, 0, 0, ${0.4 * (1 - progress)})`);
+            gradient.addColorStop(1, `rgba(0, 0, 0, ${0.7 * (1 - progress)})`);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Radial lines emanating from kill point (speed lines)
+            ctx.strokeStyle = `rgba(255, 200, 100, ${0.3 * (1 - progress)})`;
+            ctx.lineWidth = 2;
+            const numLines = 16;
+            for (let i = 0; i < numLines; i++) {
+                const angle = (i / numLines) * Math.PI * 2;
+                const innerRadius = 50 + progress * 50;
+                const outerRadius = 150 + progress * 100;
+                ctx.beginPath();
+                ctx.moveTo(
+                    bulletTimeFocusX + Math.cos(angle) * innerRadius,
+                    bulletTimeFocusY + Math.sin(angle) * innerRadius
+                );
+                ctx.lineTo(
+                    bulletTimeFocusX + Math.cos(angle) * outerRadius,
+                    bulletTimeFocusY + Math.sin(angle) * outerRadius
+                );
+                ctx.stroke();
+            }
+
+            // Pulsing ring at kill location
+            const ringRadius = 30 + progress * 100;
+            ctx.strokeStyle = `rgba(255, 255, 0, ${0.5 * (1 - progress)})`;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(bulletTimeFocusX, bulletTimeFocusY, ringRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Chrome aberration effect on edges
+            ctx.globalCompositeOperation = 'lighter';
+            ctx.fillStyle = `rgba(255, 0, 0, ${0.05 * (1 - progress)})`;
+            ctx.fillRect(0, 0, 3, canvas.height);
+            ctx.fillStyle = `rgba(0, 255, 255, ${0.05 * (1 - progress)})`;
+            ctx.fillRect(canvas.width - 3, 0, 3, canvas.height);
+            ctx.globalCompositeOperation = 'source-over';
         }
 
         // Screen shake effect
@@ -7227,6 +7637,12 @@
 
                 // Track boss kill for achievements
                 updateSessionStats('bossKill');
+
+                // Handle Boss Rush mode differently
+                if (bossRushMode) {
+                    onBossRushBossDefeated();
+                    return true;
+                }
 
                 // Level up and spawn next wave
                 level++;
@@ -8003,18 +8419,71 @@
         function drawPlayerTrail() {
             if (playerTrail.length < 2) return;
 
+            const trail = TRAIL_STYLES[selectedTrail] || TRAIL_STYLES.classic;
             ctx.lineCap = 'round';
+
             for (let i = 1; i < playerTrail.length; i++) {
                 const prev = playerTrail[i - 1];
                 const curr = playerTrail[i];
+                const progress = i / playerTrail.length;
+                let color;
 
-                ctx.strokeStyle = `rgba(0, 255, 255, ${curr.alpha * 0.5})`;
+                if (trail.rainbow) {
+                    // Rainbow: cycle through colors
+                    const hue = (Date.now() / 10 + i * 30) % 360;
+                    color = `hsla(${hue}, 100%, 50%, ${curr.alpha * 0.6})`;
+                } else if (trail.electric) {
+                    // Electric: flickering white/blue
+                    const flicker = Math.random() > 0.3 ? 1 : 0.5;
+                    const r = Math.floor(10 + Math.random() * 100);
+                    const g = Math.floor(170 + Math.random() * 85);
+                    const b = 255;
+                    color = `rgba(${r}, ${g}, ${b}, ${curr.alpha * 0.7 * flicker})`;
+                } else if (trail.starfield) {
+                    // Galaxy: purple with sparkles
+                    const sparkle = Math.random() > 0.9 ? 1 : 0.6;
+                    color = `rgba(170, 80, 255, ${curr.alpha * 0.5 * sparkle})`;
+                } else {
+                    // Standard gradient trail
+                    const c1 = trail.color1;
+                    const c2 = trail.color2;
+                    // Parse hex colors
+                    const r1 = parseInt(c1.slice(1,2), 16) * 17;
+                    const g1 = parseInt(c1.slice(2,3), 16) * 17;
+                    const b1 = parseInt(c1.slice(3,4), 16) * 17;
+                    const r2 = parseInt(c2.slice(1,2), 16) * 17;
+                    const g2 = parseInt(c2.slice(2,3), 16) * 17;
+                    const b2 = parseInt(c2.slice(3,4), 16) * 17;
+                    // Interpolate
+                    const r = Math.floor(r1 + (r2 - r1) * progress);
+                    const g = Math.floor(g1 + (g2 - g1) * progress);
+                    const b = Math.floor(b1 + (b2 - b1) * progress);
+                    color = `rgba(${r}, ${g}, ${b}, ${curr.alpha * 0.5})`;
+                }
+
+                ctx.strokeStyle = color;
                 ctx.lineWidth = (MAX_TRAIL_LENGTH - i) * 1.5;
 
                 ctx.beginPath();
                 ctx.moveTo(prev.x, prev.y);
                 ctx.lineTo(curr.x, curr.y);
                 ctx.stroke();
+
+                // Extra effects for special trails
+                if (trail.electric && Math.random() > 0.7) {
+                    // Draw spark
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.beginPath();
+                    ctx.arc(curr.x + (Math.random() - 0.5) * 10, curr.y + (Math.random() - 0.5) * 10, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                if (trail.starfield && Math.random() > 0.8) {
+                    // Draw star sparkle
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    ctx.beginPath();
+                    ctx.arc(curr.x + (Math.random() - 0.5) * 8, curr.y + (Math.random() - 0.5) * 8, 1, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
         }
 
@@ -9352,6 +9821,12 @@
                             spawnPowerUp(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
 
                             enemiesToRemove.add(ei);
+
+                            // BULLET TIME KILL-CAM: Trigger when last enemy in wave is killed
+                            if (!endlessMode && !bossRushMode && !currentBoss &&
+                                enemies.length - enemiesToRemove.size === 0) {
+                                triggerBulletTimeKillCam(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
+                            }
                         } else {
                             // Enemy hit but not destroyed (tank)
                             createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#888', 4);
@@ -9510,15 +9985,27 @@
         }
 
         // Game over
-        async function gameOver() {
+        async function gameOver(isVictory = false) {
             gameRunning = false;
             stopMusic();
-            playGameOverSound();
+
+            // Play different sound for victory vs game over
+            if (isVictory) {
+                playVictoryFanfare();
+            } else {
+                playGameOverSound();
+            }
 
             // End AI demo mode if active
             if (aiDemoMode) {
                 aiDemoMode = false;
                 document.getElementById('demoOverlay').classList.add('hidden');
+            }
+
+            // End Boss Rush mode if active
+            if (bossRushMode) {
+                bossRushMode = false;
+                document.getElementById('bossRushDisplay').classList.add('hidden');
             }
 
             // Hide mobile controls and reset touch state
@@ -9543,6 +10030,15 @@
             // Update UI immediately
             document.getElementById('playerNameDisplay').textContent = playerName;
             document.getElementById('finalScore').textContent = score;
+
+            // Update title based on victory or defeat
+            if (isVictory) {
+                document.getElementById('gameOverTitle').textContent = '🏆 VICTORY! 🏆';
+                document.getElementById('gameOverSubtitle').textContent = 'All bosses have been vanquished!';
+            } else {
+                document.getElementById('gameOverTitle').textContent = '💀 GAME OVER 💀';
+                document.getElementById('gameOverSubtitle').textContent = 'The aliens have won this battle...';
+            }
 
             // Calculate and display game stats
             const timePlayed = Math.floor((Date.now() - gameStartTime) / 1000);
@@ -9574,6 +10070,9 @@
             if (isNew && score > 0) {
                 document.getElementById('newHighscoreMsg').classList.remove('hidden');
                 announce('newHighscore');
+            } else if (isVictory) {
+                document.getElementById('newHighscoreMsg').classList.add('hidden');
+                // Victory doesn't need a specific announce - fanfare is already playing
             } else {
                 document.getElementById('newHighscoreMsg').classList.add('hidden');
                 announce('gameOver');
@@ -9625,6 +10124,9 @@
 
                 // Update slow motion
                 updateSlowMotion();
+
+                // Update dynamic music intensity
+                updateMusicIntensity();
 
                 // Update
                 updateNebula();
@@ -9688,6 +10190,9 @@
                 // Draw 3D text effects (on top of everything)
                 draw3DScrollText();
                 draw3DRotatingText();
+
+                // Draw bullet time kill-cam effect
+                drawBulletTimeEffect();
 
                 // Restore context after shake
                 ctx.restore();
@@ -9773,6 +10278,10 @@
             aiDemoMode = false;
             endlessMode = false;
             twoPlayerMode = false;
+            bossRushMode = false;
+
+            // Hide boss rush display
+            document.getElementById('bossRushDisplay').classList.add('hidden');
 
             // Refresh highscores
             await fetchHighscores();
@@ -9949,6 +10458,148 @@
             }
         }
 
+        // ==========================================
+        // BOSS RUSH MODE
+        // ==========================================
+        let bossRushMode = false;
+        let bossRushCurrent = 0;
+        const bossRushBosses = ['guardian', 'guardian', 'destroyer', 'destroyer', 'mothership'];
+
+        async function startBossRush() {
+            await initAudio();
+            initMusic();
+            initAmbientSounds();
+
+            const nameInput = document.getElementById('playerName');
+            playerName = nameInput.value.trim() || 'Boss Slayer';
+            endlessMode = false;
+            twoPlayerMode = false;
+            aiDemoMode = false;
+            bossRushMode = true;
+            bossRushCurrent = 0;
+
+            document.getElementById('startScreen').classList.add('hidden');
+            resetGame();
+            gameRunning = true;
+            gameStartTime = Date.now();
+
+            // Hide normal wave UI, show boss rush UI
+            document.getElementById('endlessTimer').classList.add('hidden');
+            document.getElementById('endlessWave').classList.add('hidden');
+            document.getElementById('levelValue').parentElement.style.display = 'none';
+
+            // Show boss rush display
+            document.getElementById('bossRushDisplay').classList.remove('hidden');
+            document.getElementById('bossRushCurrent').textContent = '1';
+            document.getElementById('bossRushTotal').textContent = bossRushBosses.length;
+
+            // Don't spawn normal enemies
+            enemies = [];
+
+            updateMobileControlsVisibility();
+            announce('gameStart');
+
+            // Show dramatic intro
+            show3DScrollText([
+                '👹 BOSS RUSH 👹',
+                '',
+                'DEFEAT ALL BOSSES',
+                'TO WIN!',
+                '',
+                'GOOD LUCK...'
+            ], 3000);
+
+            // Spawn first boss after intro
+            setTimeout(() => {
+                if (gameRunning && bossRushMode) {
+                    spawnBossRushBoss();
+                }
+            }, 3500);
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function spawnBossRushBoss() {
+            if (!bossRushMode || bossRushCurrent >= bossRushBosses.length) return;
+
+            const bossType = bossRushBosses[bossRushCurrent];
+            const bossData = BOSS_TYPES[bossType];
+
+            // Scale difficulty based on boss number
+            const difficultyMultiplier = 1 + (bossRushCurrent * 0.3);
+
+            currentBoss = {
+                x: canvas.width / 2 - bossData.width / 2,
+                y: -bossData.height,
+                targetY: 50,
+                width: bossData.width,
+                height: bossData.height,
+                health: Math.floor(bossData.baseHealth * difficultyMultiplier),
+                maxHealth: Math.floor(bossData.baseHealth * difficultyMultiplier),
+                direction: 1,
+                speed: 2 + bossRushCurrent * 0.5,
+                shootTimer: 0,
+                pattern: 0,
+                patternTimer: 0,
+                type: bossType,
+                phase: 1,
+                entering: true,
+                laserCharging: false,
+                laserTimer: 0,
+                spawnTimer: 0,
+                angle: 0
+            };
+
+            document.getElementById('bossHealth').classList.remove('hidden');
+            document.getElementById('bossName').textContent = `${bossData.name} #${bossRushCurrent + 1}`;
+            updateBossHealthBar();
+            announce('bossAppear');
+
+            show3DRotatingText(`BOSS ${bossRushCurrent + 1}/${bossRushBosses.length}`, 2000);
+            startBossMusic();
+        }
+
+        function onBossRushBossDefeated() {
+            bossRushCurrent++;
+            document.getElementById('bossRushCurrent').textContent = bossRushCurrent + 1;
+
+            if (bossRushCurrent >= bossRushBosses.length) {
+                // Victory!
+                bossRushMode = false;
+                document.getElementById('bossRushDisplay').classList.add('hidden');
+
+                show3DScrollText([
+                    '🏆 VICTORY! 🏆',
+                    '',
+                    'ALL BOSSES DEFEATED!',
+                    '',
+                    `FINAL SCORE: ${score}`
+                ], 5000);
+
+                // Trigger game over with victory
+                setTimeout(() => {
+                    if (gameRunning) {
+                        gameOver(true); // true = victory
+                    }
+                }, 5500);
+            } else {
+                // Spawn next boss after a short break
+                show3DScrollText([
+                    '💀 BOSS DEFEATED! 💀',
+                    '',
+                    `NEXT: BOSS ${bossRushCurrent + 1}/${bossRushBosses.length}`,
+                    '',
+                    'PREPARE YOURSELF!'
+                ], 2500);
+
+                setTimeout(() => {
+                    if (gameRunning && bossRushMode) {
+                        spawnBossRushBoss();
+                    }
+                }, 3000);
+            }
+        }
+
         // Reset game state
         function resetGame() {
             score = 0;
@@ -10029,6 +10680,10 @@
             // Reset boss
             currentBoss = null;
             document.getElementById('bossHealth').classList.add('hidden');
+
+            // Reset boss rush state
+            bossRushCurrent = 0;
+            document.getElementById('bossRushDisplay').classList.add('hidden');
 
             // Reset UI
             document.getElementById('pauseScreen').classList.add('hidden');
