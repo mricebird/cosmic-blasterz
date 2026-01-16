@@ -8792,31 +8792,36 @@
             initSplashStars();
             startScroller();
 
-            // Start music on first interaction, then hide on second
-            let firstClick = true;
+            // Try to autostart music (may be blocked by browser)
+            setTimeout(() => {
+                startSplashMusicOnce();
+            }, 100);
+
+            // Also start music on any interaction (fallback for autoplay block)
+            function ensureMusicPlaying() {
+                startSplashMusicOnce();
+                document.removeEventListener('click', ensureMusicPlaying);
+                document.removeEventListener('touchstart', ensureMusicPlaying);
+                document.removeEventListener('keydown', ensureMusicPlaying);
+            }
+            document.addEventListener('click', ensureMusicPlaying, { once: true });
+            document.addEventListener('touchstart', ensureMusicPlaying, { once: true });
+            document.addEventListener('keydown', ensureMusicPlaying, { once: true });
+
+            // Single click to start game
             function handleSplashInteraction(e) {
-                if (firstClick) {
-                    startSplashMusicOnce();
-                    firstClick = false;
-                    // Update prompt
-                    const prompt = splashScreen.querySelector('.splash-prompt');
-                    if (prompt) prompt.textContent = 'Click Again to Start';
-                } else {
-                    hideSplashScreen();
-                }
+                hideSplashScreen();
             }
 
             splashScreen.addEventListener('click', handleSplashInteraction);
             splashScreen.addEventListener('touchstart', handleSplashInteraction);
-            // Also allow Enter or Space to interact
+            // Also allow Enter or Space to start
             document.addEventListener('keydown', function splashKeyHandler(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     if (!splashScreen.classList.contains('hidden')) {
                         e.preventDefault();
-                        handleSplashInteraction(e);
-                        if (!firstClick) {
-                            document.removeEventListener('keydown', splashKeyHandler);
-                        }
+                        hideSplashScreen();
+                        document.removeEventListener('keydown', splashKeyHandler);
                     }
                 }
             });
