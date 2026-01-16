@@ -691,6 +691,24 @@
             color: #f0f;
         }
 
+        .mode-card.aidemo:hover {
+            border-color: rgba(0, 255, 136, 0.6);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .mode-card.aidemo .mode-title {
+            color: #0f8;
+        }
+
+        .mode-card.aidemo .mode-icon {
+            animation: robotPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes robotPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
         .mode-desc {
             font-family: 'Rajdhani', sans-serif;
             font-size: 12px;
@@ -1455,6 +1473,64 @@
             font-size: 18px;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* AI Demo overlay */
+        .demo-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .demo-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 200, 100, 0.1) 100%);
+            border-bottom: 2px solid rgba(0, 255, 136, 0.5);
+            backdrop-filter: blur(10px);
+            animation: demoPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes demoPulse {
+            0%, 100% { border-bottom-color: rgba(0, 255, 136, 0.5); }
+            50% { border-bottom-color: rgba(0, 255, 136, 0.9); }
+        }
+
+        .demo-icon {
+            font-size: 24px;
+            animation: robotBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes robotBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .demo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f8;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            letter-spacing: 3px;
+        }
+
+        .demo-hint {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            animation: hintBlink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes hintBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         /* Game controls overlay */
@@ -3205,6 +3281,11 @@
                     <div class="mode-title">2 PLAYERS</div>
                     <div class="mode-desc">Play with a friend! Co-op mode on the same keyboard.</div>
                 </div>
+                <div class="mode-card aidemo" onclick="startAIDemo()">
+                    <div class="mode-icon">🤖</div>
+                    <div class="mode-title">AI DEMO</div>
+                    <div class="mode-desc">Watch AI play! See how the game works before you try.</div>
+                </div>
             </div>
             <div class="controls-info">
                 <p class="controls-title">⌨️ Controls</p>
@@ -3313,6 +3394,15 @@
         <div class="pause-screen hidden" id="pauseScreen">
             <h2>PAUSED</h2>
             <p>Press P to continue</p>
+        </div>
+
+        <!-- AI Demo overlay -->
+        <div class="demo-overlay hidden" id="demoOverlay">
+            <div class="demo-banner">
+                <span class="demo-icon">🤖</span>
+                <span class="demo-text">AI DEMO MODE</span>
+                <span class="demo-hint">Press any key or click to play yourself!</span>
+            </div>
         </div>
 
         <!-- Bottom toolbar -->
@@ -4257,6 +4347,13 @@
             const modal = document.getElementById('inviteModal');
             if (e.target === modal) {
                 closeInviteModal();
+            }
+        });
+
+        // Exit AI demo mode on canvas click
+        canvas.addEventListener('click', (e) => {
+            if (aiDemoMode && gameRunning) {
+                handleDemoExit(e);
             }
         });
 
@@ -9399,6 +9496,12 @@
             stopMusic();
             playGameOverSound();
 
+            // End AI demo mode if active
+            if (aiDemoMode) {
+                aiDemoMode = false;
+                document.getElementById('demoOverlay').classList.add('hidden');
+            }
+
             // Hide mobile controls and reset touch state
             resetTouchControls();
             updateMobileControlsVisibility();
@@ -9488,6 +9591,9 @@
 
             // Poll gamepads for input
             pollGamepads();
+
+            // Update AI if in demo mode
+            updateAI();
 
             try {
                 // Clear canvas
@@ -9635,6 +9741,170 @@
             requestAnimationFrame(gameLoop);
         }
 
+        // AI Demo Mode
+        let aiDemoMode = false;
+        let aiDecisionTimer = 0;
+        let aiTargetX = 0;
+        let aiDodgeDirection = 0;
+
+        async function startAIDemo() {
+            await initAudio();
+            initMusic();
+            initAmbientSounds();
+
+            playerName = 'AI Bot';
+            endlessMode = false;
+            twoPlayerMode = false;
+            aiDemoMode = true;
+
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('demoOverlay').classList.remove('hidden');
+            resetGame();
+            gameRunning = true;
+            gameStartTime = Date.now();
+
+            document.getElementById('endlessTimer').classList.add('hidden');
+            document.getElementById('endlessWave').classList.add('hidden');
+            document.getElementById('levelValue').parentElement.style.display = '';
+
+            updateMobileControlsVisibility();
+            announce('gameStart');
+            requestAnimationFrame(gameLoop);
+        }
+
+        function stopAIDemo() {
+            if (!aiDemoMode) return;
+            aiDemoMode = false;
+            document.getElementById('demoOverlay').classList.add('hidden');
+            // Reset keys
+            keys.left = false;
+            keys.right = false;
+            keys.up = false;
+            keys.down = false;
+            keys.space = false;
+        }
+
+        function updateAI() {
+            if (!aiDemoMode || !gameRunning || gamePaused) return;
+
+            const now = Date.now();
+
+            // Find nearest threat (enemy bullet)
+            let nearestThreat = null;
+            let nearestThreatDist = Infinity;
+            const playerCenterX = player.x + player.width / 2;
+            const playerCenterY = player.y + player.height / 2;
+
+            enemyBullets.forEach(b => {
+                // Only consider bullets that are heading towards player area
+                if (b.y > player.y - 150 && b.y < player.y + player.height) {
+                    const dx = b.x - playerCenterX;
+                    const dist = Math.abs(dx);
+                    if (dist < nearestThreatDist && dist < 100) {
+                        nearestThreatDist = dist;
+                        nearestThreat = b;
+                    }
+                }
+            });
+
+            // Find best target (nearest enemy)
+            let targetEnemy = null;
+            let targetDist = Infinity;
+            enemies.forEach(e => {
+                const ex = e.x + e.width / 2;
+                const dx = Math.abs(ex - playerCenterX);
+                if (dx < targetDist) {
+                    targetDist = dx;
+                    targetEnemy = e;
+                }
+            });
+
+            // Check for powerups
+            let nearestPowerup = null;
+            let powerupDist = Infinity;
+            powerUps.forEach(p => {
+                const px = p.x + p.width / 2;
+                const py = p.y + p.height / 2;
+                const dist = Math.sqrt(Math.pow(px - playerCenterX, 2) + Math.pow(py - playerCenterY, 2));
+                if (dist < powerupDist && p.y > player.y - 200) {
+                    powerupDist = dist;
+                    nearestPowerup = p;
+                }
+            });
+
+            // AI Decision making
+            let targetX = canvas.width / 2; // Default to center
+
+            // Priority 1: Dodge bullets
+            if (nearestThreat && nearestThreatDist < 80) {
+                const threatX = nearestThreat.x;
+                // Move away from threat
+                if (threatX < playerCenterX) {
+                    targetX = playerCenterX + 100;
+                } else {
+                    targetX = playerCenterX - 100;
+                }
+                aiDodgeDirection = threatX < playerCenterX ? 1 : -1;
+            }
+            // Priority 2: Collect nearby powerups
+            else if (nearestPowerup && powerupDist < 150) {
+                targetX = nearestPowerup.x + nearestPowerup.width / 2;
+            }
+            // Priority 3: Position under enemies to shoot
+            else if (targetEnemy) {
+                targetX = targetEnemy.x + targetEnemy.width / 2;
+                // Add some randomness
+                targetX += (Math.random() - 0.5) * 30;
+            }
+            // Priority 4: Handle boss
+            else if (currentBoss) {
+                targetX = currentBoss.x + currentBoss.width / 2;
+                // Weave side to side while shooting boss
+                targetX += Math.sin(now / 500) * 100;
+            }
+
+            // Clamp target
+            targetX = Math.max(player.width / 2, Math.min(canvas.width - player.width / 2, targetX));
+            aiTargetX = targetX;
+
+            // Move towards target
+            const moveSpeed = 5;
+            const dx = targetX - playerCenterX;
+
+            keys.left = dx < -moveSpeed;
+            keys.right = dx > moveSpeed;
+
+            // Vertical movement - stay in lower area, dodge up when needed
+            const idealY = canvas.height - 100;
+            const dy = idealY - player.y;
+
+            // Move up if bullet is very close
+            if (nearestThreat && nearestThreat.y > player.y - 50) {
+                keys.up = true;
+                keys.down = false;
+            } else {
+                keys.up = player.y > idealY + 50;
+                keys.down = player.y < idealY - 30;
+            }
+
+            // Shooting logic - shoot when enemies are roughly above
+            const shouldShoot = enemies.some(e => {
+                const ex = e.x + e.width / 2;
+                return Math.abs(ex - playerCenterX) < 60;
+            }) || (currentBoss && Math.abs(currentBoss.x + currentBoss.width / 2 - playerCenterX) < 150);
+
+            keys.space = shouldShoot || enemies.length > 0 || currentBoss;
+        }
+
+        // Exit demo mode on any input
+        function handleDemoExit(e) {
+            if (aiDemoMode && gameRunning) {
+                e.preventDefault();
+                stopAIDemo();
+                showShareToast('You have taken control! Good luck!');
+            }
+        }
+
         // Reset game state
         function resetGame() {
             score = 0;
@@ -9729,6 +9999,12 @@
 
         // Event listeners
         document.addEventListener('keydown', (e) => {
+            // Exit demo mode on any key press
+            if (aiDemoMode && gameRunning) {
+                handleDemoExit(e);
+                return;
+            }
+
             // Player 1 controls (Arrow keys + Space)
             if (e.key === 'ArrowLeft') keys.left = true;
             if (e.key === 'ArrowRight') keys.right = true;
