@@ -2094,6 +2094,112 @@
             display: none !important;
         }
 
+        /* ========================================
+           UI STATE MANAGEMENT - Z-INDEX LAYERS
+           ========================================
+           Layer 0:    Game canvas (base)
+           Layer 10:   HUD (score, lives, level)
+           Layer 50:   In-game overlays (powerups, boss health)
+           Layer 100:  Screen overlays (start, gameover, pause)
+           Layer 200:  Modals (invite, confirm)
+           Layer 500:  Garage, Stats screens
+           Layer 1000: Tutorial overlay
+           Layer 5000: FTUE overlay
+           Layer 9000: Screen transitions
+           Layer 9999: Splash/Loading screens
+        */
+
+        /* HUD should only be visible during gameplay */
+        .ui-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        body.state-playing .ui-overlay,
+        body.state-paused .ui-overlay {
+            opacity: 1;
+        }
+
+        /* Screen base styles with proper z-index */
+        .start-screen {
+            z-index: 100;
+        }
+
+        .game-over-screen {
+            z-index: 100;
+        }
+
+        .pause-screen {
+            z-index: 100;
+        }
+
+        .tutorial-overlay {
+            z-index: 1000;
+        }
+
+        .garage-screen {
+            z-index: 500 !important;
+        }
+
+        .stats-screen {
+            z-index: 500 !important;
+        }
+
+        .invite-modal {
+            z-index: 200 !important;
+        }
+
+        .confirm-modal {
+            z-index: 250 !important;
+        }
+
+        .roguelike-modal {
+            z-index: 150 !important;
+        }
+
+        .ftue-overlay {
+            z-index: 5000 !important;
+        }
+
+        .screen-transition-overlay {
+            z-index: 9000 !important;
+        }
+
+        .splash-screen {
+            z-index: 9999 !important;
+        }
+
+        .loading-screen {
+            z-index: 10000 !important;
+        }
+
+        /* Ensure hidden screens don't capture clicks */
+        .start-screen.hidden,
+        .game-over-screen.hidden,
+        .pause-screen.hidden,
+        .garage-screen.hidden,
+        .stats-screen.hidden,
+        .invite-modal.hidden,
+        .confirm-modal:not(.active),
+        .roguelike-modal.hidden,
+        .tutorial-overlay.hidden,
+        .demo-overlay.hidden {
+            pointer-events: none !important;
+            visibility: hidden !important;
+        }
+
+        /* Hide in-game elements when on menu */
+        body.state-menu .boss-health,
+        body.state-menu .powerup-indicator,
+        body.state-menu .endless-timer,
+        body.state-menu .endless-wave,
+        body.state-menu .combo-display,
+        body.state-menu .boss-rush-display,
+        body.state-menu .mobile-controls {
+            display: none !important;
+        }
+
         /* Pilot Profile Card */
         .pilot-profile {
             box-sizing: border-box;
@@ -7010,6 +7116,106 @@
         let playerName = 'Gamer';
         let gameStartTime = 0;
 
+        // ========================================
+        // CENTRALIZED UI STATE MANAGEMENT
+        // ========================================
+        // Possible states: 'loading', 'splash', 'menu', 'playing', 'paused', 'gameover', 'garage', 'stats', 'tutorial'
+        let currentUIState = 'loading';
+
+        // All screen element IDs mapped to their states
+        const UI_SCREENS = {
+            loading: 'loadingScreen',
+            splash: 'splashScreen',
+            menu: 'startScreen',
+            gameover: 'gameOverScreen',
+            paused: 'pauseScreen',
+            garage: 'garageScreen',
+            stats: 'statsScreen',
+            tutorial: 'tutorialOverlay'
+        };
+
+        // Elements that should be hidden when not playing
+        const IN_GAME_ELEMENTS = [
+            'bossHealth',
+            'powerupIndicator',
+            'endlessTimer',
+            'endlessWave',
+            'bossRushDisplay',
+            'demoOverlay'
+        ];
+
+        /**
+         * Set the current UI state and update all screen visibility
+         * @param {string} newState - The new UI state
+         * @param {Object} options - Additional options
+         */
+        function setUIState(newState, options = {}) {
+            const previousState = currentUIState;
+            currentUIState = newState;
+
+            // Update body class for CSS state-based styling
+            document.body.className = document.body.className
+                .replace(/state-\w+/g, '')
+                .trim();
+            document.body.classList.add(`state-${newState}`);
+
+            // Hide all main screens first
+            Object.entries(UI_SCREENS).forEach(([state, elementId]) => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    if (state === newState) {
+                        element.classList.remove('hidden');
+                    } else if (state !== 'loading' && state !== 'splash') {
+                        // Don't hide loading/splash via this - they have their own logic
+                        element.classList.add('hidden');
+                    }
+                }
+            });
+
+            // Handle in-game elements visibility
+            const showInGameElements = ['playing', 'paused'].includes(newState);
+            IN_GAME_ELEMENTS.forEach(elementId => {
+                const element = document.getElementById(elementId);
+                if (element && !showInGameElements) {
+                    element.classList.add('hidden');
+                }
+            });
+
+            // Handle mobile controls
+            const mobileControls = document.getElementById('mobileControls');
+            if (mobileControls) {
+                mobileControls.style.display = (newState === 'playing') ? 'flex' : 'none';
+            }
+
+            // Sync gameRunning and gamePaused with UI state
+            if (newState === 'playing') {
+                gameRunning = true;
+                gamePaused = false;
+            } else if (newState === 'paused') {
+                gamePaused = true;
+            } else if (['menu', 'gameover', 'garage', 'stats'].includes(newState)) {
+                gameRunning = false;
+                gamePaused = false;
+            }
+        }
+
+        /**
+         * Get the current UI state
+         * @returns {string} The current UI state
+         */
+        function getUIState() {
+            return currentUIState;
+        }
+
+        /**
+         * Check if we're in a specific UI state
+         * @param {string} state - The state to check
+         * @returns {boolean}
+         */
+        function isUIState(state) {
+            return currentUIState === state;
+        }
+
         // Difficulty settings
         let currentDifficulty = 'normal';
         const DIFFICULTY_SETTINGS = {
@@ -10100,21 +10306,23 @@
 
         // Pause and Mute functions
         function togglePause() {
-            if (!gameRunning) return;
-            gamePaused = !gamePaused;
-            document.getElementById('pauseScreen').classList.toggle('hidden', !gamePaused);
-            document.getElementById('pauseBtn').textContent = gamePaused ? '▶️' : '⏸️';
-            // Update mobile controls visibility based on pause state
-            updateMobileControlsVisibility();
+            if (!gameRunning && !gamePaused) return;
 
-            // Sync volume sliders when opening pause menu
             if (gamePaused) {
+                // Resume game
+                setUIState('playing');
+                document.getElementById('pauseBtn').textContent = '⏸️';
+                requestAnimationFrame(gameLoop);
+            } else {
+                // Pause game
+                setUIState('paused');
+                document.getElementById('pauseScreen').classList.remove('hidden');
+                document.getElementById('pauseBtn').textContent = '▶️';
                 syncPauseVolumeSliders();
             }
 
-            if (!gamePaused) {
-                requestAnimationFrame(gameLoop);
-            }
+            // Update mobile controls visibility based on pause state
+            updateMobileControlsVisibility();
         }
 
         function syncPauseVolumeSliders() {
@@ -10184,13 +10392,6 @@
         }
 
         function quitToMenu() {
-            // Stop the game
-            gameRunning = false;
-            gamePaused = false;
-
-            // Hide pause screen
-            document.getElementById('pauseScreen').classList.add('hidden');
-
             // Stop game music
             stopGameMusic();
 
@@ -10202,7 +10403,7 @@
             explosions = [];
             currentBoss = null;
 
-            // Show start screen
+            // Show start screen (setUIState handles hiding pause, setting gameRunning/gamePaused)
             backToMenu();
             playSelectSound();
         }
@@ -13297,7 +13498,6 @@
 
         // Game over
         async function gameOver(isVictory = false) {
-            gameRunning = false;
             stopMusic();
 
             // Save ghost recording if enabled
@@ -13414,7 +13614,7 @@
             renderAchievementBadges();
 
             renderHighscores('gameOverHighscores', score);
-            document.getElementById('gameOverScreen').classList.remove('hidden');
+            setUIState('gameover');
         }
 
         // Draw shield effect around player
@@ -13570,9 +13770,8 @@
                 resetRoguelikeUpgrades();
             }
 
-            document.getElementById('startScreen').classList.add('hidden');
             resetGame();
-            gameRunning = true;
+            setUIState('playing');
             gameStartTime = Date.now();
             announce('gameStart');
 
@@ -13619,11 +13818,10 @@
 
         // Restart game
         async function restartGame() {
-            document.getElementById('gameOverScreen').classList.add('hidden');
             // Refresh highscores from server
             await fetchHighscores();
             resetGame();
-            gameRunning = true;
+            setUIState('playing');
             initMusic();
             updateMobileControlsVisibility();
             requestAnimationFrame(gameLoop);
@@ -13631,11 +13829,7 @@
 
         // Back to main menu
         async function backToMenu() {
-            document.getElementById('gameOverScreen').classList.add('hidden');
-            document.getElementById('startScreen').classList.remove('hidden');
-
             // Stop any running game
-            gameRunning = false;
             stopMusic();
 
             // Reset modes
@@ -13644,8 +13838,8 @@
             twoPlayerMode = false;
             bossRushMode = false;
 
-            // Hide boss rush display
-            document.getElementById('bossRushDisplay').classList.add('hidden');
+            // Set UI state to menu (this hides game over, shows menu, hides in-game elements)
+            setUIState('menu');
 
             // Refresh highscores
             await fetchHighscores();
@@ -13671,8 +13865,7 @@
         function openGarage() {
             playSelectSound();
             showScreenTransition('garage', () => {
-                document.getElementById('startScreen').classList.add('hidden');
-                document.getElementById('garageScreen').classList.remove('hidden');
+                setUIState('garage');
                 document.getElementById('garageCoins').textContent = totalCoins;
 
                 // Update equipped display
@@ -13689,8 +13882,7 @@
         function closeGarage() {
             playSelectSound();
             showScreenTransition('menu', () => {
-                document.getElementById('garageScreen').classList.add('hidden');
-                document.getElementById('startScreen').classList.remove('hidden');
+                setUIState('menu');
 
                 // Stop animation
                 if (garageAnimationFrame) {
@@ -14370,10 +14562,9 @@
             twoPlayerMode = false;
             aiDemoMode = true;
 
-            document.getElementById('startScreen').classList.add('hidden');
-            document.getElementById('demoOverlay').classList.remove('hidden');
             resetGame();
-            gameRunning = true;
+            setUIState('playing');
+            document.getElementById('demoOverlay').classList.remove('hidden');
             gameStartTime = Date.now();
 
             document.getElementById('endlessTimer').classList.add('hidden');
@@ -14539,9 +14730,8 @@
             bossRushMode = true;
             bossRushCurrent = 0;
 
-            document.getElementById('startScreen').classList.add('hidden');
             resetGame();
-            gameRunning = true;
+            setUIState('playing');
             gameStartTime = Date.now();
 
             // Hide normal wave UI, show boss rush UI
@@ -16083,6 +16273,8 @@
                     cancelAnimationFrame(scrollerAnimationId);
                     scrollerAnimationId = null;
                 }
+                // Set UI state to menu
+                setUIState('menu');
                 // Keep menu music playing - it will stop when game starts
                 // Play a sound effect when entering
                 if (typeof initAudio === 'function') {
