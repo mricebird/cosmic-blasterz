@@ -2000,29 +2000,34 @@
 
         .pilot-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            font-weight: 600;
-            color: rgba(0, 255, 255, 0.6);
+            font-size: 14px;
+            font-weight: 700;
+            color: #0ff;
             text-transform: uppercase;
             letter-spacing: 3px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
         }
 
         .pilot-rank {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 14px;
+            font-size: 18px;
+            font-weight: 600;
             color: #f0f;
             display: flex;
             align-items: center;
             gap: 6px;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
         }
 
         .pilot-rank-badge {
-            background: linear-gradient(135deg, rgba(255, 0, 255, 0.3) 0%, rgba(255, 100, 200, 0.2) 100%);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            border: 1px solid rgba(255, 0, 255, 0.4);
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.5) 0%, rgba(255, 100, 200, 0.4) 100%);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px solid rgba(255, 0, 255, 0.6);
+            text-shadow: 0 0 5px rgba(255, 0, 255, 0.5);
         }
 
         .pilot-input-container {
@@ -2032,8 +2037,9 @@
         .pilot-input-label {
             display: block;
             font-family: 'Rajdhani', sans-serif;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.5);
+            font-size: 15px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -2071,8 +2077,8 @@
 
         .pilot-hint {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.35);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
             margin-top: 10px;
             text-align: center;
         }
@@ -2082,7 +2088,7 @@
             justify-content: space-around;
             margin-top: 16px;
             padding-top: 16px;
-            border-top: 1px solid rgba(0, 255, 255, 0.15);
+            border-top: 2px solid rgba(0, 255, 255, 0.3);
         }
 
         .pilot-stat-mini {
@@ -2091,16 +2097,18 @@
 
         .pilot-stat-value {
             font-family: 'Orbitron', sans-serif;
-            font-size: 18px;
+            font-size: 22px;
             font-weight: 700;
             color: #0ff;
             display: block;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
         }
 
         .pilot-stat-label {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -2180,11 +2188,12 @@
         .highscore-entry {
             display: flex;
             justify-content: space-between;
-            padding: 14px 10px;
-            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 14px 12px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
             font-family: 'Rajdhani', sans-serif;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
+            color: #fff;
             transition: all 0.2s ease;
         }
 
@@ -2193,32 +2202,37 @@
         }
 
         .highscore-entry:hover {
-            background: rgba(0, 255, 255, 0.05);
+            background: rgba(0, 255, 255, 0.1);
         }
 
         .highscore-entry.current {
             color: #f0f;
             font-weight: 700;
-            background: rgba(255, 0, 255, 0.1);
+            background: rgba(255, 0, 255, 0.2);
             margin: 0 -10px;
-            padding: 8px 10px;
-            border-radius: 6px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
         }
 
         .highscore-rank {
             color: #ff0;
-            width: 30px;
-            font-weight: 600;
+            width: 40px;
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
         }
 
         .highscore-name {
             flex: 1;
-            margin: 0 10px;
+            margin: 0 15px;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
         }
 
         .highscore-score {
             color: #0f0;
-            font-weight: 600;
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
         }
 
         .new-highscore {
@@ -9145,7 +9159,55 @@
             `;
         }
 
+        // Update the start screen daily challenge panel
+        function updateStartScreenChallenge() {
+            if (!dailyChallenge) return;
+
+            const nameEl = document.getElementById('challengeName');
+            const descEl = document.getElementById('challengeDesc');
+            const rewardEl = document.getElementById('challengeReward');
+            const barEl = document.getElementById('challengeBar');
+            const progressTextEl = document.getElementById('challengeProgressText');
+            const timerEl = document.getElementById('challengeTimer');
+
+            if (nameEl) nameEl.textContent = dailyChallenge.name;
+            if (descEl) descEl.textContent = dailyChallenge.desc;
+            if (rewardEl) rewardEl.textContent = dailyChallenge.reward;
+
+            const progress = dailyChallengeCompleted ? 100 : Math.min(100, (dailyChallengeProgress / dailyChallenge.goal) * 100);
+            if (barEl) barEl.style.width = progress + '%';
+            if (progressTextEl) {
+                progressTextEl.textContent = dailyChallengeCompleted
+                    ? '✅ Completed!'
+                    : `${dailyChallengeProgress} / ${dailyChallenge.goal}`;
+            }
+
+            // Update timer
+            if (timerEl) {
+                updateChallengeTimer();
+                setInterval(updateChallengeTimer, 1000);
+            }
+        }
+
+        function updateChallengeTimer() {
+            const timerEl = document.getElementById('challengeTimer');
+            if (!timerEl) return;
+
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+
+            const diff = tomorrow - now;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            timerEl.textContent = `Resets in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
         loadDailyChallenge();
+        updateStartScreenChallenge();
 
         // Weapon system
         const WEAPONS = {
