@@ -17,7 +17,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <!-- Inter font added to fix 'i' glyph rendering issue (Rajdhani has unusual lowercase i) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -32,7 +33,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Rajdhani', 'Courier New', monospace;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             overflow-x: hidden;
         }
 
@@ -439,7 +440,7 @@
         }
 
         .game-over-subtitle {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 18px;
             color: rgba(255, 100, 100, 0.8);
             margin-bottom: 20px;
@@ -561,7 +562,7 @@
         }
 
         .stat-label {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 10px;
             color: rgba(255, 255, 255, 0.5);
             text-transform: uppercase;
@@ -763,12 +764,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 10000;
+            z-index: 10001;
             animation: fadeIn 0.3s ease;
         }
 
         .roguelike-modal.hidden {
             display: none;
+            pointer-events: none;
         }
 
         .roguelike-title {
@@ -787,6 +789,7 @@
         }
 
         .upgrade-card {
+            position: relative;
             background: linear-gradient(180deg, rgba(30, 30, 50, 0.9) 0%, rgba(20, 20, 40, 0.95) 100%);
             border: 2px solid rgba(255, 200, 0, 0.3);
             border-radius: 15px;
@@ -816,10 +819,28 @@
         }
 
         .upgrade-desc {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.7);
             line-height: 1.4;
+        }
+
+        .upgrade-key-hint {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 200, 0, 0.2);
+            border: 1px solid rgba(255, 200, 0, 0.5);
+            border-radius: 4px;
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fc0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .upgrade-rarity-common {
@@ -857,7 +878,7 @@
         }
 
         .mode-desc {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 13px;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.75);
@@ -940,7 +961,7 @@
         }
 
         .tutorial-text {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: rgba(255, 255, 255, 0.9);
             font-size: 17px;
             font-weight: 500;
@@ -1007,7 +1028,7 @@
             border: 1px solid rgba(100, 100, 120, 0.5);
             border-radius: 8px;
             color: rgba(150, 150, 170, 0.8);
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-weight: 500;
             cursor: pointer;
             font-size: 13px;
@@ -1083,7 +1104,7 @@
             border: 1px solid rgba(100, 100, 130, 0.4);
             border-radius: 8px;
             color: rgba(255, 255, 255, 0.8);
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -1098,7 +1119,7 @@
         .share-copied {
             margin-top: 12px;
             color: #0f0;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 15px;
             font-weight: 600;
             text-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
@@ -1178,7 +1199,7 @@
         }
 
         .game-subtitle {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 18px;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.7);
@@ -1277,7 +1298,7 @@
         }
 
         .difficulty-desc {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 10px;
             color: rgba(255, 255, 255, 0.4);
             margin-top: 4px;
@@ -1302,7 +1323,7 @@
         }
 
         .controls-info p {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 14px;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.5);
@@ -1593,7 +1614,7 @@
         }
 
         .stat-label {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
             width: 80px;
@@ -1694,7 +1715,7 @@
         }
 
         .garage-item-name {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 14px;
             font-weight: 600;
             color: #fff;
@@ -1736,7 +1757,7 @@
         }
 
         .equipped-label {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.5);
         }
@@ -1757,7 +1778,7 @@
         }
 
         .invite-friend-text {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 13px;
             color: rgba(255, 255, 255, 0.5);
             margin-top: 5px;
@@ -1798,7 +1819,7 @@
         }
 
         .invite-modal p {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.7);
             margin-bottom: 20px;
@@ -1944,19 +1965,22 @@
 
         /* Pilot Profile Card */
         .pilot-profile {
+            box-sizing: border-box;
             background: linear-gradient(135deg, rgba(0, 30, 60, 0.95) 0%, rgba(0, 15, 35, 0.98) 100%);
             border: 4px solid rgba(0, 255, 255, 0.5);
             border-radius: 24px;
             padding: 40px 50px;
             margin-bottom: 32px;
-            width: 550px;
-            max-width: 95vw;
+            width: min(550px, 95vw);
+            height: auto;
+            min-height: 120px;
             box-shadow:
                 0 10px 40px rgba(0, 0, 0, 0.5),
                 0 0 60px rgba(0, 255, 255, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.08);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
+            line-height: 1.25;
         }
 
         .pilot-profile::before {
@@ -2010,10 +2034,12 @@
             letter-spacing: 4px;
             margin-bottom: 10px;
             text-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 40px rgba(0, 255, 255, 0.6);
+            white-space: normal;
+            overflow-wrap: anywhere;
         }
 
         .pilot-rank {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 26px;
             font-weight: 600;
             color: #f0f;
@@ -2021,6 +2047,8 @@
             align-items: center;
             gap: 10px;
             text-shadow: 0 0 20px rgba(255, 0, 255, 0.8), 0 0 30px rgba(255, 0, 255, 0.5);
+            white-space: normal;
+            overflow-wrap: anywhere;
         }
 
         .pilot-rank-badge {
@@ -2039,7 +2067,7 @@
 
         .pilot-input-label {
             display: block;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 20px;
             font-weight: 600;
             color: #fff;
@@ -2080,7 +2108,7 @@
         }
 
         .pilot-hint {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.85);
             margin-top: 12px;
@@ -2110,7 +2138,7 @@
         }
 
         .pilot-stat-label {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 16px;
             font-weight: 600;
             color: #fff;
@@ -2197,7 +2225,7 @@
             justify-content: space-between;
             padding: 16px 14px;
             border-bottom: 1px solid rgba(0, 255, 255, 0.3);
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 26px;
             font-weight: 600;
             color: #fff;
@@ -2373,7 +2401,7 @@
         }
 
         .volume-label {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
             min-width: 70px;
@@ -2447,7 +2475,7 @@
         .control-item {
             display: flex;
             justify-content: space-between;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 12px;
         }
 
@@ -2829,7 +2857,7 @@
         }
 
         .demo-hint {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
             animation: hintBlink 1.5s ease-in-out infinite;
@@ -3098,7 +3126,7 @@
             border-radius: 8px;
             padding: 8px 16px;
             color: rgba(0, 255, 255, 0.8);
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 12px;
             text-align: center;
             pointer-events: none;
@@ -3128,7 +3156,7 @@
             border-radius: 8px;
             border: 1px solid rgba(0, 255, 0, 0.5);
             color: #0f0;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 13px;
             font-weight: 600;
             z-index: 45;
@@ -3296,7 +3324,7 @@
         }
 
         .achievement-popup .achievement-desc {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: rgba(255, 255, 255, 0.7);
             font-size: 11px;
             font-weight: 500;
@@ -3373,7 +3401,7 @@
         }
 
         .achievement-detail-rarity {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 12px;
             font-weight: 700;
             padding: 4px 15px;
@@ -3390,7 +3418,7 @@
         .achievement-detail-rarity.legendary { background: rgba(255, 150, 0, 0.3); color: #fa0; }
 
         .achievement-detail-desc {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 18px;
             color: #0ff;
             margin-bottom: 15px;
@@ -3398,7 +3426,7 @@
         }
 
         .achievement-detail-long {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 14px;
             color: rgba(255, 255, 255, 0.8);
             line-height: 1.6;
@@ -3411,7 +3439,7 @@
             border-radius: 10px;
             padding: 12px 15px;
             margin-bottom: 15px;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 13px;
             color: rgba(255, 255, 255, 0.9);
         }
@@ -3478,7 +3506,7 @@
         }
 
         .daily-challenge-timer {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.6);
         }
@@ -3506,7 +3534,7 @@
         }
 
         .daily-challenge-desc {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.7);
             margin-bottom: 8px;
@@ -3662,7 +3690,7 @@
         }
 
         .stat-label {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.6);
             text-transform: uppercase;
@@ -3686,7 +3714,7 @@
         }
 
         .stats-reset-btn {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 12px;
             color: rgba(255, 100, 100, 0.7);
             background: none;
@@ -4104,14 +4132,14 @@
         }
 
         .shop-item-name {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: #0ff;
             font-weight: 700;
             font-size: 15px;
         }
 
         .shop-item-desc {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 13px;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.5);
@@ -4252,14 +4280,14 @@
         }
 
         .trail-desc {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 10px;
             color: rgba(255, 255, 255, 0.6);
             margin-bottom: 4px;
         }
 
         .skin-name {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 13px;
             font-weight: 700;
             color: #0ff;
@@ -4278,7 +4306,7 @@
         }
 
         .skin-rarity {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 10px;
             font-weight: 600;
             margin-top: 4px;
@@ -4337,7 +4365,7 @@
         }
 
         .weapon-desc {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 13px;
             color: rgba(255, 255, 255, 0.7);
             text-align: center;
@@ -4345,7 +4373,7 @@
         }
 
         .weapon-stats {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 11px;
             color: #0ff;
             text-align: center;
@@ -4407,7 +4435,7 @@
         }
 
         .weapon-next-upgrade {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 13px;
             color: rgba(255, 255, 255, 0.7);
         }
@@ -4582,7 +4610,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.9);
         }
@@ -4684,7 +4712,7 @@
         }
 
         .daily-challenge-name {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: #fff;
             font-weight: 700;
             font-size: 12px;
@@ -4692,7 +4720,7 @@
         }
 
         .daily-challenge-desc {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: rgba(255, 255, 255, 0.6);
             font-size: 10px;
             font-weight: 500;
@@ -4710,7 +4738,7 @@
         }
 
         .daily-challenge-reward {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: #ff0;
             font-size: 10px;
             font-weight: 600;
@@ -5063,7 +5091,7 @@
             right: 0;
             text-align: center;
             padding: 15px 20px;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 13px;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.4);
@@ -5227,7 +5255,7 @@
         .loading-tips {
             position: absolute;
             bottom: 80px;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.5);
             text-align: center;
@@ -5257,6 +5285,229 @@
                 padding: 0 20px;
             }
         }
+
+        /* ==========================================
+           FIRST-TIME USER EXPERIENCE (FTUE) TUTORIAL
+           ========================================== */
+        .ftue-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .ftue-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .ftue-step {
+            text-align: center;
+            max-width: 400px;
+            padding: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .ftue-step.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ftue-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: ftueIconPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes ftueIconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .ftue-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #0ff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+            letter-spacing: 2px;
+        }
+
+        .ftue-desc {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        .ftue-keys {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .ftue-key {
+            background: linear-gradient(180deg, rgba(0, 100, 150, 0.6) 0%, rgba(0, 50, 100, 0.8) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 10px;
+            padding: 15px 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
+            animation: ftueKeyBounce 0.8s ease-in-out infinite;
+        }
+
+        .ftue-key:nth-child(2) { animation-delay: 0.1s; }
+        .ftue-key:nth-child(3) { animation-delay: 0.2s; }
+
+        @keyframes ftueKeyBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .ftue-progress {
+            display: flex;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .ftue-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .ftue-dot.active {
+            background: #0ff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            transform: scale(1.2);
+        }
+
+        .ftue-dot.completed {
+            background: #0f0;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .ftue-skip {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ftue-skip:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .ftue-continue {
+            margin-top: 30px;
+            background: linear-gradient(135deg, #0ff, #00b8b8);
+            border: none;
+            border-radius: 30px;
+            padding: 15px 40px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .ftue-continue:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.7);
+        }
+
+        /* ==========================================
+           VISUAL FEEDBACK: HIT EFFECTS
+           ========================================== */
+        .hit-flash {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 100, 100, 0.6) 50%, transparent 70%);
+            pointer-events: none;
+            animation: hitFlashAnim 0.2s ease-out forwards;
+        }
+
+        @keyframes hitFlashAnim {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* ==========================================
+           VISUAL FEEDBACK: FLOATING TEXT
+           ========================================== */
+        .floating-text {
+            position: absolute;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0ff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.5);
+            pointer-events: none;
+            animation: floatUp 1.2s ease-out forwards;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+
+        .floating-text.powerup {
+            color: #f0f;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.8), 0 0 30px rgba(255, 0, 255, 0.5);
+        }
+
+        .floating-text.damage {
+            color: #ff6b6b;
+            text-shadow: 0 0 15px rgba(255, 100, 100, 0.8);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.8);
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-60px) scale(1.1);
+                opacity: 0;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -5304,6 +5555,57 @@
             <div class="level">LEVEL: <span id="levelValue">1</span></div>
             <div class="lives">P1: <span id="livesValue">❤️❤️❤️</span></div>
             <div class="lives player2-lives hidden" id="player2Lives">P2: <span id="lives2Value">💜💜💜</span></div>
+        </div>
+
+        <!-- FTUE Tutorial Overlay -->
+        <div class="ftue-overlay" id="ftueOverlay">
+            <button class="ftue-skip" onclick="skipFTUE()">Skip Tutorial</button>
+
+            <!-- Step 1: Movement -->
+            <div class="ftue-step active" id="ftueStep1">
+                <div class="ftue-icon">🚀</div>
+                <div class="ftue-title">Move Your Ship</div>
+                <div class="ftue-desc">Dodge enemy fire and position yourself for the perfect shot!</div>
+                <div class="ftue-keys">
+                    <div class="ftue-key">←</div>
+                    <div class="ftue-key">→</div>
+                </div>
+                <button class="ftue-continue" onclick="nextFTUEStep()">Got It!</button>
+                <div class="ftue-progress">
+                    <div class="ftue-dot active"></div>
+                    <div class="ftue-dot"></div>
+                    <div class="ftue-dot"></div>
+                </div>
+            </div>
+
+            <!-- Step 2: Shooting -->
+            <div class="ftue-step" id="ftueStep2">
+                <div class="ftue-icon">💥</div>
+                <div class="ftue-title">Fire!</div>
+                <div class="ftue-desc">Blast the alien invaders before they reach Earth!</div>
+                <div class="ftue-keys">
+                    <div class="ftue-key">SPACE</div>
+                </div>
+                <button class="ftue-continue" onclick="nextFTUEStep()">Let's Go!</button>
+                <div class="ftue-progress">
+                    <div class="ftue-dot completed"></div>
+                    <div class="ftue-dot active"></div>
+                    <div class="ftue-dot"></div>
+                </div>
+            </div>
+
+            <!-- Step 3: Objective -->
+            <div class="ftue-step" id="ftueStep3">
+                <div class="ftue-icon">🎯</div>
+                <div class="ftue-title">Destroy & Survive</div>
+                <div class="ftue-desc">Eliminate all enemies, collect power-ups, and survive the onslaught!</div>
+                <button class="ftue-continue" onclick="completeFTUE()">Start Mission!</button>
+                <div class="ftue-progress">
+                    <div class="ftue-dot completed"></div>
+                    <div class="ftue-dot completed"></div>
+                    <div class="ftue-dot active"></div>
+                </div>
+            </div>
         </div>
 
         <div class="start-screen" id="startScreen">
@@ -9867,6 +10169,13 @@
                     playLevelUpSound();
                     updateSessionStats('powerUp');
                     dailyChallengeStats.powerupsCollected++;
+
+                    // Visual feedback: Floating power-up text
+                    const puInfo = POWERUP_TYPES[pu.type];
+                    if (puInfo) {
+                        showFloatingText(player.x + player.width / 2, player.y, '+' + puInfo.name, 'powerup');
+                    }
+
                     return false;
                 }
                 return pu.y < canvas.height;
@@ -9926,7 +10235,7 @@
                 ctx.shadowBlur = 0;
 
                 // Symbol
-                ctx.font = '14px Arial';
+                ctx.font = '14px Inter, system-ui, Arial, sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillStyle = '#fff';
@@ -12693,6 +13002,12 @@
 
                             enemiesToRemove.add(ei);
 
+                            // Visual feedback: Hit flash on kill
+                            createHitFlash(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, 50);
+
+                            // FTUE: Auto-complete tutorial on first kill
+                            onFirstKill();
+
                             // BULLET TIME KILL-CAM: Trigger when last enemy in wave is killed
                             if (!endlessMode && !bossRushMode && !currentBoss &&
                                 enemies.length - enemiesToRemove.size === 0) {
@@ -12703,6 +13018,9 @@
                             createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#888', 4);
                             playEnemyHitSound();
                             dailyChallengeStats.shotsHit++;
+
+                            // Visual feedback: Smaller hit flash for non-kill
+                            createHitFlash(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, 30);
                         }
 
                         // Only remove bullet if not penetrating
@@ -13170,6 +13488,11 @@
 
             // Show mobile controls on touch devices
             updateMobileControlsVisibility();
+
+            // Show FTUE tutorial for first-time players
+            if (isFirstTimePlayer()) {
+                showFTUE();
+            }
 
             requestAnimationFrame(gameLoop);
         }
@@ -13800,6 +14123,9 @@
             return selected;
         }
 
+        // Current upgrades shown in modal (for keyboard selection)
+        let currentRoguelikeUpgradeOptions = [];
+
         function showRoguelikeUpgradeModal() {
             if (!roguelikeMode) return;
 
@@ -13808,18 +14134,39 @@
             const container = document.getElementById('upgradeCards');
 
             const upgrades = getRandomUpgrades(3);
-            container.innerHTML = upgrades.map(upgrade => `
-                <div class="upgrade-card upgrade-rarity-${upgrade.rarity}" onclick="selectRoguelikeUpgrade('${upgrade.id}')">
+            currentRoguelikeUpgradeOptions = upgrades; // Store for keyboard access
+
+            container.innerHTML = upgrades.map((upgrade, index) => `
+                <div class="upgrade-card upgrade-rarity-${upgrade.rarity}" data-upgrade-id="${upgrade.id}" data-upgrade-index="${index}">
+                    <div class="upgrade-key-hint">${index + 1}</div>
                     <div class="upgrade-icon">${upgrade.icon}</div>
                     <div class="upgrade-name">${upgrade.name}</div>
                     <div class="upgrade-desc">${upgrade.desc}</div>
                 </div>
             `).join('');
 
+            // Add click event listeners to each card (more reliable than inline onclick)
+            container.querySelectorAll('.upgrade-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const upgradeId = this.getAttribute('data-upgrade-id');
+                    if (upgradeId) {
+                        selectRoguelikeUpgrade(upgradeId);
+                    }
+                });
+            });
+
             modal.classList.remove('hidden');
+
+            // Focus the modal for keyboard input
+            modal.setAttribute('tabindex', '-1');
+            modal.focus();
         }
 
         function selectRoguelikeUpgrade(upgradeId) {
+            const modal = document.getElementById('roguelikeModal');
+            if (modal.classList.contains('hidden')) return; // Already closed
+
             const upgrade = ROGUELIKE_UPGRADES.find(u => u.id === upgradeId);
             if (upgrade) {
                 roguelikeUpgrades.push(upgradeId);
@@ -13827,8 +14174,24 @@
                 playPowerUpSound();
             }
 
-            document.getElementById('roguelikeModal').classList.add('hidden');
+            modal.classList.add('hidden');
+            currentRoguelikeUpgradeOptions = []; // Clear options
             gamePaused = false;
+        }
+
+        // Keyboard handler for roguelike upgrades (1, 2, 3 keys)
+        function handleRoguelikeKeyboard(e) {
+            const modal = document.getElementById('roguelikeModal');
+            if (!modal || modal.classList.contains('hidden')) return false;
+
+            const keyNum = parseInt(e.key);
+            if (keyNum >= 1 && keyNum <= 3 && currentRoguelikeUpgradeOptions[keyNum - 1]) {
+                e.preventDefault();
+                e.stopPropagation();
+                selectRoguelikeUpgrade(currentRoguelikeUpgradeOptions[keyNum - 1].id);
+                return true;
+            }
+            return false;
         }
 
         async function startRoguelike() {
@@ -14245,6 +14608,11 @@
 
         // Event listeners
         document.addEventListener('keydown', (e) => {
+            // Handle roguelike upgrade selection with 1, 2, 3 keys
+            if (handleRoguelikeKeyboard(e)) {
+                return;
+            }
+
             // Exit demo mode on any key press
             if (aiDemoMode && gameRunning) {
                 handleDemoExit(e);
@@ -15654,6 +16022,132 @@
                 }
             }
         });
+
+        // ==========================================
+        // FIRST-TIME USER EXPERIENCE (FTUE) SYSTEM
+        // ==========================================
+        const FTUE_STORAGE_KEY = 'cosmicBlasterzFTUECompleted';
+        let ftueActive = false;
+        let ftueStep = 1;
+
+        // Check if player is first-time
+        function isFirstTimePlayer() {
+            return localStorage.getItem(FTUE_STORAGE_KEY) !== 'true';
+        }
+
+        // Mark FTUE as completed
+        function markFTUEComplete() {
+            localStorage.setItem(FTUE_STORAGE_KEY, 'true');
+        }
+
+        // Show FTUE overlay
+        function showFTUE() {
+            if (!isFirstTimePlayer()) return;
+            ftueActive = true;
+            ftueStep = 1;
+            const overlay = document.getElementById('ftueOverlay');
+            if (overlay) {
+                overlay.classList.add('active');
+                // Reset steps
+                document.querySelectorAll('.ftue-step').forEach((step, i) => {
+                    step.classList.toggle('active', i === 0);
+                });
+            }
+        }
+
+        // Hide FTUE overlay
+        function hideFTUE() {
+            ftueActive = false;
+            const overlay = document.getElementById('ftueOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+        }
+
+        // Go to next FTUE step
+        function nextFTUEStep() {
+            ftueStep++;
+            document.querySelectorAll('.ftue-step').forEach((step, i) => {
+                step.classList.toggle('active', i === ftueStep - 1);
+            });
+        }
+
+        // Skip FTUE
+        function skipFTUE() {
+            markFTUEComplete();
+            hideFTUE();
+        }
+
+        // Complete FTUE
+        function completeFTUE() {
+            markFTUEComplete();
+            hideFTUE();
+        }
+
+        // Auto-complete FTUE on first kill (called from enemy death code)
+        function onFirstKill() {
+            if (ftueActive) {
+                markFTUEComplete();
+                hideFTUE();
+            }
+        }
+
+        // ==========================================
+        // VISUAL FEEDBACK: FLOATING TEXT
+        // ==========================================
+        function showFloatingText(x, y, text, type = 'default') {
+            const container = document.querySelector('.game-container');
+            if (!container) return;
+
+            const floatingText = document.createElement('div');
+            floatingText.className = `floating-text ${type}`;
+            floatingText.textContent = text;
+
+            // Convert canvas coordinates to screen coordinates
+            const canvas = document.getElementById('gameCanvas');
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = rect.width / canvas.width;
+            const scaleY = rect.height / canvas.height;
+
+            floatingText.style.left = (rect.left + x * scaleX) + 'px';
+            floatingText.style.top = (rect.top + y * scaleY) + 'px';
+
+            document.body.appendChild(floatingText);
+
+            // Remove after animation
+            setTimeout(() => {
+                floatingText.remove();
+            }, 1200);
+        }
+
+        // ==========================================
+        // VISUAL FEEDBACK: ENEMY HIT EFFECT
+        // ==========================================
+        function createHitFlash(x, y, size = 40) {
+            const container = document.querySelector('.game-container');
+            if (!container) return;
+
+            const flash = document.createElement('div');
+            flash.className = 'hit-flash';
+
+            // Convert canvas coordinates
+            const canvas = document.getElementById('gameCanvas');
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = rect.width / canvas.width;
+            const scaleY = rect.height / canvas.height;
+
+            flash.style.width = size + 'px';
+            flash.style.height = size + 'px';
+            flash.style.left = (rect.left + x * scaleX - size / 2) + 'px';
+            flash.style.top = (rect.top + y * scaleY - size / 2) + 'px';
+
+            document.body.appendChild(flash);
+
+            // Remove after animation
+            setTimeout(() => {
+                flash.remove();
+            }, 200);
+        }
     </script>
 </body>
 </html>
