@@ -1,18 +1,18 @@
 {
   "name": "Cosmic Blasterz",
   "short_name": "CosmicBlasterz",
-  "description": "Defend Earth from the alien invasion in this epic retro arcade shooter!",
+  "description": "Defend Earth from the alien invasion in this epic retro arcade shooter! Classic arcade action with modern graphics, power-ups, boss battles, and global leaderboards.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0a0a1a",
   "theme_color": "#00ffff",
-  "orientation": "landscape",
+  "orientation": "any",
   "icons": [
     {
       "src": "logo.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "logo.png",
@@ -25,13 +25,19 @@
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "categories": ["games", "entertainment"],
   "screenshots": [
     {
-      "src": "logo.png",
-      "sizes": "1920x1080",
+      "src": "preview.png",
+      "sizes": "1200x630",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Cosmic Blasterz Gameplay"

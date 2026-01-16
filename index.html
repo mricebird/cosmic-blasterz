@@ -15,6 +15,23 @@
     <link rel="apple-touch-icon" href="logo.png">
     <link rel="icon" type="image/png" href="logo.png">
 
+    <!-- Open Graph Meta Tags (LinkedIn, Facebook) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Cosmic Blasterz - Retro Arcade Space Shooter">
+    <meta property="og:description" content="Defend Earth from the alien invasion! Classic arcade action with modern graphics, power-ups, boss battles, and global leaderboards.">
+    <meta property="og:image" content="https://mricebird.github.io/cosmic-blasterz/preview.png">
+    <meta property="og:url" content="https://mricebird.github.io/cosmic-blasterz/">
+    <meta property="og:site_name" content="Cosmic Blasterz">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cosmic Blasterz - Retro Arcade Space Shooter">
+    <meta name="twitter:description" content="Defend Earth from the alien invasion! Classic arcade action with modern graphics, power-ups, boss battles, and global leaderboards.">
+    <meta name="twitter:image" content="https://mricebird.github.io/cosmic-blasterz/preview.png">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mricebird.github.io/cosmic-blasterz/">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Inter font added to fix 'i' glyph rendering issue (Rajdhani has unusual lowercase i) -->
@@ -875,6 +892,109 @@
         @keyframes legendaryGlow {
             0%, 100% { box-shadow: 0 0 15px rgba(255, 200, 0, 0.3); }
             50% { box-shadow: 0 0 30px rgba(255, 200, 0, 0.6); }
+        }
+
+        /* Custom Confirm Modal */
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10002;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .confirm-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .confirm-dialog {
+            background: linear-gradient(180deg, rgba(30, 30, 50, 0.95) 0%, rgba(20, 20, 40, 0.98) 100%);
+            border: 2px solid rgba(255, 100, 100, 0.5);
+            border-radius: 20px;
+            padding: 30px 40px;
+            max-width: 400px;
+            text-align: center;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .confirm-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .confirm-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            color: #f55;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(255, 100, 100, 0.5);
+        }
+
+        .confirm-message {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .confirm-btn {
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid;
+        }
+
+        .confirm-btn-cancel {
+            background: rgba(100, 100, 100, 0.3);
+            border-color: rgba(150, 150, 150, 0.5);
+            color: #aaa;
+        }
+
+        .confirm-btn-cancel:hover {
+            background: rgba(100, 100, 100, 0.5);
+            color: #fff;
+        }
+
+        .confirm-btn-confirm {
+            background: linear-gradient(180deg, rgba(255, 80, 80, 0.4) 0%, rgba(200, 50, 50, 0.5) 100%);
+            border-color: rgba(255, 100, 100, 0.6);
+            color: #f88;
+        }
+
+        .confirm-btn-confirm:hover {
+            background: linear-gradient(180deg, rgba(255, 80, 80, 0.7) 0%, rgba(200, 50, 50, 0.8) 100%);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 100, 100, 0.4);
         }
 
         .mode-desc {
@@ -5940,6 +6060,19 @@
             </div>
         </div>
 
+        <!-- Custom Confirm Modal -->
+        <div class="confirm-modal" id="confirmModal">
+            <div class="confirm-dialog">
+                <div class="confirm-icon">⚠️</div>
+                <div class="confirm-title" id="confirmTitle">Confirm Action</div>
+                <div class="confirm-message" id="confirmMessage">Are you sure?</div>
+                <div class="confirm-buttons">
+                    <button class="confirm-btn confirm-btn-cancel" onclick="hideConfirmModal()">Cancel</button>
+                    <button class="confirm-btn confirm-btn-confirm" id="confirmBtn" onclick="executeConfirmAction()">Confirm</button>
+                </div>
+            </div>
+        </div>
+
         <!-- AI Demo overlay -->
         <div class="demo-overlay hidden" id="demoOverlay">
             <div class="demo-banner">
@@ -5971,10 +6104,10 @@
 
                 <div class="garage-customization">
                     <div class="garage-tabs">
-                        <button class="garage-tab active" onclick="switchGarageTab('skins')" id="garageSkinTab">🚀 SKINS</button>
-                        <button class="garage-tab" onclick="switchGarageTab('trails')" id="garageTrailTab">✨ TRAILS</button>
-                        <button class="garage-tab" onclick="switchGarageTab('weapons')" id="garageWeaponTab">🔫 WEAPONS</button>
-                        <button class="garage-tab" onclick="switchGarageTab('upgrades')" id="garageUpgradeTab">⬆️ UPGRADES</button>
+                        <button class="garage-tab active" onclick="switchGarageTab('skins')" id="garageSkinsTab">🚀 SKINS</button>
+                        <button class="garage-tab" onclick="switchGarageTab('trails')" id="garageTrailsTab">✨ TRAILS</button>
+                        <button class="garage-tab" onclick="switchGarageTab('weapons')" id="garageWeaponsTab">🔫 WEAPONS</button>
+                        <button class="garage-tab" onclick="switchGarageTab('upgrades')" id="garageUpgradesTab">⬆️ UPGRADES</button>
                     </div>
 
                     <div class="garage-items" id="garageItems">
@@ -6295,7 +6428,6 @@
                 await audioCtx.resume();
             }
             audioReady = true;
-            console.log('Audio initialized, state:', audioCtx.state);
         }
 
         // Helper to ensure audio is ready before playing
@@ -6421,7 +6553,7 @@
                     osc1.stop(audioCtx.currentTime + 0.12);
                     osc2.stop(audioCtx.currentTime + 0.12);
                 }
-            } catch (e) { console.log('Shoot sound error:', e); }
+            } catch (e) { /* Silent fail */ }
         }
 
         // Helper: Create noise buffer
@@ -6759,7 +6891,7 @@
                     beep.start(startTime);
                     beep.stop(startTime + 0.05);
                 }
-            } catch (e) { console.log('Player hit sound error:', e); }
+            } catch (e) { /* Silent fail */ }
         }
 
         // Enhanced Sound effect: Level up with triumphant fanfare
@@ -6825,7 +6957,7 @@
                         shimmer.stop(audioCtx.currentTime + 0.3);
                     }
                 }, 400);
-            } catch (e) { console.log('Level up sound error:', e); }
+            } catch (e) { /* Silent fail */ }
         }
 
         // Enhanced Sound effect: Game over with dramatic descent
@@ -6869,7 +7001,7 @@
 
                 drone.start(audioCtx.currentTime);
                 drone.stop(audioCtx.currentTime + 2);
-            } catch (e) { console.log('Game over sound error:', e); }
+            } catch (e) { /* Silent fail */ }
         }
 
         // Sound effect: Enemy shooting (throttled)
@@ -7328,7 +7460,7 @@
                 shimmer.start();
                 spaceHumOsc.push({ osc: shimmer, gain: shimmerGain, lfo: shimmerLfo });
 
-            } catch (e) { console.log('Space hum error:', e); }
+            } catch (e) { /* Silent fail */ }
         }
 
         function playRandomCosmicSound() {
@@ -7646,7 +7778,6 @@
             musicGain.connect(musicFilterNode);
             musicFilterNode.connect(audioCtx.destination);
 
-            console.log('Amiga music initialized with dynamic intensity system');
             playMusicRow();
         }
 
@@ -10834,7 +10965,7 @@
                     }
                 }
             } catch (e) {
-                console.log('Using local highscores:', e);
+                // Fallback to local highscores
             }
 
             highscoresLoaded = true;
@@ -10867,7 +10998,7 @@
                     body: JSON.stringify({ highscores: cachedHighscores })
                 });
             } catch (e) {
-                console.log('Could not save to server, saved locally:', e);
+                // Server save failed, local save succeeded
             }
 
             return cachedHighscores;
@@ -11027,12 +11158,10 @@
 
         // Gamepad connection events
         window.addEventListener('gamepadconnected', (e) => {
-            console.log(`Gamepad connected: ${e.gamepad.id}`);
             showShareToast(`🎮 Controller ${e.gamepad.index + 1} connected!`);
         });
 
         window.addEventListener('gamepaddisconnected', (e) => {
-            console.log(`Gamepad disconnected: ${e.gamepad.id}`);
             showShareToast(`🎮 Controller ${e.gamepad.index + 1} disconnected`);
             if (e.gamepad.index === 0) gamepadConnected = false;
             if (e.gamepad.index === 1) gamepad2Connected = false;
@@ -13464,7 +13593,7 @@
                 // Restore context after shake
                 ctx.restore();
             } catch (error) {
-                console.error('Game error:', error);
+                // Game loop error - continue
             }
 
             requestAnimationFrame(gameLoop);
@@ -13476,7 +13605,6 @@
             stopSplashMusic();
 
             await initAudio();
-            console.log('Audio ready, starting music...');
             initMusic();
             initAmbientSounds();
 
@@ -14066,7 +14194,6 @@
             const existingGhost = loadGhostData();
             if (!existingGhost || score > existingGhost.score) {
                 saveGhostData(ghostRecording, score);
-                console.log('New ghost saved! Score:', score);
             }
         }
 
@@ -15276,7 +15403,7 @@
             splashMusicPlaying = true;
             playMelody(0);
             } catch (e) {
-                console.log('Could not start splash music:', e);
+                // Splash music failed to start
             }
         }
 
@@ -15322,7 +15449,7 @@
                 try {
                     createSplashMusic();
                 } catch (e) {
-                    console.log('Could not start music:', e);
+                    // Music failed to start
                 }
             } else {
                 stopSplashMusic();
@@ -15569,26 +15696,22 @@
         // Start loading sequence immediately
         (function() {
             try {
-                console.log('Starting loading sequence...');
                 runLoadingSequence().then(() => {
-                    console.log('Loading complete, showing splash screen');
                     setTimeout(() => {
                         try {
                             initSplashStars();
                             startScroller();
                             // Music starts on user interaction (click/tap/key)
                         } catch (e) {
-                            console.log('Splash init error:', e);
+                            // Splash init error - continue
                         }
                     }, 100);
                 }).catch(err => {
-                    console.error('Loading sequence error:', err);
                     // Fallback: skip loading screen
                     document.getElementById('loadingScreen')?.classList.add('hidden');
                     document.getElementById('splashScreen')?.classList.remove('hidden');
                 });
             } catch (e) {
-                console.error('Loading init error:', e);
                 // Fallback: skip loading screen
                 document.getElementById('loadingScreen')?.classList.add('hidden');
                 document.getElementById('splashScreen')?.classList.remove('hidden');
@@ -15788,24 +15911,52 @@
             playSelectSound();
         }
 
-        function confirmResetStats() {
-            if (confirm('Are you sure you want to reset all statistics? This cannot be undone!')) {
-                lifetimeStats = {
-                    gamesPlayed: 0,
-                    highScore: 0,
-                    highLevel: 0,
-                    totalKills: 0,
-                    bossKills: 0,
-                    bestCombo: 0,
-                    powerUpsCollected: 0,
-                    totalCoinsEarned: 0,
-                    challengesCompleted: 0,
-                    totalPlayTime: 0
-                };
-                saveLifetimeStats();
-                updateStatsUI();
-                playSelectSound();
+        // Custom confirm modal system
+        let confirmCallback = null;
+
+        function showConfirmModal(title, message, onConfirm) {
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmMessage').textContent = message;
+            confirmCallback = onConfirm;
+            document.getElementById('confirmModal').classList.add('active');
+            playSelectSound();
+        }
+
+        function hideConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            confirmCallback = null;
+            playSelectSound();
+        }
+
+        function executeConfirmAction() {
+            if (confirmCallback) {
+                confirmCallback();
             }
+            hideConfirmModal();
+        }
+
+        function confirmResetStats() {
+            showConfirmModal(
+                'Reset Statistics',
+                'Are you sure you want to reset all statistics? This cannot be undone!',
+                () => {
+                    lifetimeStats = {
+                        gamesPlayed: 0,
+                        highScore: 0,
+                        highLevel: 0,
+                        totalKills: 0,
+                        bossKills: 0,
+                        bestCombo: 0,
+                        powerUpsCollected: 0,
+                        totalCoinsEarned: 0,
+                        challengesCompleted: 0,
+                        totalPlayTime: 0
+                    };
+                    saveLifetimeStats();
+                    updateStatsUI();
+                    showShareToast('Statistics have been reset');
+                }
+            );
         }
 
         // Load stats on startup
@@ -15968,7 +16119,7 @@
                 try {
                     createSplashMusic();
                 } catch (e) {
-                    console.log('Could not start splash music:', e);
+                    // Music failed to start
                 }
             }
         }
@@ -16031,8 +16182,6 @@
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js')
                     .then((registration) => {
-                        console.log('Cosmic Blasterz: Service Worker registered', registration.scope);
-
                         // Check for updates
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
@@ -16044,7 +16193,7 @@
                         });
                     })
                     .catch((error) => {
-                        console.log('Cosmic Blasterz: Service Worker registration failed', error);
+                        // Service worker registration failed - continue without SW
                     });
             });
         }
