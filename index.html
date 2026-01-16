@@ -16,7 +16,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -1055,6 +1055,104 @@
             font-weight: 500;
             color: rgba(255, 255, 255, 0.7);
             margin-bottom: 20px;
+        }
+
+        /* Difficulty Selector */
+        .difficulty-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 16px 24px;
+            background: rgba(0, 20, 40, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .difficulty-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(0, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .difficulty-btn {
+            flex: 1;
+            padding: 12px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px solid rgba(100, 100, 100, 0.4);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .difficulty-btn:hover {
+            background: rgba(0, 50, 80, 0.5);
+            border-color: rgba(0, 255, 255, 0.4);
+            color: #fff;
+        }
+
+        .difficulty-btn.active {
+            border-color: #0ff;
+            background: rgba(0, 255, 255, 0.15);
+            color: #0ff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .difficulty-btn.easy {
+            border-color: rgba(0, 255, 100, 0.4);
+        }
+        .difficulty-btn.easy.active {
+            border-color: #0f0;
+            background: rgba(0, 255, 0, 0.15);
+            color: #0f0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .difficulty-btn.normal {
+            border-color: rgba(0, 200, 255, 0.4);
+        }
+        .difficulty-btn.normal.active {
+            border-color: #0ff;
+            background: rgba(0, 255, 255, 0.15);
+            color: #0ff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .difficulty-btn.hard {
+            border-color: rgba(255, 100, 100, 0.4);
+        }
+        .difficulty-btn.hard.active {
+            border-color: #f55;
+            background: rgba(255, 50, 50, 0.15);
+            color: #f55;
+            box-shadow: 0 0 15px rgba(255, 50, 50, 0.3);
+        }
+
+        .difficulty-btn.nightmare {
+            border-color: rgba(255, 0, 255, 0.4);
+        }
+        .difficulty-btn.nightmare.active {
+            border-color: #f0f;
+            background: rgba(255, 0, 255, 0.15);
+            color: #f0f;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+        }
+
+        .difficulty-desc {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 4px;
         }
 
         .select-mode-label {
@@ -3398,6 +3496,35 @@
         }
 
         /* Stats button on start screen */
+        .menu-music-btn {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: linear-gradient(180deg, rgba(0, 100, 150, 0.4) 0%, rgba(0, 60, 100, 0.5) 100%);
+            border: 2px solid rgba(0, 200, 255, 0.4);
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            color: #0ff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+        }
+
+        .menu-music-btn:hover {
+            background: linear-gradient(180deg, rgba(0, 150, 200, 0.5) 0%, rgba(0, 100, 150, 0.6) 100%);
+            border-color: #0ff;
+            transform: scale(1.05);
+        }
+
+        .menu-music-btn.muted {
+            color: rgba(255, 100, 100, 0.8);
+            border-color: rgba(255, 100, 100, 0.4);
+        }
+
         .stats-btn {
             position: absolute;
             bottom: 15px;
@@ -4902,7 +5029,8 @@
         </div>
 
         <div class="start-screen" id="startScreen">
-            <!-- Stats button -->
+            <!-- Menu controls -->
+            <button class="menu-music-btn" id="menuMusicBtn" onclick="toggleMenuMusic()">🎵 Music</button>
             <button class="stats-btn" onclick="openStats()">📊 Stats</button>
 
             <!-- Amiga-style effects -->
@@ -4973,6 +5101,27 @@
                         <div class="daily-challenge-reward">🪙 <span id="challengeReward">0</span> Coins</div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Difficulty Selector -->
+            <p class="difficulty-label">Select Difficulty</p>
+            <div class="difficulty-selector">
+                <button class="difficulty-btn easy" onclick="setDifficulty('easy')">
+                    <div>🌱 Easy</div>
+                    <div class="difficulty-desc">Relaxed pace</div>
+                </button>
+                <button class="difficulty-btn normal active" onclick="setDifficulty('normal')">
+                    <div>⚔️ Normal</div>
+                    <div class="difficulty-desc">Balanced challenge</div>
+                </button>
+                <button class="difficulty-btn hard" onclick="setDifficulty('hard')">
+                    <div>🔥 Hard</div>
+                    <div class="difficulty-desc">For veterans</div>
+                </button>
+                <button class="difficulty-btn nightmare" onclick="setDifficulty('nightmare')">
+                    <div>💀 Nightmare</div>
+                    <div class="difficulty-desc">Pure chaos</div>
+                </button>
             </div>
 
             <p class="select-mode-label">Select Game Mode</p>
@@ -6106,6 +6255,84 @@
         let level = 1;
         let playerName = 'Gamer';
         let gameStartTime = 0;
+
+        // Difficulty settings
+        let currentDifficulty = 'normal';
+        const DIFFICULTY_SETTINGS = {
+            easy: {
+                name: 'Easy',
+                enemySpeedMultiplier: 0.7,
+                enemyFireRateMultiplier: 0.5,
+                enemyHealthMultiplier: 0.8,
+                playerLives: 5,
+                scoreMultiplier: 0.5,
+                powerupChance: 1.5,
+                bossHealthMultiplier: 0.7
+            },
+            normal: {
+                name: 'Normal',
+                enemySpeedMultiplier: 1.0,
+                enemyFireRateMultiplier: 1.0,
+                enemyHealthMultiplier: 1.0,
+                playerLives: 3,
+                scoreMultiplier: 1.0,
+                powerupChance: 1.0,
+                bossHealthMultiplier: 1.0
+            },
+            hard: {
+                name: 'Hard',
+                enemySpeedMultiplier: 1.3,
+                enemyFireRateMultiplier: 1.5,
+                enemyHealthMultiplier: 1.3,
+                playerLives: 2,
+                scoreMultiplier: 1.5,
+                powerupChance: 0.7,
+                bossHealthMultiplier: 1.3
+            },
+            nightmare: {
+                name: 'Nightmare',
+                enemySpeedMultiplier: 1.6,
+                enemyFireRateMultiplier: 2.0,
+                enemyHealthMultiplier: 1.5,
+                playerLives: 1,
+                scoreMultiplier: 2.5,
+                powerupChance: 0.4,
+                bossHealthMultiplier: 1.6
+            }
+        };
+
+        function getDifficulty() {
+            return DIFFICULTY_SETTINGS[currentDifficulty];
+        }
+
+        function addScore(points) {
+            const diff = getDifficulty();
+            score += Math.round(points * diff.scoreMultiplier);
+        }
+
+        function setDifficulty(diff) {
+            currentDifficulty = diff;
+            // Update UI
+            document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.difficulty-btn.${diff}`).classList.add('active');
+            // Save preference
+            localStorage.setItem('gameDifficulty', diff);
+            playSelectSound();
+        }
+
+        function loadDifficultySetting() {
+            const saved = localStorage.getItem('gameDifficulty');
+            if (saved && DIFFICULTY_SETTINGS[saved]) {
+                currentDifficulty = saved;
+                document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                const btn = document.querySelector(`.difficulty-btn.${saved}`);
+                if (btn) btn.classList.add('active');
+            }
+        }
 
         // Volume settings (0-100)
         let sfxVolume = 100;
@@ -8300,6 +8527,9 @@
         // Load screen size on start
         loadScreenSize();
 
+        // Load difficulty setting on start
+        loadDifficultySetting();
+
         // Daily Challenges system
         const DAILY_CHALLENGES = [
             { id: 'speed', name: 'Speed Master', desc: 'Kill 30 enemies in 60 seconds', goal: 30, timeLimit: 60, reward: 100 },
@@ -8702,7 +8932,7 @@
 
                 // Bonus points with combo
                 const comboPoints = addComboKill(ufo.points);
-                score += comboPoints;
+                addScore(comboPoints);
                 document.getElementById('scoreValue').textContent = score;
                 updateSessionStats('kill');
                 updateSessionStats('score', score);
@@ -9062,7 +9292,7 @@
                 enemies.forEach(enemy => {
                     createExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2, '#f80', 8);
                     const comboPoints = addComboKill(enemy.points);
-                    score += comboPoints;
+                    addScore(comboPoints);
                 });
                 enemies = [];
                 playExplosionSound('boss');
@@ -12962,8 +13192,10 @@
         // Reset game state
         function resetGame() {
             score = 0;
-            // Apply extra life upgrade
-            lives = hasUpgrade('extraLife') ? 4 : 3;
+            // Apply difficulty and extra life upgrade
+            const diff = getDifficulty();
+            const baseLives = diff.playerLives;
+            lives = hasUpgrade('extraLife') ? baseLives + 1 : baseLives;
             level = 1;
             bullets = [];
             enemyBullets = [];
@@ -12977,7 +13209,7 @@
                 player.x = canvas.width / 3 - 25;
                 player2.x = (canvas.width * 2 / 3) - 25;
                 player2.y = canvas.height - 70;
-                player2Lives = hasUpgrade('extraLife') ? 4 : 3;
+                player2Lives = hasUpgrade('extraLife') ? baseLives + 1 : baseLives;
                 player2Active = true;
                 player2.speed = hasUpgrade('fasterShip') ? 8.4 : 7;
                 // Reset player 2 keys
@@ -13662,6 +13894,43 @@
             }
         }
 
+        let menuMusicMuted = false;
+
+        function toggleMenuMusic() {
+            menuMusicMuted = !menuMusicMuted;
+            const btn = document.getElementById('menuMusicBtn');
+
+            if (menuMusicMuted) {
+                stopSplashMusic();
+                if (btn) {
+                    btn.textContent = '🔇 Music Off';
+                    btn.classList.add('muted');
+                }
+            } else {
+                createSplashMusic();
+                if (btn) {
+                    btn.textContent = '🎵 Music';
+                    btn.classList.remove('muted');
+                }
+            }
+
+            // Save preference
+            localStorage.setItem('menuMusicMuted', menuMusicMuted);
+            playSelectSound();
+        }
+
+        function loadMenuMusicSetting() {
+            const saved = localStorage.getItem('menuMusicMuted');
+            if (saved === 'true') {
+                menuMusicMuted = true;
+                const btn = document.getElementById('menuMusicBtn');
+                if (btn) {
+                    btn.textContent = '🔇 Music Off';
+                    btn.classList.add('muted');
+                }
+            }
+        }
+
         // Amiga-style Sine Wave Scroller
         const scrollerCanvas = document.getElementById('scrollerCanvas');
         let scrollerCtx = null;
@@ -13686,13 +13955,13 @@
             // Clear canvas
             scrollerCtx.clearRect(0, 0, width, height);
 
-            // Font settings - classic Amiga style
-            const fontSize = Math.min(40, height * 0.6);
-            scrollerCtx.font = `bold ${fontSize}px "Orbitron", sans-serif`;
+            // Font settings - classic Amiga pixel style
+            const fontSize = Math.min(28, height * 0.45);
+            scrollerCtx.font = `${fontSize}px "Press Start 2P", monospace`;
             scrollerCtx.textBaseline = 'middle';
 
-            // Calculate text width for looping
-            const charWidth = fontSize * 0.7;
+            // Calculate text width for looping (pixel font is wider)
+            const charWidth = fontSize * 1.1;
             const totalWidth = scrollText.length * charWidth;
 
             // Draw each character with sine wave offset
@@ -14143,6 +14412,9 @@
         // Initialize pilot profile
         updatePilotProfile();
 
+        // Load menu music setting
+        loadMenuMusicSetting();
+
         // ========================================
         // Screen Transition System
         // ========================================
@@ -14259,7 +14531,7 @@
         // Start music on first interaction (browser autoplay policy)
         let splashMusicStarted = false;
         function startSplashMusicOnce() {
-            if (!splashMusicStarted) {
+            if (!splashMusicStarted && !menuMusicMuted) {
                 splashMusicStarted = true;
                 createSplashMusic();
             }
