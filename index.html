@@ -813,6 +813,103 @@
             cursor: pointer;
         }
 
+        /* Settings button and panel */
+        .settings-btn {
+            position: absolute;
+            bottom: 10px;
+            left: 180px;
+            padding: 5px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #0ff;
+            border-radius: 5px;
+            color: #0ff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 60;
+        }
+
+        .settings-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+        }
+
+        .settings-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #0ff;
+            border-radius: 10px;
+            padding: 20px;
+            color: #fff;
+            z-index: 200;
+            min-width: 320px;
+        }
+
+        .settings-panel h2 {
+            color: #0ff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .settings-item {
+            margin: 15px 0;
+        }
+
+        .settings-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .settings-value {
+            color: #0ff;
+            font-size: 12px;
+        }
+
+        .settings-slider {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #333;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .settings-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #0ff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .settings-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #0ff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .settings-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #f00;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
         /* Daily Challenge */
         .daily-challenge-container {
             position: absolute;
@@ -1042,6 +1139,36 @@
             <div id="shopItems"></div>
         </div>
 
+        <!-- Settings button -->
+        <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">⚙️ SETTINGS</button>
+
+        <!-- Settings panel -->
+        <div class="settings-panel hidden" id="settingsPanel">
+            <button class="settings-close" onclick="toggleSettings()">✕</button>
+            <h2>⚙️ SETTINGS</h2>
+            <div class="settings-item">
+                <div class="settings-label">
+                    <span>🔊 Sound Effects</span>
+                    <span class="settings-value" id="sfxValue">100%</span>
+                </div>
+                <input type="range" class="settings-slider" id="sfxVolume" min="0" max="100" value="100" oninput="updateVolume('sfx', this.value)">
+            </div>
+            <div class="settings-item">
+                <div class="settings-label">
+                    <span>🎵 Music</span>
+                    <span class="settings-value" id="musicValue">100%</span>
+                </div>
+                <input type="range" class="settings-slider" id="musicVolume" min="0" max="100" value="100" oninput="updateVolume('music', this.value)">
+            </div>
+            <div class="settings-item">
+                <div class="settings-label">
+                    <span>🎙️ Announcer</span>
+                    <span class="settings-value" id="announcerValue">100%</span>
+                </div>
+                <input type="range" class="settings-slider" id="announcerVolume" min="0" max="100" value="100" oninput="updateVolume('announcer', this.value)">
+            </div>
+        </div>
+
         <!-- Daily Challenge -->
         <div class="daily-challenge-container" id="dailyChallengeContainer"></div>
 
@@ -1094,7 +1221,7 @@
                 osc.frequency.setValueAtTime(880, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.1);
 
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.15 * (sfxVolume / 100), audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
 
                 osc.start(audioCtx.currentTime);
@@ -1127,7 +1254,7 @@
                 filter.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + duration);
 
                 const gain = audioCtx.createGain();
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.3 * (sfxVolume / 100), audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
 
                 noise.connect(filter);
@@ -1152,7 +1279,7 @@
                 osc.frequency.setValueAtTime(200, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.5);
 
-                gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.25 * (sfxVolume / 100), audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
 
                 osc.start(audioCtx.currentTime);
@@ -1177,7 +1304,7 @@
                     osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
 
                     gain.gain.setValueAtTime(0, audioCtx.currentTime + i * 0.1);
-                    gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + i * 0.1 + 0.05);
+                    gain.gain.linearRampToValueAtTime(0.2 * (sfxVolume / 100), audioCtx.currentTime + i * 0.1 + 0.05);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.1 + 0.3);
 
                     osc.start(audioCtx.currentTime + i * 0.1);
@@ -1202,7 +1329,7 @@
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.2);
 
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.2);
+                    gain.gain.setValueAtTime(0.2 * (sfxVolume / 100), audioCtx.currentTime + i * 0.2);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.2 + 0.4);
 
                     osc.start(audioCtx.currentTime + i * 0.2);
@@ -1232,7 +1359,7 @@
                 osc.frequency.setValueAtTime(300, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
 
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08 * (sfxVolume / 100), audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
 
                 osc.start(audioCtx.currentTime);
@@ -1265,6 +1392,66 @@
         let level = 1;
         let playerName = 'Spiller';
 
+        // Volume settings (0-100)
+        let sfxVolume = 100;
+        let musicVolumeLevel = 100;
+        let announcerVolume = 100;
+        let settingsOpen = false;
+
+        // Load saved volume settings
+        function loadVolumeSettings() {
+            const saved = localStorage.getItem('spaceInvadersVolume');
+            if (saved) {
+                const settings = JSON.parse(saved);
+                sfxVolume = settings.sfx ?? 100;
+                musicVolumeLevel = settings.music ?? 100;
+                announcerVolume = settings.announcer ?? 100;
+
+                // Update UI sliders
+                document.getElementById('sfxVolume').value = sfxVolume;
+                document.getElementById('musicVolume').value = musicVolumeLevel;
+                document.getElementById('announcerVolume').value = announcerVolume;
+                document.getElementById('sfxValue').textContent = sfxVolume + '%';
+                document.getElementById('musicValue').textContent = musicVolumeLevel + '%';
+                document.getElementById('announcerValue').textContent = announcerVolume + '%';
+            }
+        }
+
+        // Save volume settings
+        function saveVolumeSettings() {
+            localStorage.setItem('spaceInvadersVolume', JSON.stringify({
+                sfx: sfxVolume,
+                music: musicVolumeLevel,
+                announcer: announcerVolume
+            }));
+        }
+
+        // Update volume from slider
+        function updateVolume(type, value) {
+            value = parseInt(value);
+            if (type === 'sfx') {
+                sfxVolume = value;
+                document.getElementById('sfxValue').textContent = value + '%';
+            } else if (type === 'music') {
+                musicVolumeLevel = value;
+                document.getElementById('musicValue').textContent = value + '%';
+                // Update music gain in real-time
+                if (musicGain) {
+                    musicGain.gain.setValueAtTime(0.08 * (value / 100), audioCtx.currentTime);
+                }
+            } else if (type === 'announcer') {
+                announcerVolume = value;
+                document.getElementById('announcerValue').textContent = value + '%';
+            }
+            saveVolumeSettings();
+        }
+
+        // Toggle settings panel
+        function toggleSettings() {
+            settingsOpen = !settingsOpen;
+            document.getElementById('settingsPanel').classList.toggle('hidden', !settingsOpen);
+        }
+
         // Background music system
         let musicOscillators = [];
         let musicGain = null;
@@ -1279,7 +1466,7 @@
 
             // Create master gain for music
             musicGain = audioCtx.createGain();
-            musicGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            musicGain.gain.setValueAtTime(0.08 * (musicVolumeLevel / 100), audioCtx.currentTime);
             musicGain.connect(audioCtx.destination);
 
             // Start the music loop
@@ -1411,7 +1598,7 @@
                 utterance.lang = 'en-US';
                 utterance.rate = 1.1;
                 utterance.pitch = 1.0;
-                utterance.volume = 0.8;
+                utterance.volume = 0.8 * (announcerVolume / 100);
 
                 // Try to find an English voice
                 const voices = window.speechSynthesis.getVoices();
@@ -1962,6 +2149,9 @@
 
         // Load shop data on start
         loadShopData();
+
+        // Load volume settings on start
+        loadVolumeSettings();
 
         // Daily Challenges system
         const DAILY_CHALLENGES = [
