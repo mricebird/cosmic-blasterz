@@ -6308,6 +6308,7 @@
                 <button class="menu-footer-btn" onclick="openStats()">📊 Stats</button>
                 <button class="menu-footer-btn" onclick="startTutorial()">📖 Tutorial</button>
                 <button class="menu-footer-btn" onclick="startAIDemo()">🤖 Watch AI</button>
+                <button class="menu-footer-btn" onclick="openFeedback()">💬 Feedback</button>
                 <button class="menu-footer-btn hidden" id="installPwaBtn" onclick="installPwa()">📲 Install</button>
             </div>
 
@@ -16863,6 +16864,28 @@
 
         function closeStats() {
             document.getElementById('statsScreen').classList.add('hidden');
+            playSelectSound();
+        }
+
+        function openFeedback() {
+            const subject = encodeURIComponent('Cosmic Blasterz Feedback');
+            const body = encodeURIComponent(
+`Hej Martin!
+
+Her er min feedback til Cosmic Blasterz:
+
+⭐ Hvad synes jeg om spillet (1-5):
+
+💬 Kommentarer / Hvad kunne gøres bedre:
+
+
+💡 Idéer til nye features:
+
+
+---
+Sendt fra Cosmic Blasterz`
+            );
+            window.open(`mailto:mricebird@gmail.com?subject=${subject}&body=${body}`, '_self');
             playSelectSound();
         }
 
