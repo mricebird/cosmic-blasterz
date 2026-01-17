@@ -4610,8 +4610,10 @@
             color: #fff;
             z-index: 200;
             min-width: 360px;
-            max-height: 80vh;
-            overflow-y: auto;
+            max-width: 450px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
             box-shadow:
                 0 0 40px rgba(255, 255, 0, 0.15),
                 0 25px 50px rgba(0, 0, 0, 0.5),
@@ -4620,41 +4622,45 @@
             -webkit-backdrop-filter: blur(12px);
         }
 
-        .shop-panel::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .shop-panel::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 3px;
-        }
-
-        .shop-panel::-webkit-scrollbar-thumb {
-            background: rgba(255, 217, 61, 0.5);
-            border-radius: 3px;
-        }
-
         .shop-panel h2 {
             font-family: 'Orbitron', sans-serif;
             color: #ff0;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-size: 20px;
             font-weight: 700;
             text-shadow: 0 0 15px rgba(255, 255, 0, 0.4);
-            position: sticky;
-            top: -24px;
-            background: linear-gradient(135deg, rgba(10, 20, 40, 0.98) 0%, rgba(5, 10, 25, 0.99) 100%);
-            padding: 15px 0;
-            margin: -24px -24px 20px -24px;
-            padding: 20px 24px;
-            z-index: 5;
+            flex-shrink: 0;
         }
 
         .shop-close {
-            position: sticky;
-            top: 0;
+            position: absolute;
+            top: 15px;
+            right: 15px;
             z-index: 10;
+        }
+
+        #shopItems {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-height: 0;
+            max-height: calc(85vh - 100px);
+            padding-right: 10px;
+        }
+
+        #shopItems::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #shopItems::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+        }
+
+        #shopItems::-webkit-scrollbar-thumb {
+            background: rgba(255, 217, 61, 0.5);
+            border-radius: 3px;
         }
 
         .shop-item {
