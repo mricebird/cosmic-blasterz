@@ -15668,7 +15668,9 @@
         function updateMobileControlsVisibility() {
             const mobileControls = document.getElementById('mobileControls');
             if (mobileControls && isTouchDevice) {
-                mobileControls.style.display = gameRunning && !gamePaused ? 'flex' : 'none';
+                // Hide mobile controls during AI demo mode
+                const shouldShow = gameRunning && !gamePaused && !aiDemoMode;
+                mobileControls.style.display = shouldShow ? 'flex' : 'none';
             }
         }
 
