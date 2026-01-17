@@ -15378,9 +15378,14 @@
             centerY: 65         // Center Y of joystick
         };
 
-        // Detect touch device
+        // Detect touch device - only enable on actual mobile/tablet devices
         function detectTouchDevice() {
-            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+            // Check if it's actually a mobile/tablet device, not just a touchscreen laptop
+            const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isSmallScreen = window.innerWidth <= 1024 && ('ontouchstart' in window);
+            const isTablet = /iPad|Android/i.test(navigator.userAgent) && !(/Mobile/i.test(navigator.userAgent));
+
+            if (isMobileUA || isSmallScreen || isTablet) {
                 isTouchDevice = true;
                 document.body.classList.add('touch-device');
                 // Show hint briefly on first touch
