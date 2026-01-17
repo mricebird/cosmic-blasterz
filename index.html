@@ -5314,37 +5314,55 @@
             }
         }
 
-        /* Amiga-style scroll text */
+        /* Epic Amiga-style scroll text */
         .scroll-text-container {
             width: 100%;
-            max-width: 600px;
-            height: 36px;
+            max-width: 700px;
+            height: 50px;
             overflow: hidden;
             position: relative;
-            margin: 15px 0 20px 0;
-            background: linear-gradient(90deg, rgba(0, 20, 40, 0.8), rgba(0, 40, 60, 0.8), rgba(0, 20, 40, 0.8));
-            border-radius: 8px;
-            border: 2px solid rgba(0, 255, 255, 0.4);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.5);
+            margin: 10px 0 25px 0;
+            background: linear-gradient(180deg,
+                rgba(0, 0, 0, 0.9) 0%,
+                rgba(0, 20, 40, 0.95) 20%,
+                rgba(0, 30, 60, 0.95) 50%,
+                rgba(0, 20, 40, 0.95) 80%,
+                rgba(0, 0, 0, 0.9) 100%);
+            border-radius: 25px;
+            border: 2px solid;
+            border-image: linear-gradient(90deg, #0ff, #f0f, #ff0, #0ff) 1;
+            box-shadow:
+                0 0 20px rgba(0, 255, 255, 0.4),
+                0 0 40px rgba(255, 0, 255, 0.2),
+                inset 0 0 30px rgba(0, 0, 0, 0.8);
         }
 
         .scroll-text {
             position: absolute;
             white-space: nowrap;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 18px;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            color: #0ff;
-            text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px rgba(255, 0, 255, 0.5);
-            animation: scrollText 25s linear infinite;
-            line-height: 36px;
+            font-family: 'Orbitron', 'Share Tech Mono', monospace;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            background: linear-gradient(90deg, #0ff, #f0f, #ff0, #0f0, #0ff);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: scrollText 30s linear infinite, rainbowText 3s ease-in-out infinite;
+            line-height: 50px;
             text-transform: uppercase;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8)) drop-shadow(0 0 20px rgba(255, 0, 255, 0.5));
         }
 
         @keyframes scrollText {
             0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+            100% { transform: translateX(-200%); }
+        }
+
+        @keyframes rainbowText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         /* Copper bar effect - subtle top bar */
@@ -6109,7 +6127,7 @@
             <!-- Scroll text -->
             <div class="scroll-text-container">
                 <div class="scroll-text">
-                    ★ WELCOME TO COSMIC BLASTERZ ★ ARROWS TO MOVE ★ SPACE TO SHOOT ★ COLLECT POWER-UPS ★ DEFEAT THE BOSSES ★ CAN YOU BEAT THE HIGHSCORE? ★ GREETINGS TO ALL RETRO GAMERS ★
+                    ★★★ WELCOME TO COSMIC BLASTERZ ★★★ THE ULTIMATE RETRO SPACE SHOOTER ★★★ ARROWS/WASD TO MOVE ★★★ SPACE TO SHOOT ★★★ COLLECT POWER-UPS ★★★ DEFEAT EPIC BOSSES ★★★ CLIMB THE GLOBAL LEADERBOARD ★★★ GREETINGS TO ALL RETRO GAMERS ★★★ MADE WITH ♥ BY MRICEBIRD ★★★
                 </div>
             </div>
 
