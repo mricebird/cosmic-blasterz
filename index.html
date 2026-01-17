@@ -442,12 +442,29 @@
             text-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(255, 0, 255, 0.3);
             margin: 10px 0;
             letter-spacing: 3px;
-            animation: titlePulse 3s ease-in-out infinite;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        @keyframes titlePulse {
-            0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(255, 0, 255, 0.3); }
-            50% { text-shadow: 0 0 30px rgba(0, 255, 255, 0.8), 0 0 60px rgba(255, 0, 255, 0.5); }
+        .game-title .letter {
+            display: inline-block;
+            animation: letterJump 1.2s ease-in-out infinite;
+        }
+
+        .game-title .space {
+            width: 0.3em;
+        }
+
+        @keyframes letterJump {
+            0%, 100% {
+                transform: translateY(0);
+                text-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(255, 0, 255, 0.3);
+            }
+            50% {
+                transform: translateY(-8px);
+                text-shadow: 0 0 30px rgba(0, 255, 255, 0.9), 0 0 50px rgba(255, 0, 255, 0.6);
+            }
         }
 
         /* Settings bar */
@@ -1466,19 +1483,30 @@
             width: min(420px, 92vw);
         }
 
-        .difficulty-label {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 10px;
-            font-weight: 600;
-            color: rgba(0, 255, 255, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            text-align: center;
+        .difficulty-option {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
 
+        .difficulty-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .difficulty-option.easy .difficulty-label { color: rgba(0, 255, 100, 0.7); }
+        .difficulty-option.normal .difficulty-label { color: rgba(0, 200, 255, 0.7); }
+        .difficulty-option.hard .difficulty-label { color: rgba(255, 100, 100, 0.7); }
+        .difficulty-option.nightmare .difficulty-label { color: rgba(255, 0, 255, 0.7); }
+
         .difficulty-btn {
-            flex: 1;
+            width: 100%;
             padding: 12px 8px;
             font-size: 24px;
             border: 1px solid rgba(100, 100, 100, 0.4);
@@ -2526,12 +2554,16 @@
             font-family: 'Orbitron', sans-serif;
             text-align: center;
             margin-bottom: 12px;
-            color: #f0f;
-            font-size: 14px;
+            color: #fff;
+            font-size: 16px;
             font-weight: 700;
-            text-shadow: 0 0 15px rgba(255, 0, 255, 0.6);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(255, 0, 255, 0.5);
             letter-spacing: 2px;
             text-transform: uppercase;
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
+            padding: 8px 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
         }
 
         .highscore-tabs {
@@ -5976,7 +6008,9 @@
             <div class="scanlines"></div>
 
             <!-- Clean Title -->
-            <h1 class="game-title">🚀 COSMIC BLASTERZ 👾</h1>
+            <h1 class="game-title">
+                <span class="letter" style="animation-delay: 0s">🚀</span><span class="space"></span><span class="letter" style="animation-delay: 0.05s">C</span><span class="letter" style="animation-delay: 0.1s">O</span><span class="letter" style="animation-delay: 0.15s">S</span><span class="letter" style="animation-delay: 0.2s">M</span><span class="letter" style="animation-delay: 0.25s">I</span><span class="letter" style="animation-delay: 0.3s">C</span><span class="space"></span><span class="letter" style="animation-delay: 0.35s">B</span><span class="letter" style="animation-delay: 0.4s">L</span><span class="letter" style="animation-delay: 0.45s">A</span><span class="letter" style="animation-delay: 0.5s">S</span><span class="letter" style="animation-delay: 0.55s">T</span><span class="letter" style="animation-delay: 0.6s">E</span><span class="letter" style="animation-delay: 0.65s">R</span><span class="letter" style="animation-delay: 0.7s">Z</span><span class="space"></span><span class="letter" style="animation-delay: 0.75s">👾</span>
+            </h1>
 
             <!-- Scroll text -->
             <div class="scroll-text-container">
@@ -5999,10 +6033,22 @@
 
             <!-- Difficulty -->
             <div class="difficulty-selector">
-                <button class="difficulty-btn easy" onclick="setDifficulty('easy')">🌱</button>
-                <button class="difficulty-btn normal active" onclick="setDifficulty('normal')">⚔️</button>
-                <button class="difficulty-btn hard" onclick="setDifficulty('hard')">🔥</button>
-                <button class="difficulty-btn nightmare" onclick="setDifficulty('nightmare')">💀</button>
+                <div class="difficulty-option easy">
+                    <button class="difficulty-btn easy" onclick="setDifficulty('easy')">🌱</button>
+                    <span class="difficulty-label">Easy</span>
+                </div>
+                <div class="difficulty-option normal">
+                    <button class="difficulty-btn normal active" onclick="setDifficulty('normal')">⚔️</button>
+                    <span class="difficulty-label">Normal</span>
+                </div>
+                <div class="difficulty-option hard">
+                    <button class="difficulty-btn hard" onclick="setDifficulty('hard')">🔥</button>
+                    <span class="difficulty-label">Hard</span>
+                </div>
+                <div class="difficulty-option nightmare">
+                    <button class="difficulty-btn nightmare" onclick="setDifficulty('nightmare')">💀</button>
+                    <span class="difficulty-label">Nightmare</span>
+                </div>
             </div>
 
             <!-- Game Modes -->
