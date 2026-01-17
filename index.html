@@ -11800,16 +11800,41 @@
         function rescueAstronaut(astro) {
             astronautsRescued++;
 
-            // Create rescue particles
-            for (let i = 0; i < 15; i++) {
+            const centerX = astro.x + astro.width / 2;
+            const centerY = astro.y + astro.height / 2;
+
+            // Create beautiful rescue particle burst
+            const colors = ['#0ff', '#fff', '#ff0', '#0f0', '#f0f'];
+
+            // Ring of particles expanding outward
+            for (let i = 0; i < 16; i++) {
+                const angle = (Math.PI * 2 / 16) * i;
+                const speed = 4 + Math.random() * 3;
                 particles.push({
-                    x: astro.x + astro.width / 2,
-                    y: astro.y + astro.height / 2,
-                    vx: (Math.random() - 0.5) * 4,
-                    vy: (Math.random() - 0.5) * 4,
-                    life: 40,
-                    color: i % 2 === 0 ? '#0ff' : '#fff',
-                    size: 3 + Math.random() * 3
+                    x: centerX,
+                    y: centerY,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 1,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: 3 + Math.random() * 2,
+                    type: 'powerup',
+                    decay: 0.03
+                });
+            }
+
+            // Rising sparkles (like the astronaut being beamed up)
+            for (let i = 0; i < 10; i++) {
+                particles.push({
+                    x: centerX + (Math.random() - 0.5) * 30,
+                    y: centerY,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: -4 - Math.random() * 3,
+                    life: 1,
+                    color: '#fff',
+                    size: 2 + Math.random(),
+                    type: 'sparkle',
+                    decay: 0.025
                 });
             }
 
