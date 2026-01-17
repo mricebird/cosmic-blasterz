@@ -426,8 +426,8 @@
         }
 
         .speedrun-timer {
-            position: fixed;
-            top: 22px;
+            position: absolute;
+            top: 50px;
             left: 15px;
             color: #0ff;
             font-family: 'Share Tech Mono', 'Orbitron', monospace;
@@ -440,7 +440,8 @@
             align-items: center;
             gap: 8px;
             text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
-            z-index: 1000;
+            z-index: 100;
+            pointer-events: auto;
         }
 
         body.state-playing .speedrun-timer,
@@ -6930,11 +6931,11 @@
             <div class="rescued">👨‍🚀 <span id="rescuedValue">0</span></div>
             <div class="lives">P1: <span id="livesValue">❤️❤️❤️</span></div>
             <div class="lives player2-lives hidden" id="player2Lives">P2: <span id="lives2Value">💜💜💜</span></div>
-            <div class="speedrun-timer" id="speedrunTimer">
-                <span class="timer-icon">⏱️</span>
-                <span class="timer-current" id="timerCurrent">00:00.00</span>
-                <span class="timer-best" id="timerBest" title="Best Time"></span>
-            </div>
+        </div>
+        <div class="speedrun-timer" id="speedrunTimer">
+            <span class="timer-icon">⏱️</span>
+            <span class="timer-current" id="timerCurrent">00:00.00</span>
+            <span class="timer-best" id="timerBest" title="Best Time"></span>
         </div>
 
         <!-- FTUE Tutorial Overlay -->
