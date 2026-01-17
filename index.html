@@ -12767,8 +12767,8 @@
             });
         }
 
-        // Classic crab alien pattern (green one from logo)
-        const CRAB_ALIEN = [
+        // Classic crab alien pattern (green one from logo) - Frame 1
+        const CRAB_ALIEN_1 = [
             [0,0,1,0,0,0,0,0,1,0,0],
             [0,0,0,1,0,0,0,1,0,0,0],
             [0,0,1,1,1,1,1,1,1,0,0],
@@ -12779,8 +12779,20 @@
             [0,0,0,1,1,0,1,1,0,0,0],
         ];
 
-        // Classic squid/octopus alien pattern (red one from logo)
-        const SQUID_ALIEN = [
+        // Classic crab alien pattern - Frame 2 (legs out)
+        const CRAB_ALIEN_2 = [
+            [0,0,1,0,0,0,0,0,1,0,0],
+            [1,0,0,1,0,0,0,1,0,0,1],
+            [1,0,1,1,1,1,1,1,1,0,1],
+            [1,1,1,0,1,1,1,0,1,1,1],
+            [0,1,1,1,1,1,1,1,1,1,0],
+            [0,0,1,1,1,1,1,1,1,0,0],
+            [0,0,1,0,0,0,0,0,1,0,0],
+            [0,1,0,0,0,0,0,0,0,1,0],
+        ];
+
+        // Classic squid/octopus alien pattern (red one from logo) - Frame 1
+        const SQUID_ALIEN_1 = [
             [0,0,0,0,1,1,0,0,0,0],
             [0,0,0,1,1,1,1,0,0,0],
             [0,0,1,1,1,1,1,1,0,0],
@@ -12790,6 +12802,36 @@
             [0,0,1,0,1,1,0,1,0,0],
             [0,1,0,1,0,0,1,0,1,0],
         ];
+
+        // Classic squid/octopus alien pattern - Frame 2 (tentacles in)
+        const SQUID_ALIEN_2 = [
+            [0,0,0,0,1,1,0,0,0,0],
+            [0,0,0,1,1,1,1,0,0,0],
+            [0,0,1,1,1,1,1,1,0,0],
+            [0,1,1,0,1,1,0,1,1,0],
+            [0,1,1,1,1,1,1,1,1,0],
+            [0,0,1,1,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0,1,1,0],
+            [0,0,1,0,0,0,0,1,0,0],
+        ];
+
+        // Animation frame selector (switches every 500ms)
+        function getAlienFrame() {
+            return Math.floor(Date.now() / 500) % 2;
+        }
+
+        // Get the right sprite based on animation frame
+        function getCrabAlien() {
+            return getAlienFrame() === 0 ? CRAB_ALIEN_1 : CRAB_ALIEN_2;
+        }
+
+        function getSquidAlien() {
+            return getAlienFrame() === 0 ? SQUID_ALIEN_1 : SQUID_ALIEN_2;
+        }
+
+        // Keep backwards compatibility
+        const CRAB_ALIEN = CRAB_ALIEN_1;
+        const SQUID_ALIEN = SQUID_ALIEN_1;
 
         // 3D Shadow system
         const SHADOW_CONFIG = {
@@ -13070,31 +13112,33 @@
             const style = typeData.style || 'basic';
 
             if (style === 'squid' || enemy.type === 'boss' || enemy.type === 'medium') {
-                // Classic squid/octopus alien (red style from logo)
+                // Classic squid/octopus alien (red style from logo) - ANIMATED
+                const sprite = getSquidAlien();
                 const pixelSize = Math.max(3, Math.floor(enemy.width / 10));
-                const spriteWidth = SQUID_ALIEN[0].length * pixelSize;
-                const spriteHeight = SQUID_ALIEN.length * pixelSize;
+                const spriteWidth = sprite[0].length * pixelSize;
+                const spriteHeight = sprite.length * pixelSize;
                 const offsetX = enemy.x + (enemy.width - spriteWidth) / 2;
                 const offsetY = enemy.y + (enemy.height - spriteHeight) / 2;
 
                 // Add glow effect
                 ctx.shadowColor = mainColor;
                 ctx.shadowBlur = 8;
-                drawPixelArt(offsetX, offsetY, pixelSize, SQUID_ALIEN, mainColor);
+                drawPixelArt(offsetX, offsetY, pixelSize, sprite, mainColor);
                 ctx.shadowBlur = 0;
 
             } else if (style === 'crab' || enemy.type === 'basic' || enemy.type === 'zigzag') {
-                // Classic crab alien (green style from logo)
+                // Classic crab alien (green style from logo) - ANIMATED
+                const sprite = getCrabAlien();
                 const pixelSize = Math.max(3, Math.floor(enemy.width / 11));
-                const spriteWidth = CRAB_ALIEN[0].length * pixelSize;
-                const spriteHeight = CRAB_ALIEN.length * pixelSize;
+                const spriteWidth = sprite[0].length * pixelSize;
+                const spriteHeight = sprite.length * pixelSize;
                 const offsetX = enemy.x + (enemy.width - spriteWidth) / 2;
                 const offsetY = enemy.y + (enemy.height - spriteHeight) / 2;
 
                 // Add glow effect
                 ctx.shadowColor = mainColor;
                 ctx.shadowBlur = 8;
-                drawPixelArt(offsetX, offsetY, pixelSize, CRAB_ALIEN, mainColor);
+                drawPixelArt(offsetX, offsetY, pixelSize, sprite, mainColor);
                 ctx.shadowBlur = 0;
 
             } else if (enemy.type === 'zigzag') {
