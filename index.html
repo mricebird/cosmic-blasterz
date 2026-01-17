@@ -7351,6 +7351,11 @@
                         <div class="stat-label">Bosses Defeated</div>
                     </div>
                     <div class="stat-card">
+                        <div class="stat-icon">👨‍🚀</div>
+                        <div class="stat-value" id="statAstronauts">0</div>
+                        <div class="stat-label">Astronauts Rescued</div>
+                    </div>
+                    <div class="stat-card">
                         <div class="stat-icon">🔥</div>
                         <div class="stat-value" id="statBestCombo">0</div>
                         <div class="stat-label">Best Combo</div>
@@ -11683,6 +11688,289 @@
             return false;
         }
 
+        // ==========================================
+        // ASTRONAUT RESCUE SYSTEM
+        // ==========================================
+
+        function spawnAstronaut() {
+            // Decide which edge to spawn from (0=left, 1=right, 2=top)
+            const edge = Math.floor(Math.random() * 3);
+            let x, y, vx, vy;
+
+            if (edge === 0) {
+                // Left edge
+                x = -30;
+                y = 100 + Math.random() * (canvas.height - 300);
+                vx = 0.8 + Math.random() * 0.5;
+                vy = (Math.random() - 0.5) * 0.4;
+            } else if (edge === 1) {
+                // Right edge
+                x = canvas.width + 30;
+                y = 100 + Math.random() * (canvas.height - 300);
+                vx = -(0.8 + Math.random() * 0.5);
+                vy = (Math.random() - 0.5) * 0.4;
+            } else {
+                // Top edge
+                x = 100 + Math.random() * (canvas.width - 200);
+                y = -30;
+                vx = (Math.random() - 0.5) * 0.6;
+                vy = 0.6 + Math.random() * 0.4;
+            }
+
+            astronauts.push({
+                x: x,
+                y: y,
+                vx: vx,
+                vy: vy,
+                width: 24,
+                height: 30,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 0.08,
+                spawnTime: Date.now(),
+                blinkPhase: Math.random() * Math.PI * 2,
+                armWave: 0
+            });
+
+            // Play distress sound
+            playAstronautDistressSound();
+        }
+
+        function updateAstronauts() {
+            // Check if we should spawn an astronaut
+            if (Date.now() - astronautSpawnTimer > ASTRONAUT_SPAWN_INTERVAL) {
+                astronautSpawnTimer = Date.now();
+                if (Math.random() < ASTRONAUT_SPAWN_CHANCE && astronauts.length < 2) {
+                    spawnAstronaut();
+                }
+            }
+
+            // Update each astronaut
+            astronauts = astronauts.filter(astro => {
+                // Move
+                astro.x += astro.vx;
+                astro.y += astro.vy;
+
+                // Tumble rotation
+                astro.rotation += astro.rotationSpeed;
+
+                // Wave arms for help
+                astro.armWave += 0.15;
+
+                // Check if rescued by player
+                const playerCenterX = player.x + player.width / 2;
+                const playerCenterY = player.y + player.height / 2;
+                const astroCenterX = astro.x + astro.width / 2;
+                const astroCenterY = astro.y + astro.height / 2;
+                const dist = Math.hypot(playerCenterX - astroCenterX, playerCenterY - astroCenterY);
+
+                if (dist < 40) {
+                    // Rescued!
+                    rescueAstronaut(astro);
+                    return false;
+                }
+
+                // Check player 2 rescue
+                if (twoPlayerMode && player2Active) {
+                    const p2CenterX = player2.x + player2.width / 2;
+                    const p2CenterY = player2.y + player2.height / 2;
+                    const dist2 = Math.hypot(p2CenterX - astroCenterX, p2CenterY - astroCenterY);
+                    if (dist2 < 40) {
+                        rescueAstronaut(astro);
+                        return false;
+                    }
+                }
+
+                // Check if off screen (lost)
+                if (astro.x < -60 || astro.x > canvas.width + 60 ||
+                    astro.y < -60 || astro.y > canvas.height + 60) {
+                    astronautsLost++;
+                    // Small penalty - lose some points but not too harsh
+                    if (score > 50) {
+                        score = Math.max(0, score - 25);
+                        document.getElementById('scoreValue').textContent = score;
+                    }
+                    showShareToast('👨‍🚀 Astronaut lost in space...');
+                    return false;
+                }
+
+                return true;
+            });
+        }
+
+        function rescueAstronaut(astro) {
+            astronautsRescued++;
+
+            // Create rescue particles
+            for (let i = 0; i < 15; i++) {
+                particles.push({
+                    x: astro.x + astro.width / 2,
+                    y: astro.y + astro.height / 2,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4,
+                    life: 40,
+                    color: i % 2 === 0 ? '#0ff' : '#fff',
+                    size: 3 + Math.random() * 3
+                });
+            }
+
+            // Rewards
+            const rescueBonus = 100 + (astronautsRescued * 25); // Increasing bonus
+            addScore(rescueBonus);
+            addCoins(10 + Math.floor(astronautsRescued * 2));
+            document.getElementById('scoreValue').textContent = score;
+
+            // Sound and feedback
+            playAstronautRescueSound();
+            triggerScreenShake(3, 150);
+            announce(`🚀 ASTRONAUT RESCUED! +${rescueBonus}`);
+
+            // Track for stats
+            updateLifetimeStat('astronautsRescued', 1, 'add');
+        }
+
+        function drawAstronauts() {
+            astronauts.forEach(astro => {
+                ctx.save();
+                ctx.translate(astro.x + astro.width / 2, astro.y + astro.height / 2);
+                ctx.rotate(astro.rotation);
+
+                // Distress beacon glow (pulsing)
+                const pulsePhase = (Date.now() / 200 + astro.blinkPhase) % (Math.PI * 2);
+                const glowAlpha = 0.3 + Math.sin(pulsePhase) * 0.2;
+                const glowSize = 25 + Math.sin(pulsePhase) * 5;
+
+                ctx.shadowColor = '#ff0';
+                ctx.shadowBlur = glowSize;
+                ctx.fillStyle = `rgba(255, 255, 0, ${glowAlpha})`;
+                ctx.beginPath();
+                ctx.arc(0, 0, 20, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // Spacesuit body (white)
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.ellipse(0, 4, 8, 10, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Helmet (golden visor)
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(0, -8, 8, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Visor (reflective gold)
+                const visorGrad = ctx.createLinearGradient(-5, -12, 5, -4);
+                visorGrad.addColorStop(0, '#fc0');
+                visorGrad.addColorStop(0.5, '#ff8');
+                visorGrad.addColorStop(1, '#f80');
+                ctx.fillStyle = visorGrad;
+                ctx.beginPath();
+                ctx.arc(0, -8, 6, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Arms waving for help
+                const armAngle = Math.sin(astro.armWave) * 0.5;
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 3;
+                ctx.lineCap = 'round';
+
+                // Left arm
+                ctx.save();
+                ctx.rotate(-0.5 + armAngle);
+                ctx.beginPath();
+                ctx.moveTo(-6, 0);
+                ctx.lineTo(-14, -6);
+                ctx.stroke();
+                ctx.restore();
+
+                // Right arm
+                ctx.save();
+                ctx.rotate(0.5 - armAngle);
+                ctx.beginPath();
+                ctx.moveTo(6, 0);
+                ctx.lineTo(14, -6);
+                ctx.stroke();
+                ctx.restore();
+
+                // Legs
+                ctx.beginPath();
+                ctx.moveTo(-3, 12);
+                ctx.lineTo(-4, 18);
+                ctx.moveTo(3, 12);
+                ctx.lineTo(4, 18);
+                ctx.stroke();
+
+                // Backpack/jetpack (with small flame)
+                ctx.fillStyle = '#888';
+                ctx.fillRect(-4, 0, 8, 8);
+
+                // Small jetpack flame (flickering)
+                if (Math.random() > 0.3) {
+                    ctx.fillStyle = Math.random() > 0.5 ? '#f80' : '#ff0';
+                    ctx.beginPath();
+                    ctx.moveTo(-2, 8);
+                    ctx.lineTo(0, 12 + Math.random() * 4);
+                    ctx.lineTo(2, 8);
+                    ctx.fill();
+                }
+
+                // Distress indicator arrow pointing to astronaut (when off screen partially)
+                ctx.restore();
+
+                // Draw "RESCUE" text above astronaut
+                ctx.save();
+                ctx.fillStyle = '#ff0';
+                ctx.font = 'bold 10px Orbitron, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('RESCUE!', astro.x + astro.width / 2, astro.y - 15);
+                ctx.restore();
+            });
+        }
+
+        function playAstronautDistressSound() {
+            if (!ensureAudio() || soundMuted) return;
+            try {
+                // SOS beep pattern
+                const now = audioCtx.currentTime;
+                for (let i = 0; i < 3; i++) {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, now + i * 0.15);
+                    const vol = Math.max(0.01, 0.15 * (sfxVolume / 100));
+                    gain.gain.setValueAtTime(vol, now + i * 0.15);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.15 + 0.1);
+                    osc.start(now + i * 0.15);
+                    osc.stop(now + i * 0.15 + 0.1);
+                }
+            } catch (e) {}
+        }
+
+        function playAstronautRescueSound() {
+            if (!ensureAudio() || soundMuted) return;
+            try {
+                const now = audioCtx.currentTime;
+                // Triumphant ascending notes
+                const notes = [523, 659, 784, 1047]; // C5, E5, G5, C6
+                notes.forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.08);
+                    const vol = Math.max(0.01, 0.2 * (sfxVolume / 100));
+                    gain.gain.setValueAtTime(vol, now + i * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.15);
+                    osc.start(now + i * 0.08);
+                    osc.stop(now + i * 0.08 + 0.15);
+                });
+            } catch (e) {}
+        }
+
         // Slow-motion effect
         let slowMotionFactor = 1;
         let slowMotionDuration = 0;
@@ -12909,6 +13197,14 @@
         let enemies = [];
         let particles = [];
         let stars = [];
+        let astronauts = [];
+
+        // Astronaut rescue system
+        let astronautSpawnTimer = 0;
+        let astronautsRescued = 0;
+        let astronautsLost = 0;
+        const ASTRONAUT_SPAWN_INTERVAL = 15000; // Spawn every 15 seconds on average
+        const ASTRONAUT_SPAWN_CHANCE = 0.3; // 30% chance when timer triggers
 
         // Controls
         const keys = {
@@ -15491,6 +15787,7 @@
                 updatePowerUps();
                 updateBoss();
                 updateUFO();
+                updateAstronauts();
                 updateCombo();
                 checkCollisions();
                 checkDailyChallenge();
@@ -15529,6 +15826,7 @@
                 enemies.forEach(e => drawEnemy(e));
                 drawBoss();
                 drawUFO();
+                drawAstronauts();
                 drawBarriers();
                 drawPowerUps();
                 drawGhost();
@@ -17403,6 +17701,10 @@
             enemyBullets = [];
             particles = [];
             powerUps = [];
+            astronauts = [];
+            astronautSpawnTimer = Date.now();
+            astronautsRescued = 0;
+            astronautsLost = 0;
             enemyDirection = 1;
             gamePaused = false;
 
@@ -18531,7 +18833,8 @@
             powerUpsCollected: 0,
             totalCoinsEarned: 0,
             challengesCompleted: 0,
-            totalPlayTime: 0 // in seconds
+            totalPlayTime: 0, // in seconds
+            astronautsRescued: 0
         };
 
         function loadLifetimeStats() {
@@ -18591,6 +18894,7 @@
             document.getElementById('statTotalTime').textContent = formatPlayTime(lifetimeStats.totalPlayTime);
             document.getElementById('statTotalKills').textContent = formatNumber(lifetimeStats.totalKills);
             document.getElementById('statBossKills').textContent = lifetimeStats.bossKills;
+            document.getElementById('statAstronauts').textContent = lifetimeStats.astronautsRescued || 0;
             document.getElementById('statBestCombo').textContent = lifetimeStats.bestCombo + 'x';
             document.getElementById('statPowerUps').textContent = formatNumber(lifetimeStats.powerUpsCollected);
             document.getElementById('statTotalCoins').textContent = formatNumber(lifetimeStats.totalCoinsEarned);
