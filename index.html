@@ -14500,6 +14500,37 @@
             const ctx = canvas.getContext('2d');
             let time = 0;
 
+            // Helper to convert hex to RGB
+            function hexToRgb(hex) {
+                if (!hex) return { r: 128, g: 128, b: 128 };
+                hex = hex.replace('#', '');
+                if (hex.length === 3) {
+                    hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+                }
+                const num = parseInt(hex, 16);
+                return {
+                    r: (num >> 16) & 255,
+                    g: (num >> 8) & 255,
+                    b: num & 255
+                };
+            }
+
+            // Helper to create rgba color with alpha
+            function colorWithAlpha(hex, alpha) {
+                const rgb = hexToRgb(hex);
+                return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+            }
+
+            // Helper to lighten/darken colors
+            function shadeColor(color, percent) {
+                if (!color) return 'rgb(128, 128, 128)';
+                const rgb = hexToRgb(color);
+                const r = Math.min(255, Math.max(0, rgb.r + percent));
+                const g = Math.min(255, Math.max(0, rgb.g + percent));
+                const b = Math.min(255, Math.max(0, rgb.b + percent));
+                return `rgb(${r}, ${g}, ${b})`;
+            }
+
             function animate() {
                 time += 0.016;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -14539,6 +14570,7 @@
 
                 // Engine exhaust with particles
                 const trail = TRAIL_STYLES[selectedTrail] || TRAIL_STYLES.classic;
+                const engineHex = colors.engine || '#f80';
                 for (let i = 0; i < 15; i++) {
                     const progress = (time * 3 + i * 0.2) % 1;
                     const y = 25 * scale + progress * 60;
@@ -14549,9 +14581,7 @@
                         const hue = (time * 100 + i * 30) % 360;
                         color = `hsla(${hue}, 100%, 60%, ${alpha})`;
                     } else {
-                        const engineHex = colors.engine || '#f80';
-                        const rgb = hexToRgb(engineHex);
-                        color = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+                        color = colorWithAlpha(engineHex, alpha);
                     }
                     ctx.fillStyle = color;
                     ctx.beginPath();
@@ -14562,10 +14592,9 @@
 
                 // Engine glow
                 const engineGlow = ctx.createRadialGradient(0, 28 * scale, 0, 0, 28 * scale, 35 * scale);
-                const engineCol = colors.engine || '#f80';
-                engineGlow.addColorStop(0, engineCol);
-                engineGlow.addColorStop(0.3, engineCol + '80');
-                engineGlow.addColorStop(0.7, engineCol + '20');
+                engineGlow.addColorStop(0, colorWithAlpha(engineHex, 1));
+                engineGlow.addColorStop(0.3, colorWithAlpha(engineHex, 0.5));
+                engineGlow.addColorStop(0.7, colorWithAlpha(engineHex, 0.15));
                 engineGlow.addColorStop(1, 'transparent');
                 ctx.fillStyle = engineGlow;
                 ctx.beginPath();
@@ -14635,11 +14664,12 @@
                 ctx.fill();
 
                 // Cockpit with glass effect
+                const cockpitColor = colors.cockpit || '#0af';
                 const cockpitGrad = ctx.createRadialGradient(-2 * scale, -10 * scale, 0, 0, -5 * scale, 10 * scale);
                 cockpitGrad.addColorStop(0, '#fff');
-                cockpitGrad.addColorStop(0.3, colors.cockpit || '#aef');
-                cockpitGrad.addColorStop(0.7, shadeColor(colors.cockpit || '#0af', -30));
-                cockpitGrad.addColorStop(1, shadeColor(colors.cockpit || '#08a', -50));
+                cockpitGrad.addColorStop(0.3, cockpitColor);
+                cockpitGrad.addColorStop(0.7, shadeColor(cockpitColor, -30));
+                cockpitGrad.addColorStop(1, shadeColor(cockpitColor, -60));
 
                 ctx.fillStyle = cockpitGrad;
                 ctx.beginPath();
@@ -14690,31 +14720,6 @@
 
                 ctx.restore();
                 garageAnimationFrame = requestAnimationFrame(animate);
-            }
-
-            // Helper to convert hex to RGB
-            function hexToRgb(hex) {
-                if (!hex) return { r: 128, g: 128, b: 128 };
-                hex = hex.replace('#', '');
-                if (hex.length === 3) {
-                    hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-                }
-                const num = parseInt(hex, 16);
-                return {
-                    r: (num >> 16) & 255,
-                    g: (num >> 8) & 255,
-                    b: num & 255
-                };
-            }
-
-            // Helper to lighten/darken colors
-            function shadeColor(color, percent) {
-                if (!color || color.length < 4) return '#888';
-                const rgb = hexToRgb(color);
-                const r = Math.min(255, Math.max(0, rgb.r + percent));
-                const g = Math.min(255, Math.max(0, rgb.g + percent));
-                const b = Math.min(255, Math.max(0, rgb.b + percent));
-                return `rgb(${r}, ${g}, ${b})`;
             }
 
             animate();
