@@ -2294,17 +2294,18 @@
 
         /* Ship Customizer */
         .ship-customizer {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
             padding: 20px;
+            height: 100%;
         }
 
         .customizer-section {
             background: rgba(20, 20, 40, 0.8);
             border: 2px solid rgba(139, 92, 246, 0.3);
             border-radius: 12px;
-            padding: 15px;
+            padding: 20px;
         }
 
         .customizer-section-title {
@@ -2335,27 +2336,31 @@
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            width: 50px;
-            height: 35px;
+            width: 60px;
+            min-width: 60px;
+            height: 40px;
+            min-height: 40px;
             border: 2px solid rgba(139, 92, 246, 0.5);
             border-radius: 8px;
             cursor: pointer;
-            background: transparent;
+            background-color: currentColor;
             padding: 0;
+            overflow: hidden;
         }
 
         .color-picker-input::-webkit-color-swatch-wrapper {
-            padding: 2px;
+            padding: 0;
+            border: none;
         }
 
         .color-picker-input::-webkit-color-swatch {
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
         }
 
         .color-picker-input::-moz-color-swatch {
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
         }
 
         .color-hex {
@@ -2393,6 +2398,7 @@
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            grid-column: 1 / -1;
         }
 
         .customizer-btn {
@@ -15702,6 +15708,13 @@
             // Update tab buttons
             document.querySelectorAll('.garage-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('garage' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Tab').classList.add('active');
+
+            // Update ship name based on tab
+            if (tab === 'custom') {
+                document.getElementById('garageShipName').textContent = 'CUSTOM SHIP';
+            } else {
+                updateEquippedDisplay();
+            }
 
             renderGarageItems();
             playSelectSound();
