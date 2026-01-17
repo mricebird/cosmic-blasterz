@@ -13203,8 +13203,8 @@
         let astronautSpawnTimer = 0;
         let astronautsRescued = 0;
         let astronautsLost = 0;
-        const ASTRONAUT_SPAWN_INTERVAL = 15000; // Spawn every 15 seconds on average
-        const ASTRONAUT_SPAWN_CHANCE = 0.3; // 30% chance when timer triggers
+        const ASTRONAUT_SPAWN_INTERVAL = 8000; // Spawn every 8 seconds on average
+        const ASTRONAUT_SPAWN_CHANCE = 0.6; // 60% chance when timer triggers
 
         // Controls
         const keys = {
@@ -17702,7 +17702,7 @@
             particles = [];
             powerUps = [];
             astronauts = [];
-            astronautSpawnTimer = Date.now();
+            astronautSpawnTimer = Date.now() - 5000; // Start timer closer to first spawn
             astronautsRescued = 0;
             astronautsLost = 0;
             enemyDirection = 1;
