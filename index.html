@@ -419,6 +419,69 @@
             text-shadow: 0 0 8px rgba(255, 217, 61, 0.5);
         }
 
+        .speedrun-timer {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #0ff;
+            font-family: 'Share Tech Mono', 'Orbitron', monospace;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(0, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        body.state-playing .speedrun-timer,
+        body.state-paused .speedrun-timer {
+            opacity: 1;
+        }
+
+        .timer-icon {
+            font-size: 18px;
+        }
+
+        .timer-current {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .timer-best {
+            font-size: 12px;
+            color: #ffd700;
+            margin-left: 5px;
+            opacity: 0.8;
+        }
+
+        .timer-best:before {
+            content: '🏆 ';
+        }
+
+        .timer-best:empty {
+            display: none;
+        }
+
+        .timer-best:empty:before {
+            display: none;
+        }
+
+        .speedrun-timer.new-record .timer-current {
+            color: #ffd700;
+            animation: timerPulse 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes timerPulse {
+            from { text-shadow: 0 0 8px rgba(255, 215, 0, 0.5); }
+            to { text-shadow: 0 0 20px rgba(255, 215, 0, 1); }
+        }
+
         .game-over-screen, .start-screen {
             position: absolute;
             top: 0;
@@ -594,6 +657,53 @@
 
         .menu-quick-btn.active {
             background: rgba(0, 255, 255, 0.2);
+        }
+
+        /* Daily Reward Button */
+        .daily-reward-btn {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 140, 0, 0.4));
+            border: 2px solid #ffd700;
+            animation: dailyRewardPulse 2s ease-in-out infinite;
+        }
+
+        .daily-reward-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.5), rgba(255, 140, 0, 0.6));
+            transform: scale(1.05);
+        }
+
+        .daily-reward-btn .btn-icon {
+            color: #ffd700;
+        }
+
+        .daily-reward-btn .btn-label {
+            color: #ffd700;
+        }
+
+        .daily-reward-btn.claimed {
+            background: rgba(0, 20, 40, 0.6);
+            border-color: rgba(100, 100, 100, 0.5);
+            animation: none;
+            opacity: 0.6;
+        }
+
+        .daily-reward-btn.claimed .btn-icon,
+        .daily-reward-btn.claimed .btn-label {
+            color: #888;
+        }
+
+        @keyframes dailyRewardPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 140, 0, 0.4); }
+        }
+
+        .daily-reward-streak {
+            font-size: 9px;
+            color: #ffd700;
+            margin-top: 2px;
+        }
+
+        .daily-reward-btn.claimed .daily-reward-streak {
+            color: #888;
         }
 
         /* Menu footer buttons */
@@ -2115,8 +2225,18 @@
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
         }
 
+        .garage-item.previewing {
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            transform: translateY(-3px);
+        }
+
         .garage-item.locked {
-            opacity: 0.5;
+            opacity: 0.7;
+        }
+
+        .garage-item.locked:hover {
+            opacity: 1;
         }
 
         .garage-item-icon {
@@ -2170,6 +2290,321 @@
             border-color: rgba(0, 255, 100, 0.5);
             color: #0f8;
             cursor: default;
+        }
+
+        /* Ship Customizer */
+        .ship-customizer {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .customizer-section {
+            background: rgba(20, 20, 40, 0.8);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .customizer-section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: #8b5cf6;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-picker-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .color-picker-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #aaa;
+            min-width: 80px;
+        }
+
+        .color-picker-input {
+            width: 50px;
+            height: 35px;
+            border: 2px solid rgba(139, 92, 246, 0.5);
+            border-radius: 8px;
+            cursor: pointer;
+            background: transparent;
+            padding: 2px;
+        }
+
+        .color-picker-input::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-picker-input::-webkit-color-swatch {
+            border: none;
+            border-radius: 5px;
+        }
+
+        .color-hex {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            color: #888;
+            min-width: 70px;
+        }
+
+        .customizer-presets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .preset-btn {
+            padding: 8px 15px;
+            background: rgba(50, 50, 80, 0.6);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+
+        .customizer-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .customizer-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .customizer-btn.apply {
+            background: linear-gradient(180deg, rgba(0, 255, 150, 0.3) 0%, rgba(0, 200, 100, 0.4) 100%);
+            border: 2px solid rgba(0, 255, 150, 0.5);
+            color: #0f8;
+        }
+
+        .customizer-btn.apply:hover {
+            background: linear-gradient(180deg, rgba(0, 255, 150, 0.5) 0%, rgba(0, 200, 100, 0.6) 100%);
+            transform: scale(1.02);
+        }
+
+        .customizer-btn.reset {
+            background: rgba(100, 100, 120, 0.3);
+            border: 2px solid rgba(100, 100, 120, 0.5);
+            color: #888;
+        }
+
+        .customizer-btn.reset:hover {
+            background: rgba(100, 100, 120, 0.5);
+        }
+
+        /* Weapon Preview */
+        .weapon-preview-section {
+            grid-column: 1 / -1;
+            background: rgba(20, 20, 40, 0.8);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .weapon-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .preview-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .preview-weapon-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            color: #0ff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        #weaponPreviewCanvas {
+            width: 100%;
+            height: 120px;
+            background: rgba(0, 5, 20, 0.8);
+            border-radius: 10px;
+            border: 1px solid rgba(100, 100, 150, 0.3);
+        }
+
+        .weapon-stats-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(100, 100, 150, 0.3);
+        }
+
+        .weapon-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .weapon-stat .stat-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .weapon-stat .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        /* Garage Detail Panel */
+        .garage-detail-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(20, 20, 40, 0.9);
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            min-height: 70px;
+        }
+
+        .detail-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .detail-rarity {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .detail-rarity.common { background: #666; color: #fff; }
+        .detail-rarity.uncommon { background: #0a0; color: #fff; }
+        .detail-rarity.rare { background: #00f; color: #fff; }
+        .detail-rarity.epic { background: #a0f; color: #fff; }
+        .detail-rarity.legendary { background: linear-gradient(90deg, #f80, #ff0); color: #000; }
+        .detail-rarity.custom { background: linear-gradient(90deg, #f0f, #0ff); color: #000; }
+
+        .detail-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: #888;
+            margin: 0;
+            max-width: 280px;
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .detail-btn {
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid;
+        }
+
+        .detail-btn.buy {
+            background: linear-gradient(180deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 170, 0, 0.4) 100%);
+            border-color: #ffd700;
+            color: #ffd700;
+        }
+
+        .detail-btn.buy:hover:not(.disabled) {
+            background: linear-gradient(180deg, rgba(255, 215, 0, 0.5) 0%, rgba(255, 170, 0, 0.6) 100%);
+            transform: scale(1.05);
+        }
+
+        .detail-btn.buy.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .detail-btn.equip {
+            background: linear-gradient(180deg, rgba(0, 255, 150, 0.3) 0%, rgba(0, 200, 100, 0.4) 100%);
+            border-color: #0f8;
+            color: #0f8;
+        }
+
+        .detail-btn.equip:hover {
+            background: linear-gradient(180deg, rgba(0, 255, 150, 0.5) 0%, rgba(0, 200, 100, 0.6) 100%);
+            transform: scale(1.05);
+        }
+
+        .detail-btn.equipped {
+            background: rgba(100, 100, 120, 0.3);
+            border-color: #666;
+            color: #888;
+            cursor: default;
+        }
+
+        .detail-price {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .detail-price.cant-afford {
+            color: #f55;
+        }
+
+        .garage-detail-panel.hidden {
+            display: none;
         }
 
         .garage-equipped {
@@ -3816,7 +4251,7 @@
             letter-spacing: 2px;
         }
 
-        /* Combo indicator - positioned below boss bar area */
+        /* Combo indicator - enhanced with timer bar */
         .combo-display {
             position: absolute;
             top: 95px;
@@ -3824,7 +4259,7 @@
             transform: translateX(-50%);
             color: #ff0;
             font-family: 'Orbitron', sans-serif;
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 700;
             text-shadow:
                 0 0 10px rgba(255, 255, 0, 0.8),
@@ -3834,10 +4269,15 @@
             opacity: 0;
             transition: opacity 0.3s, transform 0.3s;
             z-index: 45;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 0, 0.4);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 180px;
         }
 
         .combo-display.active {
@@ -3845,9 +4285,205 @@
             animation: comboPulse 0.3s ease-out;
         }
 
+        .combo-count {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .combo-points {
+            font-size: 14px;
+            color: #0ff;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
+        .combo-timer-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(100, 100, 100, 0.5);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .combo-timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0, #f80);
+            border-radius: 2px;
+            transition: width 0.05s linear;
+        }
+
+        .combo-display.level-3 {
+            border-color: rgba(255, 136, 0, 0.6);
+        }
+
+        .combo-display.level-3 .combo-count {
+            color: #f80;
+            text-shadow: 0 0 15px rgba(255, 136, 0, 0.8);
+        }
+
+        .combo-display.level-3 .combo-timer-fill {
+            background: linear-gradient(90deg, #f80, #f00);
+        }
+
+        .combo-display.level-5 {
+            border-color: rgba(255, 0, 255, 0.6);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+
+        .combo-display.level-5 .combo-count {
+            color: #f0f;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+            animation: comboGlow 0.5s ease-in-out infinite alternate;
+        }
+
+        .combo-display.level-5 .combo-timer-fill {
+            background: linear-gradient(90deg, #f0f, #0ff);
+        }
+
+        @keyframes comboGlow {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
         @keyframes comboPulse {
             0% { transform: translateX(-50%) scale(1.4); }
             100% { transform: translateX(-50%) scale(1); }
+        }
+
+        /* Boss Danger Warning */
+        .danger-warning {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 100;
+            display: none;
+        }
+
+        .danger-warning.active {
+            display: block;
+            animation: dangerFlash 0.3s ease-in-out infinite;
+        }
+
+        @keyframes dangerFlash {
+            0%, 100% { background: rgba(255, 0, 0, 0); }
+            50% { background: rgba(255, 0, 0, 0.15); }
+        }
+
+        .danger-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 60px;
+            font-weight: 900;
+            color: #f00;
+            text-shadow:
+                0 0 20px rgba(255, 0, 0, 0.8),
+                0 0 40px rgba(255, 0, 0, 0.6),
+                0 0 60px rgba(255, 0, 0, 0.4);
+            animation: dangerTextPulse 0.5s ease-in-out infinite alternate;
+            letter-spacing: 10px;
+        }
+
+        @keyframes dangerTextPulse {
+            from { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            to { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        }
+
+        .danger-stripes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: repeating-linear-gradient(
+                90deg,
+                #ff0 0px,
+                #ff0 30px,
+                #000 30px,
+                #000 60px
+            );
+            animation: dangerStripeMove 0.5s linear infinite;
+        }
+
+        .danger-stripes.bottom {
+            top: auto;
+            bottom: 0;
+        }
+
+        @keyframes dangerStripeMove {
+            from { background-position: 0 0; }
+            to { background-position: 60px 0; }
+        }
+
+        .danger-corners {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 5px solid #f00;
+        }
+
+        .danger-corners.tl { top: 50px; left: 20px; border-right: none; border-bottom: none; }
+        .danger-corners.tr { top: 50px; right: 20px; border-left: none; border-bottom: none; }
+        .danger-corners.bl { bottom: 50px; left: 20px; border-right: none; border-top: none; }
+        .danger-corners.br { bottom: 50px; right: 20px; border-left: none; border-top: none; }
+
+        /* Kill Streak Announcer */
+        .kill-streak-announcer {
+            position: absolute;
+            top: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            color: #fff;
+            text-align: center;
+            pointer-events: none;
+            z-index: 90;
+            opacity: 0;
+            text-shadow:
+                0 0 10px currentColor,
+                0 0 20px currentColor,
+                0 0 30px currentColor;
+            transition: opacity 0.2s;
+        }
+
+        .kill-streak-announcer.active {
+            opacity: 1;
+            animation: streakSlam 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes streakSlam {
+            0% { transform: translateX(-50%) scale(2) translateY(-20px); opacity: 0; }
+            50% { transform: translateX(-50%) scale(1.2) translateY(0); }
+            100% { transform: translateX(-50%) scale(1) translateY(0); opacity: 1; }
+        }
+
+        .kill-streak-announcer.double { color: #ff0; }
+        .kill-streak-announcer.triple { color: #f80; }
+        .kill-streak-announcer.multi { color: #f50; }
+        .kill-streak-announcer.mega { color: #f0f; }
+        .kill-streak-announcer.ultra { color: #0ff; }
+        .kill-streak-announcer.monster { color: #f00; font-size: 36px; }
+        .kill-streak-announcer.godlike {
+            color: #fff;
+            font-size: 40px;
+            animation: streakSlam 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                       godlikeGlow 0.3s ease-in-out infinite alternate;
+        }
+
+        @keyframes godlikeGlow {
+            from {
+                text-shadow: 0 0 10px #fff, 0 0 20px #ff0, 0 0 40px #f80, 0 0 60px #f00;
+            }
+            to {
+                text-shadow: 0 0 20px #fff, 0 0 40px #ff0, 0 0 60px #f80, 0 0 80px #f00;
+            }
         }
 
         /* Achievement popup - compact notification style */
@@ -4942,6 +5578,107 @@
         .skin-rarity.legendary {
             background: rgba(255, 200, 0, 0.2);
             color: #fc0;
+        }
+
+        /* Shop preview states */
+        .skin-card.previewing,
+        .shop-item.previewing {
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            transform: translateY(-3px);
+        }
+
+        /* Shop Detail Panel */
+        .shop-detail-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(20, 20, 40, 0.9);
+            border: 2px solid rgba(255, 255, 0, 0.4);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            min-height: 60px;
+        }
+
+        .shop-detail-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .shop-detail-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0ff;
+        }
+
+        .shop-detail-rarity {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        .shop-detail-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 4px;
+        }
+
+        .shop-detail-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .shop-detail-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .shop-detail-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        .shop-detail-btn.buy {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            color: #000;
+        }
+
+        .shop-detail-btn.buy:hover:not(:disabled) {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .shop-detail-btn.buy:disabled {
+            background: rgba(80, 80, 80, 0.6);
+            color: rgba(150, 150, 150, 0.7);
+            cursor: not-allowed;
+        }
+
+        .shop-detail-btn.equip {
+            background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+            color: #000;
+        }
+
+        .shop-detail-btn.equip:hover {
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .shop-detail-btn.equipped {
+            background: rgba(60, 60, 80, 0.8);
+            color: rgba(0, 255, 0, 0.8);
+            cursor: default;
         }
 
         /* Weapon upgrade cards */
@@ -6173,6 +6910,11 @@
             <div class="level">LEVEL: <span id="levelValue">1</span></div>
             <div class="lives">P1: <span id="livesValue">❤️❤️❤️</span></div>
             <div class="lives player2-lives hidden" id="player2Lives">P2: <span id="lives2Value">💜💜💜</span></div>
+            <div class="speedrun-timer" id="speedrunTimer">
+                <span class="timer-icon">⏱️</span>
+                <span class="timer-current" id="timerCurrent">00:00.00</span>
+                <span class="timer-best" id="timerBest" title="Best Time"></span>
+            </div>
         </div>
 
         <!-- FTUE Tutorial Overlay -->
@@ -6248,6 +6990,11 @@
                     <input type="text" id="playerName" placeholder="Enter pilot name..." maxlength="15" autocomplete="off" spellcheck="false">
                 </div>
                 <div class="menu-quick-settings">
+                    <button class="menu-quick-btn daily-reward-btn" id="dailyRewardBtn" onclick="claimDailyReward()" title="Daily Reward">
+                        <span class="btn-icon">🎁</span>
+                        <span class="btn-label">Daily</span>
+                        <span class="daily-reward-streak" id="dailyStreakDisplay">Day 1</span>
+                    </button>
                     <button class="menu-quick-btn" id="menuMusicBtn" onclick="toggleMenuMusic()" title="Music">
                         <span class="btn-icon">🎵</span>
                         <span class="btn-label">Music</span>
@@ -6502,6 +7249,7 @@
                 <div class="garage-customization">
                     <div class="garage-tabs">
                         <button class="garage-tab active" onclick="switchGarageTab('skins')" id="garageSkinsTab">🚀 SKINS</button>
+                        <button class="garage-tab" onclick="switchGarageTab('custom')" id="garageCustomTab">🎨 CUSTOM</button>
                         <button class="garage-tab" onclick="switchGarageTab('trails')" id="garageTrailsTab">✨ TRAILS</button>
                         <button class="garage-tab" onclick="switchGarageTab('weapons')" id="garageWeaponsTab">🔫 WEAPONS</button>
                         <button class="garage-tab" onclick="switchGarageTab('upgrades')" id="garageUpgradesTab">⬆️ UPGRADES</button>
@@ -6509,6 +7257,18 @@
 
                     <div class="garage-items" id="garageItems">
                         <!-- Items will be rendered here -->
+                    </div>
+
+                    <!-- Item Detail Panel -->
+                    <div class="garage-detail-panel" id="garageDetailPanel">
+                        <div class="detail-info">
+                            <span class="detail-name" id="detailName">Select an item</span>
+                            <span class="detail-rarity" id="detailRarity"></span>
+                            <p class="detail-desc" id="detailDesc">Click on an item above to view details</p>
+                        </div>
+                        <div class="detail-actions" id="detailActions">
+                            <!-- Buttons will be rendered here -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -6660,6 +7420,16 @@
 
         <!-- Combo display -->
         <div class="combo-display" id="comboDisplay"></div>
+        <div class="danger-warning" id="dangerWarning">
+            <div class="danger-stripes"></div>
+            <div class="danger-stripes bottom"></div>
+            <div class="danger-text">⚠ DANGER ⚠</div>
+            <div class="danger-corners tl"></div>
+            <div class="danger-corners tr"></div>
+            <div class="danger-corners bl"></div>
+            <div class="danger-corners br"></div>
+        </div>
+        <div class="kill-streak-announcer" id="killStreakAnnouncer"></div>
 
         <!-- Achievement popup -->
         <div class="achievement-popup" id="achievementPopup">
@@ -6731,6 +7501,17 @@
             <button class="shop-close" onclick="toggleShop()">✕</button>
             <h2>🛒 SHOP</h2>
             <div id="shopItems"></div>
+            <!-- Item Detail Panel -->
+            <div class="shop-detail-panel" id="shopDetailPanel">
+                <div class="shop-detail-info">
+                    <span class="shop-detail-name" id="shopDetailName">Select an item</span>
+                    <span class="shop-detail-rarity" id="shopDetailRarity"></span>
+                    <p class="shop-detail-desc" id="shopDetailDesc">Click on an item above to view details</p>
+                </div>
+                <div class="shop-detail-actions" id="shopDetailActions">
+                    <!-- Buttons will be rendered here -->
+                </div>
+            </div>
         </div>
 
         <!-- Settings panel -->
@@ -8931,6 +9712,8 @@
             return index >= 0 ? COMBO_MULTIPLIERS[index] : 1;
         }
 
+        let comboTimerUpdateInterval = null;
+
         function addComboKill(basePoints) {
             comboCount++;
             comboTimer = Date.now();
@@ -8946,39 +9729,166 @@
             // Update combo display
             const comboEl = document.getElementById('comboDisplay');
             if (comboCount >= 2) {
-                const doubleText = doublePointsActive ? ' (2X!)' : '';
-                comboEl.textContent = `${comboCount}x COMBO! +${bonusPoints}${doubleText}`;
+                const doubleText = doublePointsActive ? ' 2X!' : '';
+                comboEl.innerHTML = `
+                    <div class="combo-count">${comboCount}x COMBO!</div>
+                    <div class="combo-points">+${bonusPoints}${doubleText}</div>
+                    <div class="combo-timer-bar"><div class="combo-timer-fill" id="comboTimerFill" style="width: 100%"></div></div>
+                `;
                 comboEl.classList.add('active');
 
-                // Change color based on combo level
-                if (comboCount >= 7) {
-                    comboEl.style.color = '#f0f';
-                    announce('combo7');
-                } else if (comboCount >= 5) {
-                    comboEl.style.color = '#f0f';
-                    announce('combo5');
+                // Set level class for styling
+                comboEl.classList.remove('level-3', 'level-5');
+                if (comboCount >= 5) {
+                    comboEl.classList.add('level-5');
+                    if (comboCount === 5 || comboCount === 7) {
+                        announce(comboCount >= 7 ? 'combo7' : 'combo5');
+                    }
                 } else if (comboCount >= 3) {
-                    comboEl.style.color = '#f80';
-                } else {
-                    comboEl.style.color = '#ff0';
+                    comboEl.classList.add('level-3');
                 }
 
-                // Clear previous timer
-                if (comboDisplayTimer) clearTimeout(comboDisplayTimer);
-                comboDisplayTimer = setTimeout(() => {
-                    comboEl.classList.remove('active');
-                }, 1000);
+                // Update best combo stat
+                if (comboCount > (lifetimeStats.bestCombo || 0)) {
+                    updateLifetimeStat('bestCombo', comboCount);
+                }
+
+                // Start timer bar animation
+                startComboTimerBar();
             }
 
             return bonusPoints;
+        }
+
+        function startComboTimerBar() {
+            // Clear existing interval
+            if (comboTimerUpdateInterval) {
+                clearInterval(comboTimerUpdateInterval);
+            }
+
+            comboTimerUpdateInterval = setInterval(() => {
+                const elapsed = Date.now() - comboTimer;
+                const remaining = Math.max(0, COMBO_TIMEOUT - elapsed);
+                const percent = (remaining / COMBO_TIMEOUT) * 100;
+
+                const fillEl = document.getElementById('comboTimerFill');
+                if (fillEl) {
+                    fillEl.style.width = percent + '%';
+                }
+
+                if (remaining <= 0) {
+                    clearInterval(comboTimerUpdateInterval);
+                    comboTimerUpdateInterval = null;
+                }
+            }, 50);
         }
 
         function updateCombo() {
             // Reset combo if timeout exceeded
             if (comboCount > 0 && Date.now() - comboTimer > COMBO_TIMEOUT) {
                 comboCount = 0;
-                document.getElementById('comboDisplay').classList.remove('active');
+                const comboEl = document.getElementById('comboDisplay');
+                comboEl.classList.remove('active', 'level-3', 'level-5');
+                if (comboTimerUpdateInterval) {
+                    clearInterval(comboTimerUpdateInterval);
+                    comboTimerUpdateInterval = null;
+                }
             }
+        }
+
+        // ==========================================
+        // KILL STREAK ANNOUNCER SYSTEM
+        // ==========================================
+        const KILL_STREAK_TIMEOUT = 800; // ms between kills to count as streak
+        let killStreakCount = 0;
+        let killStreakTimer = 0;
+        let killStreakDisplayTimer = null;
+
+        const KILL_STREAK_MESSAGES = {
+            2: { text: 'DOUBLE KILL!', class: 'double' },
+            3: { text: 'TRIPLE KILL!', class: 'triple' },
+            4: { text: 'MULTI KILL!', class: 'multi' },
+            5: { text: 'MEGA KILL!', class: 'mega' },
+            6: { text: 'ULTRA KILL!', class: 'ultra' },
+            7: { text: 'MONSTER KILL!', class: 'monster' },
+            8: { text: 'GODLIKE!', class: 'godlike' }
+        };
+
+        function registerKill() {
+            const now = Date.now();
+
+            // Check if this kill is part of a streak
+            if (now - killStreakTimer < KILL_STREAK_TIMEOUT) {
+                killStreakCount++;
+            } else {
+                killStreakCount = 1;
+            }
+            killStreakTimer = now;
+
+            // Show announcement for streaks of 2+
+            if (killStreakCount >= 2) {
+                showKillStreakAnnouncement(killStreakCount);
+            }
+        }
+
+        function showKillStreakAnnouncement(count) {
+            const announcer = document.getElementById('killStreakAnnouncer');
+            if (!announcer) return;
+
+            // Get message for this streak level (cap at 8 for godlike)
+            const streakLevel = Math.min(count, 8);
+            const message = KILL_STREAK_MESSAGES[streakLevel];
+            if (!message) return;
+
+            // Clear previous timer
+            if (killStreakDisplayTimer) {
+                clearTimeout(killStreakDisplayTimer);
+            }
+
+            // Update text and styling
+            announcer.textContent = message.text;
+            announcer.className = 'kill-streak-announcer active ' + message.class;
+
+            // Play streak sound
+            playKillStreakSound(streakLevel);
+
+            // Hide after delay
+            killStreakDisplayTimer = setTimeout(() => {
+                announcer.classList.remove('active');
+            }, 1500);
+        }
+
+        function playKillStreakSound(level) {
+            if (soundMuted) return;
+            try {
+                const audioCtx = getAudioContext();
+                if (!audioCtx) return;
+
+                // Create escalating pitch sound based on streak level
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const baseFreq = 400 + (level - 2) * 100; // Higher pitch for higher streaks
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(baseFreq * 1.5, audioCtx.currentTime + 0.1);
+                osc.frequency.setValueAtTime(baseFreq * 2, audioCtx.currentTime + 0.15);
+
+                gain.gain.setValueAtTime(0.1 * sfxVolume, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.01, audioCtx.currentTime + 0.25);
+
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.25);
+            } catch (e) {
+                console.log('Streak sound error:', e);
+            }
+        }
+
+        function resetKillStreak() {
+            killStreakCount = 0;
+            killStreakTimer = 0;
         }
 
         // Achievement system
@@ -9433,6 +10343,10 @@
         let ownedSkins = ['classic'];
         let currentShopTab = 'upgrades';
 
+        // Shop preview tracking (for preview/buy separation)
+        let shopPreviewItem = null;
+        let shopPreviewType = null;
+
         // Trail styles system
         const TRAIL_STYLES = {
             classic: {
@@ -9695,19 +10609,18 @@
                 Object.keys(SHOP_ITEMS).forEach(key => {
                     const item = SHOP_ITEMS[key];
                     const owned = ownedUpgrades.includes(key);
-                    const canAfford = totalCoins >= item.price;
+                    const isPreviewing = shopPreviewItem === key && shopPreviewType === 'upgrade';
 
                     html += `
-                        <div class="shop-item ${owned ? 'owned' : ''}">
+                        <div class="shop-item ${owned ? 'owned' : ''} ${isPreviewing ? 'previewing' : ''}"
+                             onclick="previewShopItem('upgrade', '${key}')">
                             <div class="shop-item-info">
                                 <div class="shop-item-name">${item.name}</div>
                                 <div class="shop-item-desc">${item.desc}</div>
                             </div>
-                            <button class="shop-item-btn"
-                                ${owned || !canAfford ? 'disabled' : ''}
-                                onclick="purchaseItem('${key}')">
-                                ${owned ? '✓ OWNED' : '🪙 ' + item.price}
-                            </button>
+                            <div class="shop-item-status">
+                                ${owned ? '<span style="color: #0f0;">✓ OWNED</span>' : '<span style="color: #ff0;">🪙 ' + item.price + '</span>'}
+                            </div>
                         </div>
                     `;
                 });
@@ -9765,11 +10678,11 @@
                     const skin = SHIP_SKINS[key];
                     const owned = ownedSkins.includes(key);
                     const isSelected = selectedSkin === key;
-                    const canAfford = totalCoins >= skin.price;
+                    const isPreviewing = shopPreviewItem === key && shopPreviewType === 'skin';
 
                     html += `
-                        <div class="skin-card ${isSelected ? 'selected' : ''} ${!owned ? 'locked' : ''}"
-                             onclick="${owned ? `selectSkin('${key}')` : (canAfford ? `purchaseSkin('${key}')` : '')}">
+                        <div class="skin-card ${isSelected ? 'selected' : ''} ${!owned ? 'locked' : ''} ${isPreviewing ? 'previewing' : ''}"
+                             onclick="previewShopItem('skin', '${key}')">
                             <div class="skin-preview">
                                 <canvas id="skinPreview_${key}" width="60" height="50"></canvas>
                             </div>
@@ -9787,11 +10700,11 @@
                     const trail = TRAIL_STYLES[key];
                     const owned = ownedTrails.includes(key);
                     const isSelected = selectedTrail === key;
-                    const canAfford = totalCoins >= trail.price;
+                    const isPreviewing = shopPreviewItem === key && shopPreviewType === 'trail';
 
                     html += `
-                        <div class="skin-card trail-card ${isSelected ? 'selected' : ''} ${!owned ? 'locked' : ''}"
-                             onclick="${owned ? `selectTrail('${key}')` : (canAfford ? `purchaseTrail('${key}')` : '')}">
+                        <div class="skin-card trail-card ${isSelected ? 'selected' : ''} ${!owned ? 'locked' : ''} ${isPreviewing ? 'previewing' : ''}"
+                             onclick="previewShopItem('trail', '${key}')">
                             <div class="trail-preview" style="background: linear-gradient(135deg, ${trail.color1}, ${trail.color2});"></div>
                             <div class="skin-name">${trail.name}</div>
                             <div class="trail-desc">${trail.desc}</div>
@@ -9812,11 +10725,175 @@
             if (currentShopTab === 'weapons') {
                 setTimeout(() => renderWeaponPreviews(), 10);
             }
+
+            // Update detail panel and visibility
+            updateShopDetailPanel();
         }
 
         function switchShopTab(tab) {
             currentShopTab = tab;
+            // Reset preview when switching tabs
+            shopPreviewItem = null;
+            shopPreviewType = null;
             renderShopItems();
+        }
+
+        // Shop preview system functions
+        function previewShopItem(type, key) {
+            shopPreviewItem = key;
+            shopPreviewType = type;
+            renderShopItems();
+            playSelectSound();
+        }
+
+        function updateShopDetailPanel() {
+            const panel = document.getElementById('shopDetailPanel');
+            const nameEl = document.getElementById('shopDetailName');
+            const rarityEl = document.getElementById('shopDetailRarity');
+            const descEl = document.getElementById('shopDetailDesc');
+            const actionsEl = document.getElementById('shopDetailActions');
+
+            // Hide detail panel for weapons tab (they have inline controls)
+            if (currentShopTab === 'weapons') {
+                panel.style.display = 'none';
+                return;
+            }
+            panel.style.display = 'flex';
+
+            // No item selected
+            if (!shopPreviewItem || !shopPreviewType) {
+                nameEl.textContent = 'Select an item';
+                rarityEl.style.display = 'none';
+                descEl.textContent = 'Click on an item above to view details';
+                actionsEl.innerHTML = '';
+                return;
+            }
+
+            let item, owned, equipped, price, rarity;
+
+            if (shopPreviewType === 'upgrade') {
+                item = SHOP_ITEMS[shopPreviewItem];
+                owned = ownedUpgrades.includes(shopPreviewItem);
+                equipped = false; // Upgrades don't have equip state
+                price = item.price;
+                rarity = null;
+
+                nameEl.textContent = item.name;
+                rarityEl.style.display = 'none';
+                descEl.textContent = item.desc;
+
+                if (owned) {
+                    actionsEl.innerHTML = '<button class="shop-detail-btn equipped">✓ OWNED</button>';
+                } else {
+                    const canAfford = totalCoins >= price;
+                    actionsEl.innerHTML = `<button class="shop-detail-btn buy" ${!canAfford ? 'disabled' : ''} onclick="buyShopItem()">🪙 ${price}</button>`;
+                }
+            } else if (shopPreviewType === 'skin') {
+                item = SHIP_SKINS[shopPreviewItem];
+                owned = ownedSkins.includes(shopPreviewItem);
+                equipped = selectedSkin === shopPreviewItem;
+                price = item.price;
+                rarity = item.rarity;
+
+                nameEl.textContent = item.name;
+                rarityEl.textContent = rarity.toUpperCase();
+                rarityEl.className = 'shop-detail-rarity skin-rarity ' + rarity;
+                rarityEl.style.display = 'inline-block';
+                descEl.textContent = `${rarity.charAt(0).toUpperCase() + rarity.slice(1)} ship skin`;
+
+                if (owned) {
+                    if (equipped) {
+                        actionsEl.innerHTML = '<button class="shop-detail-btn equipped">✓ EQUIPPED</button>';
+                    } else {
+                        actionsEl.innerHTML = '<button class="shop-detail-btn equip" onclick="equipShopItem()">EQUIP</button>';
+                    }
+                } else {
+                    const canAfford = totalCoins >= price;
+                    actionsEl.innerHTML = `<button class="shop-detail-btn buy" ${!canAfford ? 'disabled' : ''} onclick="buyShopItem()">🪙 ${price}</button>`;
+                }
+            } else if (shopPreviewType === 'trail') {
+                item = TRAIL_STYLES[shopPreviewItem];
+                owned = ownedTrails.includes(shopPreviewItem);
+                equipped = selectedTrail === shopPreviewItem;
+                price = item.price;
+                rarity = item.rarity;
+
+                nameEl.textContent = item.name;
+                rarityEl.textContent = rarity.toUpperCase();
+                rarityEl.className = 'shop-detail-rarity skin-rarity ' + rarity;
+                rarityEl.style.display = 'inline-block';
+                descEl.textContent = item.desc;
+
+                if (owned) {
+                    if (equipped) {
+                        actionsEl.innerHTML = '<button class="shop-detail-btn equipped">✓ EQUIPPED</button>';
+                    } else {
+                        actionsEl.innerHTML = '<button class="shop-detail-btn equip" onclick="equipShopItem()">EQUIP</button>';
+                    }
+                } else {
+                    const canAfford = totalCoins >= price;
+                    actionsEl.innerHTML = `<button class="shop-detail-btn buy" ${!canAfford ? 'disabled' : ''} onclick="buyShopItem()">🪙 ${price}</button>`;
+                }
+            }
+        }
+
+        function buyShopItem() {
+            if (!shopPreviewItem || !shopPreviewType) return;
+
+            if (shopPreviewType === 'upgrade') {
+                const item = SHOP_ITEMS[shopPreviewItem];
+                if (ownedUpgrades.includes(shopPreviewItem) || totalCoins < item.price) return;
+
+                totalCoins -= item.price;
+                ownedUpgrades.push(shopPreviewItem);
+                saveShopData();
+                updateCoinsDisplay();
+                renderShopItems();
+                playLevelUpSound();
+                showShareToast(`${item.name} purchased!`);
+            } else if (shopPreviewType === 'skin') {
+                const skin = SHIP_SKINS[shopPreviewItem];
+                if (ownedSkins.includes(shopPreviewItem) || totalCoins < skin.price) return;
+
+                totalCoins -= skin.price;
+                ownedSkins.push(shopPreviewItem);
+                selectedSkin = shopPreviewItem; // Auto-equip
+                saveShopData();
+                updateCoinsDisplay();
+                renderShopItems();
+                playLevelUpSound();
+                announce(`New ship skin unlocked: ${skin.name}!`);
+            } else if (shopPreviewType === 'trail') {
+                const trail = TRAIL_STYLES[shopPreviewItem];
+                if (ownedTrails.includes(shopPreviewItem) || totalCoins < trail.price) return;
+
+                totalCoins -= trail.price;
+                ownedTrails.push(shopPreviewItem);
+                selectedTrail = shopPreviewItem; // Auto-equip
+                saveShopData();
+                updateCoinsDisplay();
+                renderShopItems();
+                playLevelUpSound();
+                announce(`New trail style unlocked: ${trail.name}!`);
+            }
+        }
+
+        function equipShopItem() {
+            if (!shopPreviewItem || !shopPreviewType) return;
+
+            if (shopPreviewType === 'skin') {
+                if (!ownedSkins.includes(shopPreviewItem)) return;
+                selectedSkin = shopPreviewItem;
+                saveShopData();
+                renderShopItems();
+                playSelectSound();
+            } else if (shopPreviewType === 'trail') {
+                if (!ownedTrails.includes(shopPreviewItem)) return;
+                selectedTrail = shopPreviewItem;
+                saveShopData();
+                renderShopItems();
+                playSelectSound();
+            }
         }
 
         function renderSkinPreviews() {
@@ -10569,6 +11646,7 @@
                 addScore(comboPoints);
                 document.getElementById('scoreValue').textContent = score;
                 updateSessionStats('kill');
+                registerKill(); // Kill streak announcer
                 updateSessionStats('score', score);
                 dailyChallengeStats.ufosKilled++;
                 announce('ufoKill');
@@ -10876,6 +11954,7 @@
         function quitToMenu() {
             // Stop game music
             stopMusic();
+            stopSpeedrunTimer(false); // Don't save time when quitting
 
             // Reset game state
             enemies = [];
@@ -11095,6 +12174,61 @@
                 patterns: ['spawn', 'barrage', 'bombs']
             }
         };
+
+        // Boss Warning System
+        let bossWarningActive = false;
+
+        function triggerBossWarning() {
+            bossWarningActive = true;
+
+            // Show danger warning overlay
+            const warningEl = document.getElementById('dangerWarning');
+            warningEl.classList.add('active');
+
+            // Play warning sound effect
+            playDangerSound();
+
+            // Screen shake
+            triggerScreenShake(3, 2000);
+
+            // After warning duration, spawn the boss
+            setTimeout(() => {
+                warningEl.classList.remove('active');
+                bossWarningActive = false;
+                spawnBoss();
+            }, 2500);
+        }
+
+        function playDangerSound() {
+            if (soundMuted) return;
+            try {
+                const audioCtx = getAudioContext();
+                if (!audioCtx) return;
+
+                // Create alarm-like sound
+                for (let i = 0; i < 4; i++) {
+                    setTimeout(() => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+
+                        osc.type = 'square';
+                        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                        osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1);
+
+                        gain.gain.setValueAtTime(0.1 * sfxVolume, audioCtx.currentTime);
+                        gain.gain.exponentialDecayTo = 0.01;
+                        gain.gain.setValueAtTime(0.01, audioCtx.currentTime + 0.2);
+
+                        osc.start(audioCtx.currentTime);
+                        osc.stop(audioCtx.currentTime + 0.2);
+                    }, i * 500);
+                }
+            } catch (e) {
+                console.log('Warning sound error:', e);
+            }
+        }
 
         // Boss functions
         function spawnBoss() {
@@ -13949,6 +15083,7 @@
 
                             // Track stats for achievements
                             updateSessionStats('kill');
+                            registerKill(); // Kill streak announcer
                             updateSessionStats('combo', comboCount);
                             updateSessionStats('score', score);
 
@@ -14007,6 +15142,7 @@
                                     const splashPoints = addComboKill(nearEnemy.points);
                                     score += splashPoints;
                                     updateSessionStats('kill');
+                                    registerKill(); // Kill streak announcer
                                     dailyChallengeStats.killsInTime++;
                                     spawnPowerUp(nearEnemy.x + nearEnemy.width / 2, nearEnemy.y + nearEnemy.height / 2);
                                     enemiesToRemove.add(nei);
@@ -14144,6 +15280,7 @@
         // Game over
         async function gameOver(isVictory = false) {
             stopMusic();
+            stopSpeedrunTimer(true); // Save the time
 
             // Save ghost recording if enabled
             finishGhostRecording();
@@ -14346,8 +15483,8 @@
                 updateEndlessMode();
 
                 // Check for boss spawn (only when no enemies and no current boss, not in endless mode)
-                if (!endlessMode && enemies.length === 0 && !currentBoss && BOSS_LEVELS.includes(level)) {
-                    spawnBoss();
+                if (!endlessMode && enemies.length === 0 && !currentBoss && BOSS_LEVELS.includes(level) && !bossWarningActive) {
+                    triggerBossWarning();
                 }
 
                 // Draw background layers
@@ -14428,6 +15565,7 @@
             resetGame();
             setUIState('playing');
             gameStartTime = Date.now();
+            startSpeedrunTimer();
             announce('gameStart');
 
             // Initialize ghost race
@@ -14549,6 +15687,10 @@
         function switchGarageTab(tab) {
             garageTab = tab;
 
+            // Reset preview when switching tabs
+            garagePreviewItem = null;
+            garagePreviewType = null;
+
             // Update tab buttons
             document.querySelectorAll('.garage-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('garage' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Tab').classList.add('active');
@@ -14556,6 +15698,10 @@
             renderGarageItems();
             playSelectSound();
         }
+
+        // Track currently previewed item in garage
+        let garagePreviewItem = null;
+        let garagePreviewType = null;
 
         function renderGarageItems() {
             const container = document.getElementById('garageItems');
@@ -14565,14 +15711,15 @@
                 Object.keys(SHIP_SKINS).forEach(key => {
                     const skin = SHIP_SKINS[key];
                     const owned = ownedSkins.includes(key);
-                    const isSelected = selectedSkin === key;
+                    const isEquipped = selectedSkin === key;
+                    const isPreviewing = garagePreviewItem === key && garagePreviewType === 'skin';
 
                     html += `
-                        <div class="garage-item ${isSelected ? 'selected' : ''} ${!owned ? 'locked' : ''}"
-                             onclick="${owned ? `garageSelectSkin('${key}')` : `garageBuySkin('${key}')`}">
+                        <div class="garage-item ${isEquipped ? 'selected' : ''} ${isPreviewing ? 'previewing' : ''} ${!owned ? 'locked' : ''}"
+                             onclick="previewGarageItem('skin', '${key}')">
                             <div class="garage-item-icon">🚀</div>
                             <div class="garage-item-name">${skin.name}</div>
-                            <div class="garage-item-price ${owned ? 'owned' : ''}">${owned ? (isSelected ? '✓ EQUIPPED' : 'OWNED') : '🪙 ' + skin.price}</div>
+                            <div class="garage-item-price ${owned ? 'owned' : ''}">${owned ? (isEquipped ? '✓ EQUIPPED' : 'OWNED') : '🪙 ' + skin.price}</div>
                         </div>
                     `;
                 });
@@ -14580,19 +15727,51 @@
                 Object.keys(TRAIL_STYLES).forEach(key => {
                     const trail = TRAIL_STYLES[key];
                     const owned = ownedTrails.includes(key);
-                    const isSelected = selectedTrail === key;
+                    const isEquipped = selectedTrail === key;
+                    const isPreviewing = garagePreviewItem === key && garagePreviewType === 'trail';
 
                     html += `
-                        <div class="garage-item ${isSelected ? 'selected' : ''} ${!owned ? 'locked' : ''}"
-                             onclick="${owned ? `garageSelectTrail('${key}')` : `garageBuyTrail('${key}')`}">
+                        <div class="garage-item ${isEquipped ? 'selected' : ''} ${isPreviewing ? 'previewing' : ''} ${!owned ? 'locked' : ''}"
+                             onclick="previewGarageItem('trail', '${key}')">
                             <div class="garage-item-icon" style="background: linear-gradient(135deg, ${trail.color1}, ${trail.color2}); width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 10px;">✨</div>
                             <div class="garage-item-name">${trail.name}</div>
-                            <div class="garage-item-price ${owned ? 'owned' : ''}">${owned ? (isSelected ? '✓ EQUIPPED' : 'OWNED') : '🪙 ' + trail.price}</div>
+                            <div class="garage-item-price ${owned ? 'owned' : ''}">${owned ? (isEquipped ? '✓ EQUIPPED' : 'OWNED') : '🪙 ' + trail.price}</div>
                         </div>
                     `;
                 });
             } else if (garageTab === 'weapons') {
                 const weaponIcons = { laser: '⚡', missile: '🚀', plasma: '🔮' };
+                const currentWpn = WEAPONS[currentWeapon];
+
+                // Add weapon preview section at top
+                html += `
+                    <div class="weapon-preview-section">
+                        <div class="weapon-preview-header">
+                            <span class="preview-label">WEAPON PREVIEW</span>
+                            <span class="preview-weapon-name">${currentWpn.name.toUpperCase()}</span>
+                        </div>
+                        <canvas id="weaponPreviewCanvas" width="380" height="120"></canvas>
+                        <div class="weapon-stats-row">
+                            <div class="weapon-stat">
+                                <span class="stat-name">DAMAGE</span>
+                                <span class="stat-value">${currentWpn.damage}</span>
+                            </div>
+                            <div class="weapon-stat">
+                                <span class="stat-name">SPEED</span>
+                                <span class="stat-value">${currentWpn.speed}</span>
+                            </div>
+                            <div class="weapon-stat">
+                                <span class="stat-name">FIRE RATE</span>
+                                <span class="stat-value">${Math.round(1000/currentWpn.cooldown * 10) / 10}/s</span>
+                            </div>
+                            <div class="weapon-stat">
+                                <span class="stat-name">SPECIAL</span>
+                                <span class="stat-value">${currentWpn.penetrating ? 'PENETRATING' : currentWpn.splash > 0 ? 'SPLASH' : 'NONE'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
                 Object.keys(WEAPONS).forEach(key => {
                     const weapon = WEAPONS[key];
                     const isSelected = currentWeapon === key;
@@ -14619,23 +15798,207 @@
                         </div>
                     `;
                 });
+
+                // Initialize weapon preview after render
+                setTimeout(() => startWeaponPreview(), 50);
             } else if (garageTab === 'upgrades') {
                 Object.keys(SHOP_ITEMS).forEach(key => {
                     const item = SHOP_ITEMS[key];
                     const owned = ownedUpgrades.includes(key);
+                    const isPreviewing = garagePreviewItem === key && garagePreviewType === 'upgrade';
 
                     html += `
-                        <div class="garage-item ${owned ? 'selected' : ''}"
-                             onclick="${owned ? '' : `garageBuyUpgrade('${key}')`}">
+                        <div class="garage-item ${owned ? 'selected' : ''} ${isPreviewing ? 'previewing' : ''}"
+                             onclick="previewGarageItem('upgrade', '${key}')">
                             <div class="garage-item-icon">${owned ? '✅' : '🔒'}</div>
                             <div class="garage-item-name">${item.name}</div>
                             <div class="garage-item-price ${owned ? 'owned' : ''}">${owned ? '✓ OWNED' : '🪙 ' + item.price}</div>
                         </div>
                     `;
                 });
+            } else if (garageTab === 'custom') {
+                const customColors = getCustomShipColors();
+                html = `
+                    <div class="ship-customizer">
+                        <div class="customizer-section">
+                            <div class="customizer-section-title">🎨 Ship Colors</div>
+                            <div class="color-picker-row">
+                                <span class="color-picker-label">Body</span>
+                                <input type="color" class="color-picker-input" id="customBodyColor" value="${customColors.body}" onchange="updateCustomColor('body', this.value)">
+                                <span class="color-hex" id="bodyColorHex">${customColors.body}</span>
+                            </div>
+                            <div class="color-picker-row">
+                                <span class="color-picker-label">Cockpit</span>
+                                <input type="color" class="color-picker-input" id="customCockpitColor" value="${customColors.cockpit}" onchange="updateCustomColor('cockpit', this.value)">
+                                <span class="color-hex" id="cockpitColorHex">${customColors.cockpit}</span>
+                            </div>
+                            <div class="color-picker-row">
+                                <span class="color-picker-label">Engine</span>
+                                <input type="color" class="color-picker-input" id="customEngineColor" value="${customColors.engine}" onchange="updateCustomColor('engine', this.value)">
+                                <span class="color-hex" id="engineColorHex">${customColors.engine}</span>
+                            </div>
+                        </div>
+
+                        <div class="customizer-section">
+                            <div class="customizer-section-title">⚡ Quick Presets</div>
+                            <div class="customizer-presets">
+                                <button class="preset-btn" onclick="applyColorPreset('classic')">Classic Blue</button>
+                                <button class="preset-btn" onclick="applyColorPreset('fire')">Fire Red</button>
+                                <button class="preset-btn" onclick="applyColorPreset('toxic')">Toxic Green</button>
+                                <button class="preset-btn" onclick="applyColorPreset('royal')">Royal Purple</button>
+                                <button class="preset-btn" onclick="applyColorPreset('gold')">Golden</button>
+                                <button class="preset-btn" onclick="applyColorPreset('stealth')">Stealth Black</button>
+                                <button class="preset-btn" onclick="applyColorPreset('rainbow')">Rainbow</button>
+                            </div>
+                        </div>
+
+                        <div class="customizer-actions">
+                            <button class="customizer-btn apply" onclick="applyCustomShip()">✓ APPLY CUSTOM SHIP</button>
+                            <button class="customizer-btn reset" onclick="resetCustomShip()">↺ RESET</button>
+                        </div>
+                    </div>
+                `;
             }
 
             container.innerHTML = html;
+
+            // Show/hide detail panel based on tab
+            const detailPanel = document.getElementById('garageDetailPanel');
+            if (garageTab === 'custom' || garageTab === 'weapons') {
+                detailPanel.classList.add('hidden');
+            } else {
+                detailPanel.classList.remove('hidden');
+                updateDetailPanel();
+            }
+        }
+
+        function previewGarageItem(type, key) {
+            garagePreviewItem = key;
+            garagePreviewType = type;
+            renderGarageItems();
+            updateDetailPanel();
+            playSelectSound();
+        }
+
+        function updateDetailPanel() {
+            const nameEl = document.getElementById('detailName');
+            const rarityEl = document.getElementById('detailRarity');
+            const descEl = document.getElementById('detailDesc');
+            const actionsEl = document.getElementById('detailActions');
+
+            if (!garagePreviewItem || !garagePreviewType) {
+                nameEl.textContent = 'Select an item';
+                rarityEl.textContent = '';
+                rarityEl.className = 'detail-rarity';
+                descEl.textContent = 'Click on an item above to view details';
+                actionsEl.innerHTML = '';
+                return;
+            }
+
+            let item, owned, isEquipped, price;
+
+            if (garagePreviewType === 'skin') {
+                item = SHIP_SKINS[garagePreviewItem];
+                owned = ownedSkins.includes(garagePreviewItem);
+                isEquipped = selectedSkin === garagePreviewItem;
+                price = item.price;
+                nameEl.textContent = item.name;
+                rarityEl.textContent = item.rarity || 'common';
+                rarityEl.className = 'detail-rarity ' + (item.rarity || 'common');
+                descEl.textContent = `Speed: ${item.stats?.speed || 50}% | Damage: ${item.stats?.damage || 50}% | Fire Rate: ${item.stats?.fireRate || 50}% | Defense: ${item.stats?.defense || 50}%`;
+            } else if (garagePreviewType === 'trail') {
+                item = TRAIL_STYLES[garagePreviewItem];
+                owned = ownedTrails.includes(garagePreviewItem);
+                isEquipped = selectedTrail === garagePreviewItem;
+                price = item.price;
+                nameEl.textContent = item.name;
+                rarityEl.textContent = item.rarity || 'common';
+                rarityEl.className = 'detail-rarity ' + (item.rarity || 'common');
+                descEl.textContent = item.desc || 'A stylish trail effect for your ship.';
+            } else if (garagePreviewType === 'upgrade') {
+                item = SHOP_ITEMS[garagePreviewItem];
+                owned = ownedUpgrades.includes(garagePreviewItem);
+                isEquipped = owned; // Upgrades are always "equipped" when owned
+                price = item.price;
+                nameEl.textContent = item.name;
+                rarityEl.textContent = 'upgrade';
+                rarityEl.className = 'detail-rarity epic';
+                descEl.textContent = item.desc || 'A powerful upgrade for your ship.';
+            }
+
+            // Build action buttons
+            let actionsHtml = '';
+            if (!owned) {
+                const canAfford = totalCoins >= price;
+                actionsHtml += `<span class="detail-price ${canAfford ? '' : 'cant-afford'}">🪙 ${price}</span>`;
+                actionsHtml += `<button class="detail-btn buy ${canAfford ? '' : 'disabled'}" onclick="buyGarageItem()">BUY</button>`;
+            } else if (isEquipped) {
+                actionsHtml += `<button class="detail-btn equipped">✓ EQUIPPED</button>`;
+            } else {
+                actionsHtml += `<button class="detail-btn equip" onclick="equipGarageItem()">EQUIP</button>`;
+            }
+            actionsEl.innerHTML = actionsHtml;
+        }
+
+        function buyGarageItem() {
+            if (!garagePreviewItem || !garagePreviewType) return;
+
+            if (garagePreviewType === 'skin') {
+                const skin = SHIP_SKINS[garagePreviewItem];
+                if (totalCoins >= skin.price) {
+                    totalCoins -= skin.price;
+                    ownedSkins.push(garagePreviewItem);
+                    selectedSkin = garagePreviewItem;
+                    saveShopData();
+                    document.getElementById('garageCoins').textContent = totalCoins;
+                    updateCoinsDisplay();
+                    renderGarageItems();
+                    updateEquippedDisplay();
+                    playLevelUpSound();
+                }
+            } else if (garagePreviewType === 'trail') {
+                const trail = TRAIL_STYLES[garagePreviewItem];
+                if (totalCoins >= trail.price) {
+                    totalCoins -= trail.price;
+                    ownedTrails.push(garagePreviewItem);
+                    selectedTrail = garagePreviewItem;
+                    saveShopData();
+                    document.getElementById('garageCoins').textContent = totalCoins;
+                    updateCoinsDisplay();
+                    renderGarageItems();
+                    updateEquippedDisplay();
+                    playLevelUpSound();
+                }
+            } else if (garagePreviewType === 'upgrade') {
+                const item = SHOP_ITEMS[garagePreviewItem];
+                if (totalCoins >= item.price && !ownedUpgrades.includes(garagePreviewItem)) {
+                    totalCoins -= item.price;
+                    ownedUpgrades.push(garagePreviewItem);
+                    saveShopData();
+                    document.getElementById('garageCoins').textContent = totalCoins;
+                    updateCoinsDisplay();
+                    renderGarageItems();
+                    playLevelUpSound();
+                }
+            }
+        }
+
+        function equipGarageItem() {
+            if (!garagePreviewItem || !garagePreviewType) return;
+
+            if (garagePreviewType === 'skin' && ownedSkins.includes(garagePreviewItem)) {
+                selectedSkin = garagePreviewItem;
+                saveShopData();
+                renderGarageItems();
+                updateEquippedDisplay();
+                playSelectSound();
+            } else if (garagePreviewType === 'trail' && ownedTrails.includes(garagePreviewItem)) {
+                selectedTrail = garagePreviewItem;
+                saveShopData();
+                renderGarageItems();
+                updateEquippedDisplay();
+                playSelectSound();
+            }
         }
 
         function garageSelectSkin(key) {
@@ -14644,6 +16007,347 @@
             renderGarageItems();
             updateEquippedDisplay();
             playSelectSound();
+        }
+
+        // ==========================================
+        // SHIP CUSTOMIZER FUNCTIONS
+        // ==========================================
+        const CUSTOM_SHIP_KEY = 'cosmicBlasterzCustomShip';
+        let customShipColors = { body: '#0088ff', cockpit: '#00ffff', engine: '#ff4400' };
+
+        const COLOR_PRESETS = {
+            classic: { body: '#0088ff', cockpit: '#00ffff', engine: '#ff4400' },
+            fire: { body: '#ff3300', cockpit: '#ffaa00', engine: '#ff0000' },
+            toxic: { body: '#00ff44', cockpit: '#88ff00', engine: '#00ff88' },
+            royal: { body: '#8800ff', cockpit: '#ff00ff', engine: '#aa00ff' },
+            gold: { body: '#ffd700', cockpit: '#ffee88', engine: '#ffaa00' },
+            stealth: { body: '#222233', cockpit: '#444466', engine: '#333355' },
+            rainbow: { body: '#ff0088', cockpit: '#00ff88', engine: '#8800ff' }
+        };
+
+        function getCustomShipColors() {
+            const saved = localStorage.getItem(CUSTOM_SHIP_KEY);
+            if (saved) {
+                customShipColors = JSON.parse(saved);
+            }
+            return customShipColors;
+        }
+
+        function saveCustomShipColors() {
+            localStorage.setItem(CUSTOM_SHIP_KEY, JSON.stringify(customShipColors));
+        }
+
+        function updateCustomColor(part, color) {
+            customShipColors[part] = color;
+            // Update hex display
+            const hexEl = document.getElementById(part + 'ColorHex');
+            if (hexEl) hexEl.textContent = color;
+            // Update garage preview
+            updateGarageShipPreview();
+        }
+
+        function applyColorPreset(presetName) {
+            const preset = COLOR_PRESETS[presetName];
+            if (!preset) return;
+
+            customShipColors = { ...preset };
+
+            // Update color pickers
+            document.getElementById('customBodyColor').value = preset.body;
+            document.getElementById('customCockpitColor').value = preset.cockpit;
+            document.getElementById('customEngineColor').value = preset.engine;
+
+            // Update hex displays
+            document.getElementById('bodyColorHex').textContent = preset.body;
+            document.getElementById('cockpitColorHex').textContent = preset.cockpit;
+            document.getElementById('engineColorHex').textContent = preset.engine;
+
+            // Update preview
+            updateGarageShipPreview();
+            playSelectSound();
+        }
+
+        function applyCustomShip() {
+            saveCustomShipColors();
+
+            // Add custom skin to SHIP_SKINS if not exists
+            if (!SHIP_SKINS.custom) {
+                SHIP_SKINS.custom = {
+                    name: 'Custom',
+                    rarity: 'custom',
+                    price: 0,
+                    colors: customShipColors,
+                    stats: { speed: 50, damage: 50, fireRate: 50, defense: 50 }
+                };
+            } else {
+                SHIP_SKINS.custom.colors = { ...customShipColors };
+            }
+
+            // Make sure custom is in owned skins
+            if (!ownedSkins.includes('custom')) {
+                ownedSkins.push('custom');
+            }
+
+            // Select custom skin
+            selectedSkin = 'custom';
+            saveShopData();
+            saveSkins();
+
+            updateEquippedDisplay();
+            playLevelUpSound();
+
+            // Show confirmation
+            showCustomizerMessage('Custom ship applied!');
+        }
+
+        function resetCustomShip() {
+            customShipColors = { ...COLOR_PRESETS.classic };
+
+            // Update color pickers
+            document.getElementById('customBodyColor').value = customShipColors.body;
+            document.getElementById('customCockpitColor').value = customShipColors.cockpit;
+            document.getElementById('customEngineColor').value = customShipColors.engine;
+
+            // Update hex displays
+            document.getElementById('bodyColorHex').textContent = customShipColors.body;
+            document.getElementById('cockpitColorHex').textContent = customShipColors.cockpit;
+            document.getElementById('engineColorHex').textContent = customShipColors.engine;
+
+            updateGarageShipPreview();
+            playSelectSound();
+        }
+
+        function updateGarageShipPreview() {
+            // Temporarily apply custom colors to preview
+            if (garageTab === 'custom') {
+                // Force redraw with custom colors
+                const canvas = document.getElementById('garageCanvas');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    drawGarageShipWithColors(ctx, canvas.width / 2, canvas.height / 2, customShipColors);
+                }
+            }
+        }
+
+        function drawGarageShipWithColors(ctx, x, y, colors) {
+            ctx.save();
+            const scale = 3;
+
+            // Draw ship body
+            ctx.fillStyle = colors.body;
+            ctx.beginPath();
+            ctx.moveTo(x, y - 40 * scale);
+            ctx.lineTo(x - 20 * scale, y + 20 * scale);
+            ctx.lineTo(x + 20 * scale, y + 20 * scale);
+            ctx.closePath();
+            ctx.fill();
+
+            // Draw cockpit
+            ctx.fillStyle = colors.cockpit;
+            ctx.beginPath();
+            ctx.ellipse(x, y - 10 * scale, 8 * scale, 12 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw engine glow
+            ctx.fillStyle = colors.engine;
+            ctx.shadowColor = colors.engine;
+            ctx.shadowBlur = 20;
+            ctx.beginPath();
+            ctx.ellipse(x, y + 25 * scale, 10 * scale, 6 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function showCustomizerMessage(text) {
+            const msg = document.createElement('div');
+            msg.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #000 0%, #1a1a2e 100%);
+                border: 3px solid #0f8;
+                border-radius: 15px;
+                padding: 20px 40px;
+                color: #0f8;
+                font-family: 'Orbitron', monospace;
+                font-size: 18px;
+                text-align: center;
+                z-index: 99999;
+                box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            `;
+            msg.textContent = text;
+            document.body.appendChild(msg);
+
+            setTimeout(() => {
+                msg.style.transition = 'opacity 0.3s';
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 300);
+            }, 1500);
+        }
+
+        // Load custom colors on startup
+        getCustomShipColors();
+
+        // ==========================================
+        // WEAPON PREVIEW ANIMATION
+        // ==========================================
+        let weaponPreviewAnimationId = null;
+        let weaponPreviewBullets = [];
+        let lastWeaponFireTime = 0;
+
+        function startWeaponPreview() {
+            stopWeaponPreview();
+            weaponPreviewBullets = [];
+            lastWeaponFireTime = 0;
+            weaponPreviewAnimationId = requestAnimationFrame(weaponPreviewLoop);
+        }
+
+        function stopWeaponPreview() {
+            if (weaponPreviewAnimationId) {
+                cancelAnimationFrame(weaponPreviewAnimationId);
+                weaponPreviewAnimationId = null;
+            }
+        }
+
+        function weaponPreviewLoop(timestamp) {
+            const canvas = document.getElementById('weaponPreviewCanvas');
+            if (!canvas || garageTab !== 'weapons') {
+                stopWeaponPreview();
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            const weapon = WEAPONS[currentWeapon];
+
+            // Clear canvas
+            ctx.fillStyle = 'rgba(0, 5, 20, 0.3)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw ship silhouette on left
+            const shipX = 50;
+            const shipY = canvas.height / 2;
+            drawPreviewShip(ctx, shipX, shipY);
+
+            // Fire bullets at weapon cooldown rate
+            if (timestamp - lastWeaponFireTime > weapon.cooldown) {
+                firePreviewBullet(shipX, shipY - 15, weapon);
+                lastWeaponFireTime = timestamp;
+            }
+
+            // Update and draw bullets
+            weaponPreviewBullets = weaponPreviewBullets.filter(bullet => {
+                bullet.x += bullet.speed;
+
+                // Draw bullet based on type
+                ctx.save();
+                ctx.shadowColor = bullet.color;
+                ctx.shadowBlur = 10;
+                ctx.fillStyle = bullet.color;
+
+                if (bullet.type === 'missile') {
+                    // Missile shape
+                    ctx.beginPath();
+                    ctx.moveTo(bullet.x + 12, bullet.y);
+                    ctx.lineTo(bullet.x - 4, bullet.y - 4);
+                    ctx.lineTo(bullet.x - 4, bullet.y + 4);
+                    ctx.closePath();
+                    ctx.fill();
+                    // Trail
+                    ctx.fillStyle = '#f80';
+                    ctx.fillRect(bullet.x - 8, bullet.y - 2, 6, 4);
+                } else if (bullet.type === 'plasma') {
+                    // Plasma orb
+                    ctx.beginPath();
+                    ctx.arc(bullet.x, bullet.y, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    // Inner glow
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(bullet.x, bullet.y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    // Laser beam
+                    ctx.fillRect(bullet.x - 8, bullet.y - 2, 16, 4);
+                }
+                ctx.restore();
+
+                return bullet.x < canvas.width + 10;
+            });
+
+            // Draw target dummy on right
+            drawPreviewTarget(ctx, canvas.width - 60, canvas.height / 2);
+
+            weaponPreviewAnimationId = requestAnimationFrame(weaponPreviewLoop);
+        }
+
+        function firePreviewBullet(x, y, weapon) {
+            weaponPreviewBullets.push({
+                x: x + 20,
+                y: y,
+                speed: weapon.speed * 0.6,
+                color: weapon.color,
+                type: currentWeapon
+            });
+        }
+
+        function drawPreviewShip(ctx, x, y) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(Math.PI / 2); // Rotate to face right
+
+            // Simple ship shape
+            const skin = SHIP_SKINS[selectedSkin] || SHIP_SKINS.classic;
+            const colors = skin.colors;
+
+            ctx.fillStyle = colors.body;
+            ctx.beginPath();
+            ctx.moveTo(0, -15);
+            ctx.lineTo(-10, 10);
+            ctx.lineTo(10, 10);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = colors.cockpit;
+            ctx.beginPath();
+            ctx.arc(0, -2, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = colors.engine;
+            ctx.shadowColor = colors.engine;
+            ctx.shadowBlur = 8;
+            ctx.fillRect(-5, 10, 10, 5);
+
+            ctx.restore();
+        }
+
+        function drawPreviewTarget(ctx, x, y) {
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255, 100, 100, 0.5)';
+            ctx.lineWidth = 2;
+
+            // Target circles
+            ctx.beginPath();
+            ctx.arc(x, y, 25, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(x, y, 15, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Crosshairs
+            ctx.beginPath();
+            ctx.moveTo(x - 30, y);
+            ctx.lineTo(x + 30, y);
+            ctx.moveTo(x, y - 30);
+            ctx.lineTo(x, y + 30);
+            ctx.stroke();
+
+            ctx.restore();
         }
 
         function garageBuySkin(key) {
@@ -14835,7 +16539,9 @@
                 const scale = 4.5;
                 const tilt = Math.sin(time * 1.5) * 0.05;
 
-                const skin = SHIP_SKINS[selectedSkin] || SHIP_SKINS.classic;
+                // Use preview skin if previewing, otherwise use selected skin
+                const skinKey = (garagePreviewType === 'skin' && garagePreviewItem) ? garagePreviewItem : selectedSkin;
+                const skin = SHIP_SKINS[skinKey] || SHIP_SKINS.classic;
                 const colors = skin.colors;
                 const baseColor = colors.body || '#0ff';
 
@@ -14850,7 +16556,9 @@
                 ctx.fill();
 
                 // Engine exhaust with particles
-                const trail = TRAIL_STYLES[selectedTrail] || TRAIL_STYLES.classic;
+                // Use preview trail if previewing, otherwise use selected trail
+                const trailKey = (garagePreviewType === 'trail' && garagePreviewItem) ? garagePreviewItem : selectedTrail;
+                const trail = TRAIL_STYLES[trailKey] || TRAIL_STYLES.classic;
                 const engineHex = colors.engine || '#f80';
                 for (let i = 0; i < 15; i++) {
                     const progress = (time * 3 + i * 0.2) % 1;
@@ -15370,6 +17078,7 @@
             setUIState('playing');
             document.getElementById('demoOverlay').classList.remove('hidden');
             gameStartTime = Date.now();
+            startSpeedrunTimer();
 
             document.getElementById('endlessTimer').classList.add('hidden');
             document.getElementById('endlessWave').classList.add('hidden');
@@ -15537,6 +17246,7 @@
             resetGame();
             setUIState('playing');
             gameStartTime = Date.now();
+            startSpeedrunTimer();
 
             // Hide normal wave UI, show boss rush UI
             document.getElementById('endlessTimer').classList.add('hidden');
@@ -17364,6 +19074,309 @@
                 msg.style.opacity = '0';
                 setTimeout(() => msg.remove(), 500);
             }, 3000);
+        }
+
+        // ==========================================
+        // DAILY REWARDS SYSTEM
+        // ==========================================
+        const DAILY_REWARD_KEY = 'cosmicBlasterzDailyReward';
+
+        // Reward tiers based on streak
+        const DAILY_REWARDS = [
+            { day: 1, coins: 50, label: '50 coins' },
+            { day: 2, coins: 100, label: '100 coins' },
+            { day: 3, coins: 150, label: '150 coins' },
+            { day: 4, coins: 200, label: '200 coins' },
+            { day: 5, coins: 300, label: '300 coins' },
+            { day: 6, coins: 400, label: '400 coins' },
+            { day: 7, coins: 500, label: '500 coins + BONUS!' }
+        ];
+
+        function getDailyRewardData() {
+            const data = localStorage.getItem(DAILY_REWARD_KEY);
+            if (data) {
+                return JSON.parse(data);
+            }
+            return { lastClaim: null, streak: 0 };
+        }
+
+        function saveDailyRewardData(data) {
+            localStorage.setItem(DAILY_REWARD_KEY, JSON.stringify(data));
+        }
+
+        function canClaimDailyReward() {
+            const data = getDailyRewardData();
+            if (!data.lastClaim) return true;
+
+            const lastClaim = new Date(data.lastClaim);
+            const now = new Date();
+
+            // Reset time to midnight for comparison
+            lastClaim.setHours(0, 0, 0, 0);
+            now.setHours(0, 0, 0, 0);
+
+            const diffDays = Math.floor((now - lastClaim) / (1000 * 60 * 60 * 24));
+            return diffDays >= 1;
+        }
+
+        function updateDailyRewardUI() {
+            const btn = document.getElementById('dailyRewardBtn');
+            const streakDisplay = document.getElementById('dailyStreakDisplay');
+            if (!btn || !streakDisplay) return;
+
+            const data = getDailyRewardData();
+            const canClaim = canClaimDailyReward();
+
+            // Calculate current streak for display
+            let displayStreak = data.streak;
+            if (!canClaim) {
+                // Show current streak
+                streakDisplay.textContent = `Day ${Math.min(displayStreak, 7)}`;
+            } else {
+                // Check if streak continues or resets
+                if (data.lastClaim) {
+                    const lastClaim = new Date(data.lastClaim);
+                    const now = new Date();
+                    lastClaim.setHours(0, 0, 0, 0);
+                    now.setHours(0, 0, 0, 0);
+                    const diffDays = Math.floor((now - lastClaim) / (1000 * 60 * 60 * 24));
+
+                    if (diffDays > 1) {
+                        // Streak broken, will reset to day 1
+                        streakDisplay.textContent = 'Day 1';
+                    } else {
+                        // Next day
+                        streakDisplay.textContent = `Day ${Math.min(displayStreak + 1, 7)}`;
+                    }
+                } else {
+                    streakDisplay.textContent = 'Day 1';
+                }
+            }
+
+            if (canClaim) {
+                btn.classList.remove('claimed');
+                btn.querySelector('.btn-icon').textContent = '🎁';
+            } else {
+                btn.classList.add('claimed');
+                btn.querySelector('.btn-icon').textContent = '✓';
+            }
+        }
+
+        function claimDailyReward() {
+            if (!canClaimDailyReward()) {
+                showDailyRewardMessage('Come back tomorrow\nfor your next reward!', '#888');
+                return;
+            }
+
+            const data = getDailyRewardData();
+            const now = new Date();
+
+            // Check if streak continues or resets
+            let newStreak = 1;
+            if (data.lastClaim) {
+                const lastClaim = new Date(data.lastClaim);
+                lastClaim.setHours(0, 0, 0, 0);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const diffDays = Math.floor((today - lastClaim) / (1000 * 60 * 60 * 24));
+
+                if (diffDays === 1) {
+                    // Consecutive day, increase streak
+                    newStreak = Math.min(data.streak + 1, 7);
+                }
+                // If diffDays > 1, streak resets to 1
+            }
+
+            // Get reward for this day
+            const rewardTier = DAILY_REWARDS[newStreak - 1];
+            let totalCoins = rewardTier.coins;
+
+            // Day 7 bonus: extra 200 coins
+            if (newStreak === 7) {
+                totalCoins += 200;
+            }
+
+            // Award coins
+            playerCoins += totalCoins;
+            saveCoins();
+            updateCoinDisplay();
+
+            // Save claim data
+            saveDailyRewardData({
+                lastClaim: now.toISOString(),
+                streak: newStreak
+            });
+
+            // Show celebration
+            if (typeof createConfetti === 'function') {
+                createConfetti();
+            }
+
+            // Show reward message
+            let message = `DAY ${newStreak} REWARD!\n\n+${totalCoins} coins`;
+            if (newStreak === 7) {
+                message += '\n\nWEEK COMPLETE!\nStreak resets tomorrow';
+            }
+            showDailyRewardMessage(message, '#ffd700');
+
+            // Update UI
+            updateDailyRewardUI();
+        }
+
+        function showDailyRewardMessage(text, color) {
+            const msg = document.createElement('div');
+            msg.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #000 0%, #1a1a2e 100%);
+                border: 3px solid ${color};
+                border-radius: 15px;
+                padding: 30px 50px;
+                color: ${color};
+                font-family: 'Press Start 2P', 'Orbitron', monospace;
+                font-size: 16px;
+                text-align: center;
+                white-space: pre-line;
+                z-index: 99999;
+                box-shadow: 0 0 30px ${color}, 0 0 60px rgba(255, 215, 0, 0.3);
+                animation: dailyRewardPopup 0.3s ease-out;
+            `;
+            msg.textContent = text;
+            document.body.appendChild(msg);
+
+            // Add animation keyframes
+            if (!document.getElementById('dailyRewardStyles')) {
+                const style = document.createElement('style');
+                style.id = 'dailyRewardStyles';
+                style.textContent = `
+                    @keyframes dailyRewardPopup {
+                        from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+                        to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Remove after delay
+            setTimeout(() => {
+                msg.style.transition = 'opacity 0.5s, transform 0.5s';
+                msg.style.opacity = '0';
+                msg.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                setTimeout(() => msg.remove(), 500);
+            }, 3000);
+        }
+
+        // Initialize daily reward UI on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(updateDailyRewardUI, 100);
+        });
+
+        // ==========================================
+        // SPEEDRUN TIMER SYSTEM
+        // ==========================================
+        const SPEEDRUN_TIMES_KEY = 'cosmicBlasterzSpeedrunTimes';
+        let speedrunTimerInterval = null;
+
+        function getSpeedrunBestTimes() {
+            const data = localStorage.getItem(SPEEDRUN_TIMES_KEY);
+            if (data) {
+                return JSON.parse(data);
+            }
+            return {};
+        }
+
+        function saveSpeedrunBestTime(mode, time) {
+            const times = getSpeedrunBestTimes();
+            const currentBest = times[mode];
+            if (!currentBest || time < currentBest) {
+                times[mode] = time;
+                localStorage.setItem(SPEEDRUN_TIMES_KEY, JSON.stringify(times));
+                return true; // New record!
+            }
+            return false;
+        }
+
+        function formatSpeedrunTime(ms) {
+            const totalSeconds = ms / 1000;
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.floor(totalSeconds % 60);
+            const centiseconds = Math.floor((ms % 1000) / 10);
+            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(centiseconds).padStart(2, '0')}`;
+        }
+
+        function updateSpeedrunTimer() {
+            if (!gameStartTime || gameStartTime <= 0) return;
+
+            const elapsed = Date.now() - gameStartTime;
+            const timerEl = document.getElementById('timerCurrent');
+            if (timerEl) {
+                timerEl.textContent = formatSpeedrunTime(elapsed);
+            }
+        }
+
+        function startSpeedrunTimer() {
+            // Clear any existing timer
+            if (speedrunTimerInterval) {
+                clearInterval(speedrunTimerInterval);
+            }
+
+            // Get current game mode for best time
+            const mode = getCurrentGameMode();
+            const bestTimes = getSpeedrunBestTimes();
+            const bestTime = bestTimes[mode];
+
+            const timerBestEl = document.getElementById('timerBest');
+            if (timerBestEl) {
+                if (bestTime) {
+                    timerBestEl.textContent = formatSpeedrunTime(bestTime);
+                } else {
+                    timerBestEl.textContent = '';
+                }
+            }
+
+            // Reset timer display
+            const timerEl = document.getElementById('timerCurrent');
+            if (timerEl) {
+                timerEl.textContent = '00:00.00';
+            }
+
+            // Remove new record styling
+            const timerContainer = document.getElementById('speedrunTimer');
+            if (timerContainer) {
+                timerContainer.classList.remove('new-record');
+            }
+
+            // Start updating timer
+            speedrunTimerInterval = setInterval(updateSpeedrunTimer, 50);
+        }
+
+        function stopSpeedrunTimer(saveTime = false) {
+            if (speedrunTimerInterval) {
+                clearInterval(speedrunTimerInterval);
+                speedrunTimerInterval = null;
+            }
+
+            if (saveTime && gameStartTime > 0) {
+                const elapsed = Date.now() - gameStartTime;
+                const mode = getCurrentGameMode();
+                const isNewRecord = saveSpeedrunBestTime(mode, elapsed);
+
+                if (isNewRecord) {
+                    const timerContainer = document.getElementById('speedrunTimer');
+                    if (timerContainer) {
+                        timerContainer.classList.add('new-record');
+                    }
+                }
+            }
+        }
+
+        function getCurrentGameMode() {
+            if (typeof bossRushMode !== 'undefined' && bossRushMode) return 'bossrush';
+            if (typeof survivalMode !== 'undefined' && survivalMode) return 'survival';
+            if (typeof coopMode !== 'undefined' && coopMode) return 'coop';
+            return 'classic';
         }
 
         // ==========================================

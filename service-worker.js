@@ -1,5 +1,5 @@
 // Cosmic Blasterz Service Worker
-const CACHE_NAME = 'cosmic-blasterz-v102';
+const CACHE_NAME = 'cosmic-blasterz-v110';
 const urlsToCache = [
   './',
   './index.html',
