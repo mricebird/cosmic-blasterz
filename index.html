@@ -11570,18 +11570,33 @@
             cachedHighscores.sort((a, b) => b.score - a.score);
             cachedHighscores = cachedHighscores.slice(0, MAX_HIGHSCORES);
 
-            // Always save locally
+            // Always save locally first
             saveLocalHighscores(cachedHighscores);
 
             // Try to save to server
+            let serverSaved = false;
             try {
-                await fetch(JSONBLOB_URL, {
+                const response = await fetch(JSONBLOB_URL, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify({ highscores: cachedHighscores })
                 });
+                if (response.ok) {
+                    serverSaved = true;
+                    console.log('Highscore saved to server successfully');
+                } else {
+                    console.warn('Server returned error:', response.status);
+                }
             } catch (e) {
-                // Server save failed, local save succeeded
+                console.warn('Could not save to server:', e.message);
+            }
+
+            // Show feedback to user
+            if (!serverSaved) {
+                console.log('Highscore saved locally (server unavailable)');
             }
 
             return cachedHighscores;
