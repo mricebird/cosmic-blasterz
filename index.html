@@ -35,7 +35,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Inter font added to fix 'i' glyph rendering issue (Rajdhani has unusual lowercase i) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Press+Start+2P&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -431,6 +431,130 @@
             padding-top: 20px;
             padding-bottom: 60px;
             overflow-y: auto;
+        }
+
+        /* Menu Tab Navigation */
+        .menu-tabs {
+            display: flex;
+            gap: 0;
+            margin: 15px 0;
+            background: rgba(0, 20, 40, 0.6);
+            border-radius: 25px;
+            padding: 4px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .menu-tab {
+            padding: 10px 24px;
+            background: transparent;
+            border: none;
+            color: rgba(0, 255, 255, 0.6);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            letter-spacing: 1px;
+        }
+
+        .menu-tab:hover {
+            color: #0ff;
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        .menu-tab.active {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(255, 0, 255, 0.2));
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .menu-tab-content {
+            display: none;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .menu-tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Compact name input for header */
+        .menu-name-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .menu-name-input label {
+            color: rgba(0, 255, 255, 0.7);
+            font-size: 12px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .menu-name-input input {
+            background: rgba(0, 20, 40, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 8px 14px;
+            color: #0ff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            width: 180px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .menu-name-input input:focus {
+            border-color: rgba(0, 255, 255, 0.6);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+
+        /* Quick settings in header */
+        .menu-quick-settings {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .menu-quick-btn {
+            background: rgba(0, 20, 40, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: rgba(0, 255, 255, 0.7);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .menu-quick-btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: rgba(0, 255, 255, 0.4);
+            color: #0ff;
+        }
+
+        .menu-quick-btn.active {
+            background: rgba(0, 255, 255, 0.2);
+            color: #0ff;
+        }
+
+        /* Compact header bar */
+        .menu-header-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px;
+            margin-bottom: 5px;
         }
 
         .game-over-screen h1, .start-screen h1 {
@@ -1000,14 +1124,6 @@
             background: linear-gradient(180deg, rgba(255, 80, 80, 0.7) 0%, rgba(200, 50, 50, 0.8) 100%);
             color: #fff;
             box-shadow: 0 0 20px rgba(255, 100, 100, 0.4);
-        }
-
-        .mode-desc {
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.75);
-            line-height: 1.5;
         }
 
         .endless-btn {
@@ -5025,23 +5141,64 @@
             margin-top: 10px;
         }
 
+        /* Audio notification toast */
+        .audio-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(40, 40, 60, 0.95);
+            border: 1px solid rgba(255, 200, 0, 0.5);
+            border-radius: 8px;
+            padding: 12px 24px;
+            color: #ffc800;
+            font-size: 14px;
+            z-index: 1001;
+            animation: slideUp 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .audio-notification.fade-out {
+            opacity: 0;
+            transform: translateX(-50%) translateY(10px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
         /* Amiga-style scroll text - hidden for cleaner UI */
         .scroll-text-container {
-            display: none;
+            width: 100%;
+            max-width: 600px;
+            height: 24px;
+            overflow: hidden;
+            position: relative;
+            margin: 5px 0 10px 0;
+            background: rgba(0, 20, 40, 0.5);
+            border-radius: 4px;
         }
 
         .scroll-text {
             position: absolute;
             white-space: nowrap;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #0ff;
-            text-shadow: 0 0 8px rgba(0, 255, 255, 0.6), 0 0 16px rgba(0, 255, 255, 0.3);
-            animation: scrollText 30s linear infinite;
-            line-height: 30px;
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            letter-spacing: 0.05em;
+            color: #0f0;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.8), 0 0 16px rgba(0, 255, 0, 0.4);
+            animation: scrollText 25s linear infinite;
+            line-height: 24px;
         }
 
         @keyframes scrollText {
@@ -5809,181 +5966,196 @@
         </div>
 
         <div class="start-screen" id="startScreen">
-            <!-- Utility Bar at Top -->
-            <div class="menu-utility-bar">
-                <div class="menu-utility-left">
-                    <button class="menu-music-btn" id="menuMusicBtn" onclick="toggleMenuMusic()">🎵 Music</button>
-                    <button class="ghost-race-btn" id="ghostRaceBtn" onclick="toggleGhostRace()">👻 Ghost</button>
-                </div>
-                <div class="menu-utility-right">
-                    <button class="stats-btn" onclick="openStats()">📊 Stats</button>
-                </div>
-            </div>
-
-            <!-- Amiga-style effects (now less intrusive) -->
-            <div class="copper-bars"></div>
+            <!-- Compact Header -->
             <div class="scanlines"></div>
 
             <h1>
-                <span class="sine-text">🚀</span><span class="sine-text">&nbsp;</span><span class="sine-text">S</span><span class="sine-text">P</span><span class="sine-text">A</span><span class="sine-text">C</span><span class="sine-text">E</span><span class="sine-text">&nbsp;</span><span class="sine-text">I</span><span class="sine-text">N</span><span class="sine-text">V</span><span class="sine-text">A</span><span class="sine-text">D</span><span class="sine-text">E</span><span class="sine-text">R</span><span class="sine-text">S</span><span class="sine-text">&nbsp;</span><span class="sine-text">👾</span>
+                <span class="sine-text">🚀</span><span class="sine-text">&nbsp;</span><span class="sine-text">C</span><span class="sine-text">O</span><span class="sine-text">S</span><span class="sine-text">M</span><span class="sine-text">I</span><span class="sine-text">C</span><span class="sine-text">&nbsp;</span><span class="sine-text">B</span><span class="sine-text">L</span><span class="sine-text">A</span><span class="sine-text">S</span><span class="sine-text">T</span><span class="sine-text">E</span><span class="sine-text">R</span><span class="sine-text">Z</span><span class="sine-text">&nbsp;</span><span class="sine-text">👾</span>
             </h1>
-            <p class="game-subtitle">Defend Earth from the alien invasion!</p>
 
             <!-- Scroll text -->
             <div class="scroll-text-container">
                 <div class="scroll-text">
-                    ★★★ WELCOME TO COSMIC BLASTERZ ★★★ PROGRAMMED WITH ♥ IN 2026 ★★★ USE ARROW KEYS TO MOVE AND SPACE TO SHOOT ★★★ COLLECT POWER-UPS FOR SPECIAL ABILITIES ★★★ DEFEAT THE BOSS AT THE END OF EACH LEVEL ★★★ CAN YOU BEAT THE HIGHSCORE? ★★★ GREETINGS TO ALL RETRO GAMERS OUT THERE ★★★
+                    ★★★ WELCOME TO COSMIC BLASTERZ ★★★ PROGRAMMED WITH ♥ IN 2025 ★★★ USE ARROW KEYS TO MOVE AND SPACE TO SHOOT ★★★ COLLECT POWER-UPS FOR SPECIAL ABILITIES ★★★ DEFEAT THE BOSS EVERY 5 LEVELS ★★★ CAN YOU BEAT THE HIGHSCORE? ★★★ GREETINGS TO ALL RETRO GAMERS ★★★
                 </div>
             </div>
 
-            <!-- Pilot Profile Card -->
-            <div class="pilot-profile">
-                <div class="pilot-header">
-                    <div class="pilot-avatar">👨‍🚀</div>
-                    <div class="pilot-info">
-                        <div class="pilot-title">Pilot Profile</div>
-                        <div class="pilot-rank">
-                            <span class="pilot-rank-badge">ROOKIE</span>
-                            <span id="pilotRankText">Ready for action</span>
+            <!-- Header Bar: Name input + Quick Settings -->
+            <div class="menu-header-bar">
+                <div class="menu-name-input">
+                    <label for="playerName">PILOT:</label>
+                    <input type="text" id="playerName" placeholder="Enter name" maxlength="15" autocomplete="off" spellcheck="false">
+                </div>
+                <div class="menu-quick-settings">
+                    <button class="menu-quick-btn" id="menuMusicBtn" onclick="toggleMenuMusic()" title="Toggle Music">🎵</button>
+                    <button class="menu-quick-btn" id="menuSoundBtn" onclick="toggleSound()" title="Toggle Sound">🔊</button>
+                    <button class="menu-quick-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Fullscreen">🔲</button>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="menu-tabs">
+                <button class="menu-tab active" onclick="switchMenuTab('play')">🎮 PLAY</button>
+                <button class="menu-tab" onclick="switchMenuTab('profile')">👤 PROFILE</button>
+                <button class="menu-tab" onclick="switchMenuTab('more')">⚙️ MORE</button>
+            </div>
+
+            <!-- TAB: PLAY -->
+            <div class="menu-tab-content active" id="tab-play">
+                <!-- Difficulty Selector -->
+                <p class="difficulty-label">Select Difficulty</p>
+                <div class="difficulty-selector">
+                    <button class="difficulty-btn easy" onclick="setDifficulty('easy')">
+                        <div>🌱 Easy</div>
+                        <div class="difficulty-desc">0.5x coins</div>
+                    </button>
+                    <button class="difficulty-btn normal active" onclick="setDifficulty('normal')">
+                        <div>⚔️ Normal</div>
+                        <div class="difficulty-desc">1x coins</div>
+                    </button>
+                    <button class="difficulty-btn hard" onclick="setDifficulty('hard')">
+                        <div>🔥 Hard</div>
+                        <div class="difficulty-desc">1.5x coins</div>
+                    </button>
+                    <button class="difficulty-btn nightmare" onclick="setDifficulty('nightmare')">
+                        <div>💀 Nightmare</div>
+                        <div class="difficulty-desc">2.5x coins</div>
+                    </button>
+                </div>
+
+                <p class="select-mode-label">Select Game Mode</p>
+                <div class="mode-buttons">
+                    <div class="mode-card normal" onclick="startGame(false)">
+                        <div class="mode-icon">🎮</div>
+                        <div class="mode-title">CAMPAIGN</div>
+                        <div class="mode-desc">Beat all 25 waves and defeat the bosses!</div>
+                    </div>
+                    <div class="mode-card endless" onclick="startGame(true)">
+                        <div class="mode-icon">♾️</div>
+                        <div class="mode-title">ENDLESS</div>
+                        <div class="mode-desc">Survive infinite waves. How long can you last?</div>
+                    </div>
+                    <div class="mode-card twoplayer" onclick="startGame(false, true)">
+                        <div class="mode-icon">👥</div>
+                        <div class="mode-title">CO-OP</div>
+                        <div class="mode-desc">Play with a friend on the same keyboard!</div>
+                    </div>
+                    <div class="mode-card roguelike" onclick="startRoguelike()">
+                        <div class="mode-icon">🎲</div>
+                        <div class="mode-title">ROGUELIKE</div>
+                        <div class="mode-desc">Choose upgrades on level up!</div>
+                    </div>
+                    <div class="mode-card bossrush" onclick="startBossRush()">
+                        <div class="mode-icon">👹</div>
+                        <div class="mode-title">BOSS RUSH</div>
+                        <div class="mode-desc">Fight all bosses back-to-back!</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: PROFILE -->
+            <div class="menu-tab-content" id="tab-profile">
+                <!-- Pilot Profile Card -->
+                <div class="pilot-profile">
+                    <div class="pilot-header">
+                        <div class="pilot-avatar">👨‍🚀</div>
+                        <div class="pilot-info">
+                            <div class="pilot-title">Pilot Profile</div>
+                            <div class="pilot-rank">
+                                <span class="pilot-rank-badge">ROOKIE</span>
+                                <span id="pilotRankText">Ready for action</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pilot-stats-mini">
+                        <div class="pilot-stat-mini">
+                            <span class="pilot-stat-value" id="pilotGames">0</span>
+                            <span class="pilot-stat-label">Games</span>
+                        </div>
+                        <div class="pilot-stat-mini">
+                            <span class="pilot-stat-value" id="pilotBest">0</span>
+                            <span class="pilot-stat-label">Best Score</span>
+                        </div>
+                        <div class="pilot-stat-mini">
+                            <span class="pilot-stat-value" id="pilotKills">0</span>
+                            <span class="pilot-stat-label">Total Kills</span>
                         </div>
                     </div>
                 </div>
-                <div class="pilot-input-container">
-                    <label class="pilot-input-label" for="playerName">Call Sign</label>
-                    <input type="text" id="playerName" class="name-input" placeholder="Enter your call sign" maxlength="15" autocomplete="off" spellcheck="false">
-                </div>
-                <div class="pilot-hint">Your name will appear on the global leaderboard</div>
-                <div class="pilot-stats-mini">
-                    <div class="pilot-stat-mini">
-                        <span class="pilot-stat-value" id="pilotGames">0</span>
-                        <span class="pilot-stat-label">Games</span>
-                    </div>
-                    <div class="pilot-stat-mini">
-                        <span class="pilot-stat-value" id="pilotBest">0</span>
-                        <span class="pilot-stat-label">Best Score</span>
-                    </div>
-                    <div class="pilot-stat-mini">
-                        <span class="pilot-stat-value" id="pilotKills">0</span>
-                        <span class="pilot-stat-label">Total Kills</span>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Daily Challenge -->
-            <div class="daily-challenge-panel" id="dailyChallenge">
-                <div class="daily-challenge-header">
-                    <div class="daily-challenge-title">🎯 Daily Challenge</div>
-                    <div class="daily-challenge-timer" id="challengeTimer">Resets in: --:--:--</div>
-                </div>
-                <div class="daily-challenge-content">
-                    <div class="daily-challenge-icon" id="challengeIcon">🎯</div>
-                    <div class="daily-challenge-info">
-                        <div class="daily-challenge-name" id="challengeName">Loading...</div>
-                        <div class="daily-challenge-desc" id="challengeDesc">Check back soon!</div>
-                        <div class="daily-challenge-progress">
-                            <div class="daily-challenge-bar" id="challengeBar" style="width: 0%"></div>
+                <!-- Daily Challenge -->
+                <div class="daily-challenge-panel" id="dailyChallenge">
+                    <div class="daily-challenge-header">
+                        <div class="daily-challenge-title">🎯 Daily Challenge</div>
+                        <div class="daily-challenge-timer" id="challengeTimer">Resets in: --:--:--</div>
+                    </div>
+                    <div class="daily-challenge-content">
+                        <div class="daily-challenge-icon" id="challengeIcon">🎯</div>
+                        <div class="daily-challenge-info">
+                            <div class="daily-challenge-name" id="challengeName">Loading...</div>
+                            <div class="daily-challenge-desc" id="challengeDesc">Check back soon!</div>
+                            <div class="daily-challenge-progress">
+                                <div class="daily-challenge-bar" id="challengeBar" style="width: 0%"></div>
+                            </div>
+                            <div class="daily-challenge-progress-text" id="challengeProgressText">0 / 0</div>
+                            <div class="daily-challenge-reward">🪙 <span id="challengeReward">0</span> Coins</div>
                         </div>
-                        <div class="daily-challenge-progress-text" id="challengeProgressText">0 / 0</div>
-                        <div class="daily-challenge-reward">🪙 <span id="challengeReward">0</span> Coins</div>
                     </div>
                 </div>
+
+                <!-- Leaderboard -->
+                <div class="highscore-list" id="startHighscores"></div>
             </div>
 
-            <!-- Difficulty Selector -->
-            <p class="difficulty-label">Select Difficulty</p>
-            <div class="difficulty-selector">
-                <button class="difficulty-btn easy" onclick="setDifficulty('easy')">
-                    <div>🌱 Easy</div>
-                    <div class="difficulty-desc">Relaxed pace</div>
-                </button>
-                <button class="difficulty-btn normal active" onclick="setDifficulty('normal')">
-                    <div>⚔️ Normal</div>
-                    <div class="difficulty-desc">Balanced challenge</div>
-                </button>
-                <button class="difficulty-btn hard" onclick="setDifficulty('hard')">
-                    <div>🔥 Hard</div>
-                    <div class="difficulty-desc">For veterans</div>
-                </button>
-                <button class="difficulty-btn nightmare" onclick="setDifficulty('nightmare')">
-                    <div>💀 Nightmare</div>
-                    <div class="difficulty-desc">Pure chaos</div>
-                </button>
-            </div>
+            <!-- TAB: MORE -->
+            <div class="menu-tab-content" id="tab-more">
+                <!-- Quick Actions -->
+                <div class="invite-friend-container" style="margin-bottom: 20px;">
+                    <button class="garage-btn" onclick="openGarage()">🔧 GARAGE</button>
+                    <button class="stats-btn" onclick="openStats()">📊 STATS</button>
+                    <button class="invite-friend-btn" onclick="openInviteModal()">👥 INVITE</button>
+                    <button class="install-pwa-btn hidden" id="installPwaBtn" onclick="installPwa()">📲 INSTALL</button>
+                </div>
 
-            <p class="select-mode-label">Select Game Mode</p>
-            <div class="mode-buttons">
-                <div class="mode-card normal" onclick="startGame(false)">
-                    <div class="mode-icon">🎮</div>
-                    <div class="mode-title">NORMAL</div>
-                    <div class="mode-desc">Classic mode with levels and bosses. Beat all waves to win!</div>
-                </div>
-                <div class="mode-card endless" onclick="startGame(true)">
-                    <div class="mode-icon">♾️</div>
-                    <div class="mode-title">ENDLESS</div>
-                    <div class="mode-desc">Survive infinite waves. How long can you last?</div>
-                </div>
-                <div class="mode-card tutorial" onclick="startTutorial()">
-                    <div class="mode-icon">📖</div>
-                    <div class="mode-title">TUTORIAL</div>
-                    <div class="mode-desc">Learn the controls and game mechanics step by step.</div>
-                </div>
-                <div class="mode-card twoplayer" onclick="startGame(false, true)">
-                    <div class="mode-icon">👥</div>
-                    <div class="mode-title">2 PLAYERS</div>
-                    <div class="mode-desc">Play with a friend! Co-op mode on the same keyboard.</div>
-                </div>
-                <div class="mode-card aidemo" onclick="startAIDemo()">
-                    <div class="mode-icon">🤖</div>
-                    <div class="mode-title">AI DEMO</div>
-                    <div class="mode-desc">Watch AI play! See how the game works before you try.</div>
-                </div>
-                <div class="mode-card bossrush" onclick="startBossRush()">
-                    <div class="mode-icon">👹</div>
-                    <div class="mode-title">BOSS RUSH</div>
-                    <div class="mode-desc">Fight all bosses back-to-back! No waves, pure chaos!</div>
-                </div>
-                <div class="mode-card roguelike" onclick="startRoguelike()">
-                    <div class="mode-icon">🎲</div>
-                    <div class="mode-title">ROGUELIKE</div>
-                    <div class="mode-desc">Choose upgrades on level up! Build your perfect ship!</div>
-                </div>
-            </div>
-            <div class="controls-info">
-                <p class="controls-title">⌨️ Controls</p>
-                <div class="controls-grid">
-                    <div class="control-player">
-                        <span class="player-label p1">PLAYER 1</span>
-                        <p>← ↑ ↓ → Move</p>
-                        <p>SPACE Shoot</p>
+                <!-- Extra Game Modes -->
+                <p class="select-mode-label">Extra Modes</p>
+                <div class="mode-buttons">
+                    <div class="mode-card tutorial" onclick="startTutorial()">
+                        <div class="mode-icon">📖</div>
+                        <div class="mode-title">TUTORIAL</div>
+                        <div class="mode-desc">Learn the controls and mechanics.</div>
                     </div>
-                    <div class="control-player">
-                        <span class="player-label p2">PLAYER 2</span>
-                        <p>W A S D Move</p>
-                        <p>Q Shoot</p>
+                    <div class="mode-card aidemo" onclick="startAIDemo()">
+                        <div class="mode-icon">🤖</div>
+                        <div class="mode-title">AI DEMO</div>
+                        <div class="mode-desc">Watch the AI play the game.</div>
                     </div>
                 </div>
-                <p class="controls-extra">1-2-3 Switch weapon · P Pause · M Mute · F Fullscreen</p>
-                <p class="controls-gamepad">🎮 Gamepads supported! Connect controller to play</p>
+
+                <!-- Controls -->
+                <div class="controls-info">
+                    <p class="controls-title">⌨️ Controls</p>
+                    <div class="controls-grid">
+                        <div class="control-player">
+                            <span class="player-label p1">PLAYER 1</span>
+                            <p>← ↑ ↓ → Move</p>
+                            <p>SPACE Shoot</p>
+                        </div>
+                        <div class="control-player">
+                            <span class="player-label p2">PLAYER 2</span>
+                            <p>W A S D Move</p>
+                            <p>Q Shoot</p>
+                        </div>
+                    </div>
+                    <p class="controls-extra">1-2-3 Switch weapon · P Pause · M Mute · F Fullscreen</p>
+                    <p class="controls-gamepad">🎮 Gamepads supported!</p>
+                </div>
+
+                <!-- Credits -->
+                <div style="margin-top: 20px;">
+                    <a href="https://www.linkedin.com/in/mricebird/" target="_blank" class="creator-btn">👨‍💻 Created by MrIceBird</a>
+                </div>
             </div>
-            <div class="invite-friend-container">
-                <button class="garage-btn" onclick="openGarage()">
-                    🔧 GARAGE
-                </button>
-                <button class="invite-friend-btn" onclick="openInviteModal()">
-                    👥 Invite Friend
-                </button>
-                <a href="https://www.linkedin.com/in/mricebird/" target="_blank" class="creator-btn">
-                    👨‍💻 Who created this?
-                </a>
-                <span class="invite-friend-text">Challenge your friends to beat your score!</span>
-                <button class="install-pwa-btn hidden" id="installPwaBtn" onclick="installPwa()">
-                    📲 Install App
-                </button>
-                <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">
-                    🔲 Fullscreen
-                </button>
-            </div>
-            <div class="highscore-list" id="startHighscores"></div>
         </div>
 
         <!-- Invite Friend Modal -->
@@ -6473,27 +6645,55 @@
         // Audio context for sound effects
         let audioCtx = null;
         let audioReady = false;
+        let audioErrorShown = false;
+
+        function showAudioNotification(message) {
+            if (audioErrorShown) return;
+            audioErrorShown = true;
+
+            const notification = document.createElement('div');
+            notification.className = 'audio-notification';
+            notification.innerHTML = `<span>🔇</span><span>${message}</span>`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
 
         async function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                // Resume AudioContext if suspended (required by modern browsers)
+                if (audioCtx.state === 'suspended') {
+                    await audioCtx.resume();
+                }
+                audioReady = true;
+            } catch (e) {
+                showAudioNotification('Audio unavailable - tap screen to enable');
             }
-            // Resume AudioContext if suspended (required by modern browsers)
-            if (audioCtx.state === 'suspended') {
-                await audioCtx.resume();
-            }
-            audioReady = true;
         }
 
         // Helper to ensure audio is ready before playing
         function ensureAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                if (audioCtx && audioCtx.state !== 'running') {
+                    showAudioNotification('Audio unavailable - tap screen to enable');
+                }
+                return audioCtx && audioCtx.state === 'running';
+            } catch (e) {
+                showAudioNotification('Audio unavailable - tap screen to enable');
+                return false;
             }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            return audioCtx && audioCtx.state === 'running';
         }
 
         // Enhanced Sound effect: Player shooting with weapon variations
@@ -7150,7 +7350,6 @@
          * @param {Object} options - Additional options
          */
         function setUIState(newState, options = {}) {
-            const previousState = currentUIState;
             currentUIState = newState;
 
             // Update body class for CSS state-based styling
@@ -7226,6 +7425,7 @@
                 enemyHealthMultiplier: 0.8,
                 playerLives: 5,
                 scoreMultiplier: 0.5,
+                coinMultiplier: 0.5,
                 powerupChance: 1.5,
                 bossHealthMultiplier: 0.7
             },
@@ -7236,6 +7436,7 @@
                 enemyHealthMultiplier: 1.0,
                 playerLives: 3,
                 scoreMultiplier: 1.0,
+                coinMultiplier: 1.0,
                 powerupChance: 1.0,
                 bossHealthMultiplier: 1.0
             },
@@ -7246,6 +7447,7 @@
                 enemyHealthMultiplier: 1.3,
                 playerLives: 2,
                 scoreMultiplier: 1.5,
+                coinMultiplier: 1.5,
                 powerupChance: 0.7,
                 bossHealthMultiplier: 1.3
             },
@@ -7256,6 +7458,7 @@
                 enemyHealthMultiplier: 1.5,
                 playerLives: 1,
                 scoreMultiplier: 2.5,
+                coinMultiplier: 2.5,
                 powerupChance: 0.4,
                 bossHealthMultiplier: 1.6
             }
@@ -7292,6 +7495,26 @@
                 const btn = document.querySelector(`.difficulty-btn.${saved}`);
                 if (btn) btn.classList.add('active');
             }
+        }
+
+        // Menu tab switching
+        function switchMenuTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.menu-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.menu-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            const tabContent = document.getElementById('tab-' + tabName);
+            if (tabContent) {
+                tabContent.classList.add('active');
+            }
+
+            playSelectSound();
         }
 
         // Volume settings (0-100)
@@ -9174,6 +9397,9 @@
         }
 
         function addCoins(amount) {
+            // Apply difficulty multiplier
+            const difficulty = getDifficulty();
+            amount = Math.floor(amount * (difficulty.coinMultiplier || 1));
             // Apply coin bonus if owned
             if (ownedUpgrades.includes('coinMagnet')) {
                 amount = Math.floor(amount * 1.25);
@@ -9642,7 +9868,8 @@
             shotsHit: 0,
             livesLostThisRound: 0,
             powerupsCollected: 0,
-            ufosKilled: 0
+            ufosKilled: 0,
+            bossesDefeatedNoLives: 0
         };
 
         function getDailyChallenge() {
@@ -9683,7 +9910,8 @@
                 shotsHit: 0,
                 livesLostThisRound: 0,
                 powerupsCollected: 0,
-                ufosKilled: 0
+                ufosKilled: 0,
+                bossesDefeatedNoLives: 0
             };
             dailyChallengeProgress = 0;
         }
@@ -9710,6 +9938,10 @@
                     }
                     break;
                 case 'boss':
+                    dailyChallengeProgress = dailyChallengeStats.bossesDefeatedNoLives;
+                    if (dailyChallengeStats.bossesDefeatedNoLives >= dailyChallenge.goal) {
+                        completed = true;
+                    }
                     break;
                 case 'accuracy':
                     if (dailyChallengeStats.shotsFired > 0) {
@@ -10410,8 +10642,21 @@
 
         function toggleMute() {
             soundMuted = !soundMuted;
-            document.getElementById('muteBtn').textContent = soundMuted ? '🔇' : '🔊';
-            document.getElementById('muteBtn').classList.toggle('muted', soundMuted);
+            const muteBtn = document.getElementById('muteBtn');
+            if (muteBtn) {
+                muteBtn.textContent = soundMuted ? '🔇' : '🔊';
+                muteBtn.classList.toggle('muted', soundMuted);
+            }
+            // Also update menu sound button
+            const menuSoundBtn = document.getElementById('menuSoundBtn');
+            if (menuSoundBtn) {
+                menuSoundBtn.textContent = soundMuted ? '🔇' : '🔊';
+                menuSoundBtn.classList.toggle('active', !soundMuted);
+            }
+        }
+
+        function toggleSound() {
+            toggleMute();
         }
 
         // Power-up functions
@@ -11007,9 +11252,10 @@
                 stopBossMusic();
                 playVictoryFanfare();
 
-                // Check boss daily challenge (defeat boss without losing life)
-                if (dailyChallenge && dailyChallenge.id === 'boss' && dailyChallengeStats.livesLostThisRound === 0) {
-                    completeDailyChallenge();
+                // Track boss defeated without losing life for daily challenge
+                if (dailyChallengeStats.livesLostThisRound === 0) {
+                    dailyChallengeStats.bossesDefeatedNoLives++;
+                    checkDailyChallenge();
                 }
 
                 // Spawn power-up from boss (guaranteed)
@@ -13526,6 +13772,8 @@
             if (roguelikeMode) {
                 roguelikeMode = false;
                 document.getElementById('roguelikeModal').classList.add('hidden');
+                currentRoguelikeUpgradeOptions = [];
+                gamePaused = false;
             }
 
             // Hide mobile controls and reset touch state
@@ -14434,6 +14682,7 @@
             roguelikeStartBomb = false;
             roguelikeVampiric = false;
             roguelikeRegenTimer = 0;
+            currentRoguelikeUpgradeOptions = [];
             player.speed = 7; // Reset to default
         }
 
@@ -14474,11 +14723,17 @@
         function showRoguelikeUpgradeModal() {
             if (!roguelikeMode) return;
 
-            gamePaused = true;
             const modal = document.getElementById('roguelikeModal');
             const container = document.getElementById('upgradeCards');
 
             const upgrades = getRandomUpgrades(3);
+
+            // Safety check: if no upgrades available, skip modal
+            if (upgrades.length === 0) {
+                return;
+            }
+
+            gamePaused = true;
             currentRoguelikeUpgradeOptions = upgrades; // Store for keyboard access
 
             container.innerHTML = upgrades.map((upgrade, index) => `
