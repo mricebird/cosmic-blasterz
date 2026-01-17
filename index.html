@@ -14133,10 +14133,16 @@
             updateSessionStats('score', score);
 
             // Track lifetime stats at game end
-            const playTime = Math.floor((Date.now() - gameStartTime) / 1000);
             updateLifetimeStat('highScore', score, 'max');
             updateLifetimeStat('highLevel', level, 'max');
-            updateLifetimeStat('totalPlayTime', playTime, 'add');
+            // Only add playtime if gameStartTime was properly set (not 0)
+            if (gameStartTime > 0) {
+                const playTime = Math.floor((Date.now() - gameStartTime) / 1000);
+                // Sanity check: only add if playtime is reasonable (less than 24 hours)
+                if (playTime > 0 && playTime < 86400) {
+                    updateLifetimeStat('totalPlayTime', playTime, 'add');
+                }
+            }
 
             // Check accuracy challenge at game over
             if (dailyChallenge && dailyChallenge.id === 'accuracy' &&
@@ -16746,6 +16752,15 @@
             const stored = localStorage.getItem('lifetimeStats');
             if (stored) {
                 lifetimeStats = { ...lifetimeStats, ...JSON.parse(stored) };
+
+                // Migration: Fix corrupted totalPlayTime (bug caused values like 491298 hours)
+                // If totalPlayTime is greater than 1 year in seconds, it's corrupted - reset it
+                const oneYearInSeconds = 365 * 24 * 60 * 60; // 31,536,000 seconds
+                if (lifetimeStats.totalPlayTime > oneYearInSeconds) {
+                    console.log('Fixing corrupted totalPlayTime:', lifetimeStats.totalPlayTime);
+                    lifetimeStats.totalPlayTime = 0;
+                    saveLifetimeStats();
+                }
             }
         }
 
