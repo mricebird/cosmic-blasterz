@@ -14234,17 +14234,21 @@
         function openGarage() {
             playSelectSound();
             showScreenTransition('garage', () => {
-                setUIState('garage');
-                document.getElementById('garageCoins').textContent = totalCoins;
+                try {
+                    setUIState('garage');
+                    document.getElementById('garageCoins').textContent = totalCoins;
 
-                // Update equipped display
-                updateEquippedDisplay();
+                    // Update equipped display
+                    updateEquippedDisplay();
 
-                // Render items
-                renderGarageItems();
+                    // Render items
+                    renderGarageItems();
 
-                // Start ship animation
-                startGarageAnimation();
+                    // Start ship animation
+                    startGarageAnimation();
+                } catch(e) {
+                    console.error('Error opening garage:', e);
+                }
             });
         }
 
@@ -16668,7 +16672,9 @@
             const text = document.getElementById('transitionText');
 
             if (!overlay) {
-                if (callback) callback();
+                if (callback) {
+                    try { callback(); } catch(e) { console.error('Transition callback error:', e); }
+                }
                 return;
             }
 
@@ -16681,9 +16687,13 @@
 
             // Execute callback at midpoint
             setTimeout(() => {
-                if (callback) callback();
+                try {
+                    if (callback) callback();
+                } catch(e) {
+                    console.error('Transition callback error:', e);
+                }
 
-                // Hide overlay
+                // Hide overlay (always, even if callback fails)
                 setTimeout(() => {
                     overlay.classList.remove('active');
                 }, duration / 2);
