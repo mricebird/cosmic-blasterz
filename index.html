@@ -16868,25 +16868,8 @@
         }
 
         function openFeedback() {
-            const subject = encodeURIComponent('Cosmic Blasterz Feedback');
-            const body = encodeURIComponent(
-`Hey!
-
-Here's my feedback for Cosmic Blasterz:
-
-⭐ Rating (1-5):
-
-💬 Comments / What could be improved:
-
-
-💡 Ideas for new features:
-
-
----
-Sent from Cosmic Blasterz`
-            );
             playSelectSound();
-            window.location.href = `mailto:mricebird@gmail.com?subject=${subject}&body=${body}`;
+            window.open('https://forms.gle/RsnfSqPeikNJnLyMA', '_blank');
         }
 
         // Custom confirm modal system
