@@ -13428,6 +13428,9 @@
                 const x = pet.x + pet.width / 2;
                 const y = pet.y + pet.height / 2 + Math.sin(pet.bobPhase) * 5;
 
+                // Don't draw if off-screen (prevents visual artifacts)
+                if (x < -20 || x > canvas.width + 20) return;
+
                 ctx.save();
 
                 // Glowing aura
@@ -13539,8 +13542,9 @@
         function drawAlienPet() {
             if (!alienPet.active) return;
 
-            const x = alienPet.x;
-            const y = alienPet.y + Math.sin(alienPet.bobPhase) * 4;
+            // Keep pet position on screen
+            const x = Math.max(20, Math.min(canvas.width - 20, alienPet.x));
+            const y = Math.max(30, alienPet.y + Math.sin(alienPet.bobPhase) * 4);
             const happy = alienPet.happiness > 0;
 
             ctx.save();
