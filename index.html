@@ -2017,11 +2017,32 @@
             flex: 1;
             padding: 20px;
             overflow-y: auto;
+            overflow-x: hidden;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 15px;
             align-content: start;
             min-height: 0;
+            max-height: calc(100vh - 200px);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .garage-items::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .garage-items::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .garage-items::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 4px;
+        }
+
+        .garage-items::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.7);
         }
 
         .garage-item {
