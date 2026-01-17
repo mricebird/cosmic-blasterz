@@ -16885,8 +16885,8 @@ Here's my feedback for Cosmic Blasterz:
 ---
 Sent from Cosmic Blasterz`
             );
-            window.open(`mailto:mricebird@gmail.com?subject=${subject}&body=${body}`, '_self');
             playSelectSound();
+            window.location.href = `mailto:mricebird@gmail.com?subject=${subject}&body=${body}`;
         }
 
         // Custom confirm modal system
