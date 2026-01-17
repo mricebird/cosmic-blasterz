@@ -433,37 +433,78 @@
             overflow-y: auto;
         }
 
-        /* Clean game title */
+        /* Epic 3D game title */
         .game-title {
             font-family: 'Orbitron', sans-serif;
             font-size: 42px;
-            font-weight: 800;
-            color: #0ff;
-            text-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(255, 0, 255, 0.3);
+            font-weight: 900;
             margin: 10px 0;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
+            perspective: 500px;
         }
 
         .game-title .letter {
             display: inline-block;
-            animation: letterJump 1.2s ease-in-out infinite;
+            animation: letterJump3D 1.5s ease-in-out infinite;
+            color: #fff;
+            text-shadow:
+                /* 3D extrusion effect */
+                0 1px 0 #0cc,
+                0 2px 0 #0bb,
+                0 3px 0 #0aa,
+                0 4px 0 #099,
+                0 5px 0 #088,
+                /* Glow */
+                0 0 10px #0ff,
+                0 0 20px #0ff,
+                0 0 40px #0ff,
+                0 0 80px #f0f;
         }
 
         .game-title .space {
-            width: 0.3em;
+            width: 0.4em;
         }
 
-        @keyframes letterJump {
+        @keyframes letterJump3D {
             0%, 100% {
-                transform: translateY(0);
-                text-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(255, 0, 255, 0.3);
+                transform: translateY(0) rotateX(0deg) scale(1);
+                color: #0ff;
+                text-shadow:
+                    0 1px 0 #0cc,
+                    0 2px 0 #0bb,
+                    0 3px 0 #0aa,
+                    0 4px 0 #099,
+                    0 5px 0 #088,
+                    0 0 10px #0ff,
+                    0 0 20px #0ff,
+                    0 0 40px #0ff,
+                    0 0 80px #f0f;
+            }
+            25% {
+                color: #ff0;
             }
             50% {
-                transform: translateY(-8px);
-                text-shadow: 0 0 30px rgba(0, 255, 255, 0.9), 0 0 50px rgba(255, 0, 255, 0.6);
+                transform: translateY(-15px) rotateX(10deg) scale(1.1);
+                color: #f0f;
+                text-shadow:
+                    0 1px 0 #c0c,
+                    0 2px 0 #b0b,
+                    0 3px 0 #a0a,
+                    0 4px 0 #909,
+                    0 5px 0 #808,
+                    0 6px 0 #707,
+                    0 7px 0 #606,
+                    0 8px 15px rgba(0,0,0,0.5),
+                    0 0 20px #f0f,
+                    0 0 40px #f0f,
+                    0 0 80px #0ff,
+                    0 0 120px #f0f;
+            }
+            75% {
+                color: #0f0;
             }
         }
 
@@ -1493,17 +1534,18 @@
 
         .difficulty-label {
             font-family: 'Orbitron', sans-serif;
-            font-size: 8px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px currentColor;
         }
 
-        .difficulty-option.easy .difficulty-label { color: rgba(0, 255, 100, 0.7); }
-        .difficulty-option.normal .difficulty-label { color: rgba(0, 200, 255, 0.7); }
-        .difficulty-option.hard .difficulty-label { color: rgba(255, 100, 100, 0.7); }
-        .difficulty-option.nightmare .difficulty-label { color: rgba(255, 0, 255, 0.7); }
+        .difficulty-option.easy .difficulty-label { color: #0f0; text-shadow: 0 0 10px rgba(0, 255, 0, 0.6); }
+        .difficulty-option.normal .difficulty-label { color: #0ff; text-shadow: 0 0 10px rgba(0, 255, 255, 0.6); }
+        .difficulty-option.hard .difficulty-label { color: #f55; text-shadow: 0 0 10px rgba(255, 85, 85, 0.6); }
+        .difficulty-option.nightmare .difficulty-label { color: #f0f; text-shadow: 0 0 10px rgba(255, 0, 255, 0.6); }
 
         .difficulty-btn {
             width: 100%;
