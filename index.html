@@ -9000,6 +9000,62 @@
                 tip: 'Master combos, survive boss fights, and play consistently to reach this milestone.',
                 rarity: 'legendary', reward: 150,
                 check: (stats) => stats.maxScore >= 20000
+            },
+            comboGod: {
+                icon: '💥', name: 'Combo God', desc: 'Get a 10x combo',
+                longDesc: 'UNSTOPPABLE! A 10x combo means you are a true master of destruction. Your enemies fall like dominoes before your relentless assault.',
+                tip: 'Use spread weapons and bomb power-ups strategically to chain massive combos.',
+                rarity: 'legendary', reward: 200,
+                check: (stats) => stats.maxCombo >= 10
+            },
+            bossHunter: {
+                icon: '🐉', name: 'Boss Hunter', desc: 'Defeat 5 bosses',
+                longDesc: 'Five alien commanders have fallen to your might! You have become a nightmare for the enemy leadership. They whisper your name in fear.',
+                tip: 'Keep playing through levels - bosses appear at levels 5, 10, 15, 20, and 25.',
+                rarity: 'epic', reward: 100,
+                check: (stats) => stats.bossKills >= 5
+            },
+            dedicated: {
+                icon: '🎮', name: 'Dedicated', desc: 'Play 10 games',
+                longDesc: 'Your dedication to defending the cosmos is admirable! 10 games shows commitment to the cause.',
+                tip: 'Just keep playing! Each game counts towards this achievement.',
+                rarity: 'common', reward: 25,
+                check: (stats) => stats.gamesPlayed >= 10
+            },
+            veteran50: {
+                icon: '🏅', name: 'Space Veteran', desc: 'Play 50 games',
+                longDesc: 'A true space veteran! 50 games of intense alien combat has hardened you into an elite defender.',
+                tip: 'Keep at it, soldier! Your experience is showing.',
+                rarity: 'rare', reward: 75,
+                check: (stats) => stats.gamesPlayed >= 50
+            },
+            collector: {
+                icon: '🧲', name: 'Collector', desc: 'Collect 50 power-ups',
+                longDesc: 'You have a talent for grabbing those cosmic bonuses! 50 power-ups collected shows you know how to gear up.',
+                tip: 'Power-ups drop from enemies. Use the magnet power-up to attract them!',
+                rarity: 'rare', reward: 50,
+                check: (stats) => stats.powerUpsCollected >= 50
+            },
+            destroyer: {
+                icon: '🔥', name: 'Destroyer', desc: 'Kill 1000 enemies',
+                longDesc: 'One thousand aliens have met their end at your hands. You are a walking apocalypse for the invasion force.',
+                tip: 'Endless mode is great for racking up massive kill counts.',
+                rarity: 'epic', reward: 100,
+                check: (stats) => stats.totalKills >= 1000
+            },
+            elite: {
+                icon: '🌟', name: 'Elite', desc: 'Reach level 20',
+                longDesc: 'Only the elite reach level 20. The enemies here are the deadliest the invasion has to offer. You are among the best.',
+                tip: 'Focus on survival. Upgrade your weapons and use power-ups wisely.',
+                rarity: 'epic', reward: 125,
+                check: (stats) => stats.maxLevel >= 20
+            },
+            perfectionist: {
+                icon: '💫', name: 'Perfectionist', desc: 'Complete 5 levels without getting hit',
+                longDesc: 'Five perfect levels! Your reflexes and positioning are legendary. The aliens cannot touch you.',
+                tip: 'Take your time, stay mobile, and prioritize dodging over attacking.',
+                rarity: 'legendary', reward: 200,
+                check: (stats) => stats.perfectLevels >= 5
             }
         };
 
@@ -9015,7 +9071,8 @@
             perfectLevels: 0,
             powerUpsCollected: 0,
             maxScore: 0,
-            levelDamageTaken: 0
+            levelDamageTaken: 0,
+            gamesPlayed: 0
         };
         let sessionStats = {
             totalKills: 0,
@@ -9025,7 +9082,8 @@
             perfectLevels: 0,
             powerUpsCollected: 0,
             maxScore: 0,
-            levelDamageTaken: 0
+            levelDamageTaken: 0,
+            gamesPlayed: 0
         };
 
         function loadAchievements() {
@@ -9055,6 +9113,10 @@
             gameStats.perfectLevels += sessionStats.perfectLevels;
             gameStats.powerUpsCollected += sessionStats.powerUpsCollected;
             gameStats.maxScore = Math.max(gameStats.maxScore, sessionStats.maxScore);
+            // Also sync from lifetimeStats for cumulative achievements
+            gameStats.gamesPlayed = lifetimeStats.gamesPlayed || 0;
+            gameStats.totalKills = Math.max(gameStats.totalKills, lifetimeStats.totalKills || 0);
+            gameStats.powerUpsCollected = Math.max(gameStats.powerUpsCollected, lifetimeStats.powerUpsCollected || 0);
 
             Object.keys(ACHIEVEMENTS).forEach(key => {
                 if (!unlockedAchievements.includes(key) && ACHIEVEMENTS[key].check(gameStats)) {
@@ -10866,6 +10928,8 @@
                     const puInfo = POWERUP_TYPES[pu.type];
                     if (puInfo) {
                         showFloatingText(player.x + player.width / 2, player.y, '+' + puInfo.name, 'powerup');
+                        // Colorful particle burst effect
+                        createPowerUpParticles(pu.x + pu.width / 2, pu.y + pu.height / 2, puInfo.color);
                     }
 
                     return false;
@@ -13356,6 +13420,13 @@
             // Reduced particle count for better performance
             const actualCount = Math.min(count, 8);
 
+            // Screen shake for larger explosions - juicy feel!
+            if (count >= 8) {
+                triggerScreenShake(Math.min(count / 2, 8), 150);
+            } else if (count >= 5) {
+                triggerScreenShake(3, 100);
+            }
+
             // Main debris particles only
             for (let i = 0; i < actualCount; i++) {
                 const angle = (Math.PI * 2 / actualCount) * i + Math.random() * 0.3;
@@ -13390,6 +13461,43 @@
                         decay: 0.06
                     });
                 }
+            }
+        }
+
+        // Create power-up collection particles - colorful burst effect
+        function createPowerUpParticles(x, y, color) {
+            const colors = [color, '#fff', '#ff0', '#0ff', '#f0f'];
+
+            // Ring of particles expanding outward
+            for (let i = 0; i < 12; i++) {
+                const angle = (Math.PI * 2 / 12) * i;
+                const speed = 4 + Math.random() * 2;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 1,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: 3 + Math.random() * 2,
+                    type: 'powerup',
+                    decay: 0.03
+                });
+            }
+
+            // Sparkle particles rising up
+            for (let i = 0; i < 8; i++) {
+                particles.push({
+                    x: x + (Math.random() - 0.5) * 30,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: -3 - Math.random() * 3,
+                    life: 1,
+                    color: '#fff',
+                    size: 2,
+                    type: 'sparkle',
+                    decay: 0.025
+                });
             }
         }
 
