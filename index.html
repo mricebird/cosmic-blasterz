@@ -13351,11 +13351,13 @@
             // Only spawn if player doesn't already have a pet
             if (alienPet.active || floatingPets.length > 0) return;
 
-            // Spawn from left or right edge
+            // Spawn from left or right edge, in lower half where player can reach
             const fromLeft = Math.random() < 0.5;
+            const minY = canvas.height * 0.5;
+            const maxY = canvas.height - 120;
             floatingPets.push({
                 x: fromLeft ? -30 : canvas.width + 30,
-                y: 100 + Math.random() * (canvas.height * 0.4),
+                y: minY + Math.random() * (maxY - minY),
                 vx: fromLeft ? 1.5 : -1.5,
                 vy: Math.sin(Date.now() / 500) * 0.5,
                 width: 40,
