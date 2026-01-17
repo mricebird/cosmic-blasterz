@@ -11693,28 +11693,26 @@
         // ==========================================
 
         function spawnAstronaut() {
-            // Decide which edge to spawn from (0=left, 1=right, 2=top)
-            const edge = Math.floor(Math.random() * 3);
+            // Only spawn from left or right edges, in the lower half where player can reach
+            const edge = Math.random() < 0.5 ? 0 : 1;
             let x, y, vx, vy;
+
+            // Spawn in the lower portion of the screen (where player can fly)
+            const minY = canvas.height * 0.5;  // Lower half of screen
+            const maxY = canvas.height - 100;   // Not too close to bottom
 
             if (edge === 0) {
                 // Left edge
                 x = -30;
-                y = 100 + Math.random() * (canvas.height - 300);
+                y = minY + Math.random() * (maxY - minY);
                 vx = 0.8 + Math.random() * 0.5;
-                vy = (Math.random() - 0.5) * 0.4;
-            } else if (edge === 1) {
+                vy = (Math.random() - 0.5) * 0.3; // Slight vertical drift
+            } else {
                 // Right edge
                 x = canvas.width + 30;
-                y = 100 + Math.random() * (canvas.height - 300);
+                y = minY + Math.random() * (maxY - minY);
                 vx = -(0.8 + Math.random() * 0.5);
-                vy = (Math.random() - 0.5) * 0.4;
-            } else {
-                // Top edge
-                x = 100 + Math.random() * (canvas.width - 200);
-                y = -30;
-                vx = (Math.random() - 0.5) * 0.6;
-                vy = 0.6 + Math.random() * 0.4;
+                vy = (Math.random() - 0.5) * 0.3; // Slight vertical drift
             }
 
             astronauts.push({
