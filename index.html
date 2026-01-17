@@ -15679,8 +15679,8 @@
         function updateMobileControlsVisibility() {
             const mobileControls = document.getElementById('mobileControls');
             if (mobileControls && isTouchDevice) {
-                // Hide mobile controls during AI demo mode
-                const shouldShow = gameRunning && !gamePaused && !aiDemoMode;
+                // Hide mobile controls during AI demo mode and 2-player co-op mode
+                const shouldShow = gameRunning && !gamePaused && !aiDemoMode && !twoPlayerMode;
                 mobileControls.style.display = shouldShow ? 'flex' : 'none';
             }
         }
