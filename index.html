@@ -9163,73 +9163,85 @@
                 name: 'Classic',
                 rarity: 'common',
                 price: 0,
-                colors: { body: '#0ff', cockpit: '#fff', engine: '#f80' }
+                colors: { body: '#0ff', cockpit: '#fff', engine: '#f80' },
+                stats: { speed: 50, damage: 50, fireRate: 50, defense: 50 }
             },
             stealth: {
                 name: 'Stealth',
                 rarity: 'common',
                 price: 200,
-                colors: { body: '#333', cockpit: '#0f0', engine: '#0f0' }
+                colors: { body: '#333', cockpit: '#0f0', engine: '#0f0' },
+                stats: { speed: 70, damage: 40, fireRate: 60, defense: 30 }
             },
             crimson: {
                 name: 'Crimson',
                 rarity: 'common',
                 price: 250,
-                colors: { body: '#f33', cockpit: '#fff', engine: '#ff0' }
+                colors: { body: '#f33', cockpit: '#fff', engine: '#ff0' },
+                stats: { speed: 50, damage: 70, fireRate: 45, defense: 45 }
             },
             royal: {
                 name: 'Royal',
                 rarity: 'rare',
                 price: 400,
-                colors: { body: '#a0f', cockpit: '#fff', engine: '#f0f' }
+                colors: { body: '#a0f', cockpit: '#fff', engine: '#f0f' },
+                stats: { speed: 55, damage: 60, fireRate: 55, defense: 55 }
             },
             golden: {
                 name: 'Golden',
                 rarity: 'rare',
                 price: 500,
-                colors: { body: '#fc0', cockpit: '#fff', engine: '#f80' }
+                colors: { body: '#fc0', cockpit: '#fff', engine: '#f80' },
+                stats: { speed: 45, damage: 50, fireRate: 50, defense: 75 }
             },
             neon: {
                 name: 'Neon',
                 rarity: 'rare',
                 price: 450,
-                colors: { body: '#0f0', cockpit: '#fff', engine: '#0ff' }
+                colors: { body: '#0f0', cockpit: '#fff', engine: '#0ff' },
+                stats: { speed: 60, damage: 45, fireRate: 75, defense: 35 }
             },
             phantom: {
                 name: 'Phantom',
                 rarity: 'epic',
                 price: 800,
-                colors: { body: '#808', cockpit: '#f0f', engine: '#a0f' }
+                colors: { body: '#808', cockpit: '#f0f', engine: '#a0f' },
+                stats: { speed: 80, damage: 50, fireRate: 70, defense: 30 }
             },
             arctic: {
                 name: 'Arctic',
                 rarity: 'epic',
                 price: 750,
-                colors: { body: '#aef', cockpit: '#fff', engine: '#0af' }
+                colors: { body: '#aef', cockpit: '#fff', engine: '#0af' },
+                stats: { speed: 45, damage: 55, fireRate: 65, defense: 70 }
             },
             inferno: {
                 name: 'Inferno',
                 rarity: 'epic',
                 price: 850,
-                colors: { body: '#f50', cockpit: '#ff0', engine: '#f00' }
+                colors: { body: '#f50', cockpit: '#ff0', engine: '#f00' },
+                stats: { speed: 45, damage: 85, fireRate: 40, defense: 55 }
             },
             galaxy: {
                 name: 'Galaxy',
                 rarity: 'legendary',
                 price: 1500,
-                colors: { body: '#50f', cockpit: '#fff', engine: '#f0f', gradient: true }
+                colors: { body: '#50f', cockpit: '#fff', engine: '#f0f', gradient: true },
+                stats: { speed: 65, damage: 65, fireRate: 65, defense: 65 }
             },
             rainbow: {
                 name: 'Rainbow',
                 rarity: 'legendary',
                 price: 2000,
-                colors: { body: '#f00', cockpit: '#fff', engine: '#ff0', rainbow: true }
+                colors: { body: '#f00', cockpit: '#fff', engine: '#ff0', rainbow: true },
+                stats: { speed: 75, damage: 60, fireRate: 80, defense: 50 }
             },
             void: {
                 name: 'Void',
                 rarity: 'legendary',
                 price: 2500,
-                colors: { body: '#111', cockpit: '#f00', engine: '#f00', glow: '#f00' }
+                colors: { body: '#111', cockpit: '#f00', engine: '#f00', glow: '#f00' },
+                stats: { speed: 40, damage: 90, fireRate: 40, defense: 85 }
             }
         };
 
@@ -14384,127 +14396,254 @@
             document.getElementById('equippedWeapon').textContent = weaponData ? weaponData.name : 'Laser';
             document.getElementById('garageShipName').textContent = (skinData ? skinData.name : 'Classic').toUpperCase() + ' FIGHTER';
 
-            // Update stats
-            const baseSpeed = 50;
-            const baseDamage = 40;
-            const baseFireRate = 50;
-            const baseDefense = 30;
+            // Get ship base stats
+            const shipStats = skinData?.stats || { speed: 50, damage: 50, fireRate: 50, defense: 50 };
 
-            const speedBonus = hasUpgrade('fasterShip') ? 20 : 0;
-            const damageBonus = hasUpgrade('biggerBullets') ? 25 : 0;
-            const defenseBonus = hasUpgrade('extraLife') ? 25 : (hasUpgrade('startShield') ? 15 : 0);
+            // Calculate upgrade bonuses
+            const speedBonus = hasUpgrade('fasterShip') ? 15 : 0;
+            const damageBonus = hasUpgrade('biggerBullets') ? 15 : 0;
+            const defenseBonus = hasUpgrade('extraLife') ? 15 : (hasUpgrade('startShield') ? 10 : 0);
+            const weaponDamageBonus = (weaponUpgradeLevels[currentWeapon] || 0) * 3;
+            const weaponFireRateBonus = (weaponUpgradeLevels[currentWeapon] || 0) * 5;
 
-            document.getElementById('statSpeed').style.width = (baseSpeed + speedBonus) + '%';
-            document.getElementById('statDamage').style.width = (baseDamage + damageBonus + (weaponUpgradeLevels[currentWeapon] || 0) * 5) + '%';
-            document.getElementById('statFireRate').style.width = (baseFireRate + (weaponUpgradeLevels[currentWeapon] || 0) * 8) + '%';
-            document.getElementById('statDefense').style.width = (baseDefense + defenseBonus) + '%';
+            // Calculate final stats (capped at 100)
+            const finalSpeed = Math.min(100, shipStats.speed + speedBonus);
+            const finalDamage = Math.min(100, shipStats.damage + damageBonus + weaponDamageBonus);
+            const finalFireRate = Math.min(100, shipStats.fireRate + weaponFireRateBonus);
+            const finalDefense = Math.min(100, shipStats.defense + defenseBonus);
+
+            document.getElementById('statSpeed').style.width = finalSpeed + '%';
+            document.getElementById('statDamage').style.width = finalDamage + '%';
+            document.getElementById('statFireRate').style.width = finalFireRate + '%';
+            document.getElementById('statDefense').style.width = finalDefense + '%';
+        }
+
+        // Get current ship stats for gameplay
+        function getShipStats() {
+            const skinData = SHIP_SKINS[selectedSkin];
+            const shipStats = skinData?.stats || { speed: 50, damage: 50, fireRate: 50, defense: 50 };
+
+            const speedBonus = hasUpgrade('fasterShip') ? 15 : 0;
+            const damageBonus = hasUpgrade('biggerBullets') ? 15 : 0;
+            const defenseBonus = hasUpgrade('extraLife') ? 15 : (hasUpgrade('startShield') ? 10 : 0);
+
+            return {
+                speed: Math.min(100, shipStats.speed + speedBonus),
+                damage: Math.min(100, shipStats.damage + damageBonus),
+                fireRate: Math.min(100, shipStats.fireRate),
+                defense: Math.min(100, shipStats.defense + defenseBonus)
+            };
         }
 
         function startGarageAnimation() {
             const canvas = document.getElementById('garageCanvas');
             const ctx = canvas.getContext('2d');
+            let time = 0;
 
             function animate() {
-                // Clear
+                time += 0.016;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                // Draw starfield background
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-                for (let i = 0; i < 50; i++) {
-                    const x = (i * 73 + Date.now() / 50) % canvas.width;
-                    const y = (i * 47) % canvas.height;
+                // Draw starfield background with depth
+                for (let i = 0; i < 80; i++) {
+                    const depth = (i % 3) + 1;
+                    const speed = 20 / depth;
+                    const x = (i * 73 + time * speed) % canvas.width;
+                    const y = (i * 47 + i * 13) % canvas.height;
+                    const size = 0.5 + (3 - depth) * 0.5;
+                    const alpha = 0.3 + (3 - depth) * 0.2;
+                    ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
                     ctx.beginPath();
-                    ctx.arc(x, y, Math.random() * 1.5, 0, Math.PI * 2);
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
                     ctx.fill();
                 }
 
-                // Draw large ship in center
                 const shipX = canvas.width / 2;
-                const shipY = canvas.height / 2 + Math.sin(Date.now() / 500) * 10;
-                const scale = 4;
+                const shipY = canvas.height / 2 + Math.sin(time * 2) * 8;
+                const scale = 4.5;
+                const tilt = Math.sin(time * 1.5) * 0.05;
 
-                // Get skin colors
                 const skin = SHIP_SKINS[selectedSkin] || SHIP_SKINS.classic;
                 const colors = skin.colors;
+                const baseColor = colors.body || '#0ff';
 
                 ctx.save();
                 ctx.translate(shipX, shipY);
+                ctx.rotate(tilt);
+
+                // Shadow under ship
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                ctx.beginPath();
+                ctx.ellipse(5, 45 * scale, 25 * scale, 8 * scale, 0.2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Engine exhaust with particles
+                const trail = TRAIL_STYLES[selectedTrail] || TRAIL_STYLES.classic;
+                for (let i = 0; i < 15; i++) {
+                    const progress = (time * 3 + i * 0.2) % 1;
+                    const y = 25 * scale + progress * 60;
+                    const alpha = (1 - progress) * 0.6;
+                    const spread = progress * 15;
+                    let color;
+                    if (trail.rainbow) {
+                        const hue = (time * 100 + i * 30) % 360;
+                        color = `hsla(${hue}, 100%, 60%, ${alpha})`;
+                    } else {
+                        color = colors.engine || '#f80';
+                        const r = parseInt(color.slice(1,3) || 'ff', 16);
+                        const g = parseInt(color.slice(3,5) || '88', 16);
+                        const b = parseInt(color.slice(5,7) || '00', 16);
+                        color = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                    }
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(-6 * scale + Math.sin(time * 10 + i) * spread, y, 4 - progress * 3, 0, Math.PI * 2);
+                    ctx.arc(6 * scale + Math.sin(time * 10 + i + 1) * spread, y, 4 - progress * 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
 
                 // Engine glow
-                const engineGlow = ctx.createRadialGradient(0, 30 * scale, 0, 0, 30 * scale, 40 * scale);
-                engineGlow.addColorStop(0, colors.engine || '#f80');
-                engineGlow.addColorStop(0.5, 'rgba(255, 100, 0, 0.3)');
+                const engineGlow = ctx.createRadialGradient(0, 28 * scale, 0, 0, 28 * scale, 35 * scale);
+                const engineCol = colors.engine || '#f80';
+                engineGlow.addColorStop(0, engineCol);
+                engineGlow.addColorStop(0.3, engineCol + '80');
+                engineGlow.addColorStop(0.7, engineCol + '20');
                 engineGlow.addColorStop(1, 'transparent');
                 ctx.fillStyle = engineGlow;
                 ctx.beginPath();
-                ctx.ellipse(0, 35 * scale, 15 * scale, 40 * scale, 0, 0, Math.PI * 2);
+                ctx.ellipse(0, 30 * scale, 18 * scale, 30 * scale, 0, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Trail preview
-                const trail = TRAIL_STYLES[selectedTrail] || TRAIL_STYLES.classic;
-                for (let i = 0; i < 8; i++) {
-                    const alpha = 1 - i / 8;
-                    const y = 40 * scale + i * 8;
-                    let color;
-                    if (trail.rainbow) {
-                        const hue = (Date.now() / 10 + i * 30) % 360;
-                        color = `hsla(${hue}, 100%, 50%, ${alpha * 0.5})`;
-                    } else {
-                        color = `rgba(${parseInt(trail.color1.slice(1,3), 16)}, ${parseInt(trail.color1.slice(3,5), 16)}, ${parseInt(trail.color1.slice(5,7), 16)}, ${alpha * 0.5})`;
-                    }
-                    ctx.strokeStyle = color;
-                    ctx.lineWidth = (8 - i) * 2;
-                    ctx.beginPath();
-                    ctx.moveTo(-5 * scale, y - 8);
-                    ctx.lineTo(-5 * scale, y);
-                    ctx.moveTo(5 * scale, y - 8);
-                    ctx.lineTo(5 * scale, y);
-                    ctx.stroke();
-                }
+                // Thruster housings
+                ctx.fillStyle = '#222';
+                ctx.fillRect(-8 * scale, 18 * scale, 4 * scale, 12 * scale);
+                ctx.fillRect(4 * scale, 18 * scale, 4 * scale, 12 * scale);
+                ctx.fillStyle = '#444';
+                ctx.fillRect(-7.5 * scale, 19 * scale, 3 * scale, 10 * scale);
+                ctx.fillRect(4.5 * scale, 19 * scale, 3 * scale, 10 * scale);
 
-                // Ship body
-                ctx.fillStyle = colors.body || '#0ff';
+                // Main body with 3D gradient
+                const bodyGrad = ctx.createLinearGradient(-15 * scale, 0, 15 * scale, 0);
+                bodyGrad.addColorStop(0, shadeColor(baseColor, -40));
+                bodyGrad.addColorStop(0.3, shadeColor(baseColor, 20));
+                bodyGrad.addColorStop(0.5, shadeColor(baseColor, 40));
+                bodyGrad.addColorStop(0.7, shadeColor(baseColor, 10));
+                bodyGrad.addColorStop(1, shadeColor(baseColor, -50));
+
+                ctx.fillStyle = bodyGrad;
                 ctx.beginPath();
-                ctx.moveTo(0, -20 * scale);
-                ctx.lineTo(-12 * scale, 15 * scale);
-                ctx.lineTo(-8 * scale, 20 * scale);
-                ctx.lineTo(0, 15 * scale);
-                ctx.lineTo(8 * scale, 20 * scale);
-                ctx.lineTo(12 * scale, 15 * scale);
+                ctx.moveTo(0, -22 * scale);
+                ctx.quadraticCurveTo(-6 * scale, -10 * scale, -14 * scale, 15 * scale);
+                ctx.lineTo(-10 * scale, 22 * scale);
+                ctx.lineTo(-6 * scale, 18 * scale);
+                ctx.lineTo(0, 20 * scale);
+                ctx.lineTo(6 * scale, 18 * scale);
+                ctx.lineTo(10 * scale, 22 * scale);
+                ctx.lineTo(14 * scale, 15 * scale);
+                ctx.quadraticCurveTo(6 * scale, -10 * scale, 0, -22 * scale);
                 ctx.closePath();
                 ctx.fill();
 
-                // Ship outline
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                // Body highlight edge
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // Cockpit
-                ctx.fillStyle = colors.cockpit || '#fff';
+                // Panel lines for detail
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+                ctx.lineWidth = 1;
                 ctx.beginPath();
-                ctx.ellipse(0, -5 * scale, 4 * scale, 8 * scale, 0, 0, Math.PI * 2);
+                ctx.moveTo(-4 * scale, -15 * scale);
+                ctx.lineTo(-8 * scale, 10 * scale);
+                ctx.moveTo(4 * scale, -15 * scale);
+                ctx.lineTo(8 * scale, 10 * scale);
+                ctx.moveTo(-10 * scale, 5 * scale);
+                ctx.lineTo(10 * scale, 5 * scale);
+                ctx.stroke();
+
+                // Wing accents
+                ctx.fillStyle = shadeColor(baseColor, -30);
+                ctx.beginPath();
+                ctx.moveTo(-10 * scale, 10 * scale);
+                ctx.lineTo(-14 * scale, 15 * scale);
+                ctx.lineTo(-10 * scale, 18 * scale);
+                ctx.closePath();
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(10 * scale, 10 * scale);
+                ctx.lineTo(14 * scale, 15 * scale);
+                ctx.lineTo(10 * scale, 18 * scale);
+                ctx.closePath();
                 ctx.fill();
 
-                // Cockpit shine
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                // Cockpit with glass effect
+                const cockpitGrad = ctx.createRadialGradient(-2 * scale, -10 * scale, 0, 0, -5 * scale, 10 * scale);
+                cockpitGrad.addColorStop(0, '#fff');
+                cockpitGrad.addColorStop(0.3, colors.cockpit || '#aef');
+                cockpitGrad.addColorStop(0.7, shadeColor(colors.cockpit || '#0af', -30));
+                cockpitGrad.addColorStop(1, shadeColor(colors.cockpit || '#08a', -50));
+
+                ctx.fillStyle = cockpitGrad;
                 ctx.beginPath();
-                ctx.ellipse(-1.5 * scale, -8 * scale, 2 * scale, 3 * scale, -0.3, 0, Math.PI * 2);
+                ctx.ellipse(0, -5 * scale, 5 * scale, 10 * scale, 0, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Weapon indicators
-                const weaponColor = currentWeapon === 'laser' ? '#0ff' : (currentWeapon === 'missile' ? '#f44' : '#a0f');
-                ctx.fillStyle = weaponColor;
-                ctx.shadowColor = weaponColor;
-                ctx.shadowBlur = 10;
+                // Cockpit frame
+                ctx.strokeStyle = shadeColor(baseColor, -20);
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                // Cockpit reflection
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
                 ctx.beginPath();
-                ctx.arc(-8 * scale, 5 * scale, 3, 0, Math.PI * 2);
-                ctx.arc(8 * scale, 5 * scale, 3, 0, Math.PI * 2);
+                ctx.ellipse(-2 * scale, -10 * scale, 2.5 * scale, 4 * scale, -0.4, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Front detail/sensor
+                ctx.fillStyle = colors.glow || baseColor;
+                ctx.shadowColor = colors.glow || baseColor;
+                ctx.shadowBlur = 15;
+                ctx.beginPath();
+                ctx.arc(0, -18 * scale, 2 * scale, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.shadowBlur = 0;
 
-                ctx.restore();
+                // Side lights (animated)
+                const pulseAlpha = 0.5 + Math.sin(time * 5) * 0.3;
+                const weaponColor = currentWeapon === 'laser' ? '#0ff' : (currentWeapon === 'missile' ? '#f44' : '#a0f');
+                ctx.fillStyle = weaponColor;
+                ctx.shadowColor = weaponColor;
+                ctx.shadowBlur = 15 + Math.sin(time * 5) * 5;
+                ctx.globalAlpha = pulseAlpha + 0.5;
+                ctx.beginPath();
+                ctx.arc(-10 * scale, 3 * scale, 3, 0, Math.PI * 2);
+                ctx.arc(10 * scale, 3 * scale, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+                ctx.shadowBlur = 0;
 
+                // Weapon mounts
+                ctx.fillStyle = '#333';
+                ctx.fillRect(-12 * scale, 0 * scale, 3 * scale, 8 * scale);
+                ctx.fillRect(9 * scale, 0 * scale, 3 * scale, 8 * scale);
+                ctx.fillStyle = '#555';
+                ctx.fillRect(-11.5 * scale, 1 * scale, 2 * scale, 6 * scale);
+                ctx.fillRect(9.5 * scale, 1 * scale, 2 * scale, 6 * scale);
+
+                ctx.restore();
                 garageAnimationFrame = requestAnimationFrame(animate);
+            }
+
+            // Helper to lighten/darken colors
+            function shadeColor(color, percent) {
+                if (!color || color.length < 4) return '#888';
+                let hex = color.replace('#', '');
+                if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+                const num = parseInt(hex, 16);
+                const r = Math.min(255, Math.max(0, (num >> 16) + percent));
+                const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + percent));
+                const b = Math.min(255, Math.max(0, (num & 0x0000FF) + percent));
+                return `rgb(${r}, ${g}, ${b})`;
             }
 
             animate();
