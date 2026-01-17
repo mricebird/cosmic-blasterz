@@ -426,8 +426,8 @@
         }
 
         .speedrun-timer {
-            position: absolute;
-            top: 10px;
+            position: fixed;
+            top: 22px;
             left: 15px;
             color: #0ff;
             font-family: 'Share Tech Mono', 'Orbitron', monospace;
@@ -436,17 +436,16 @@
             padding: 8px 15px;
             border-radius: 8px;
             border: 2px solid rgba(0, 255, 255, 0.4);
-            display: flex;
+            display: none;
             align-items: center;
             gap: 8px;
             text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
-            opacity: 0;
-            transition: opacity 0.3s;
+            z-index: 1000;
         }
 
         body.state-playing .speedrun-timer,
         body.state-paused .speedrun-timer {
-            opacity: 1;
+            display: flex;
         }
 
         .timer-icon {
