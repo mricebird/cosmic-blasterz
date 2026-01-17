@@ -2598,32 +2598,37 @@
             margin-top: 15px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
             background: linear-gradient(135deg, rgba(0, 20, 40, 0.95) 0%, rgba(0, 10, 25, 0.98) 100%);
-            padding: 20px 25px;
+            padding: 15px 20px;
             border-radius: 12px;
             border: 2px solid rgba(0, 255, 255, 0.4);
             overflow: hidden;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 2px 15px rgba(0, 0, 0, 0.4);
             width: min(500px, 94vw);
-            min-height: 120px;
-            max-height: 320px;
+        }
+
+        .highscore-scroll-wrapper {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 10px;
         }
 
         .highscore-entries {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            animation: scrollHighscores 15s linear infinite;
+            animation: scrollHighscores 20s ease-in-out infinite;
+            padding-bottom: 20px;
         }
 
-        .highscore-entries:hover {
+        .highscore-scroll-wrapper:hover .highscore-entries {
             animation-play-state: paused;
         }
 
         @keyframes scrollHighscores {
-            0%, 10% { transform: translateY(0); }
-            90%, 100% { transform: translateY(calc(-100% + 180px)); }
+            0%, 15% { transform: translateY(0); }
+            85%, 100% { transform: translateY(calc(-100% + 200px)); }
         }
 
         .highscore-list::-webkit-scrollbar {
@@ -11473,6 +11478,7 @@
             }
 
             html += `<h3>🏆 ${title} 🏆</h3>`;
+            html += `<div class="highscore-scroll-wrapper">`;
             html += `<div class="highscore-entries">`;
             displayScores.slice(0, MAX_HIGHSCORES).forEach((entry, index) => {
                 const isCurrent = currentScore !== null && entry.score === currentScore && entry.name === playerName;
@@ -11484,7 +11490,7 @@
                     </div>
                 `;
             });
-            html += `</div>`;
+            html += `</div></div>`;
             container.innerHTML = html;
         }
 
