@@ -15802,11 +15802,17 @@
 
         // Update bullets
         function updateBullets() {
-            bullets = bullets.filter(b => b.y > 0 && b.x > 0 && b.x < canvas.width);
+            bullets = bullets.filter(b => b.y > -20 && b.y < canvas.height + 20 && b.x > -20 && b.x < canvas.width + 20);
             bullets.forEach(b => {
-                b.y -= b.speed * slowMotionFactor;
-                if (b.angle) {
-                    b.x += Math.sin(b.angle) * b.speed * slowMotionFactor;
+                // Handle directional bullets (wingman, pet)
+                if (b.vx !== undefined && b.vy !== undefined) {
+                    b.x += b.vx * slowMotionFactor;
+                    b.y += b.vy * slowMotionFactor;
+                } else {
+                    b.y -= b.speed * slowMotionFactor;
+                    if (b.angle) {
+                        b.x += Math.sin(b.angle) * b.speed * slowMotionFactor;
+                    }
                 }
             });
 
