@@ -17250,6 +17250,118 @@
         });
 
         // ==========================================
+        // KONAMI CODE EASTER EGG
+        // ==========================================
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+        let konamiActivated = false;
+
+        document.addEventListener('keydown', (e) => {
+            // Check if key matches next in sequence
+            if (e.key === konamiCode[konamiIndex] || e.key.toLowerCase() === konamiCode[konamiIndex]) {
+                konamiIndex++;
+
+                // Full code entered!
+                if (konamiIndex === konamiCode.length) {
+                    activateKonamiCode();
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        function activateKonamiCode() {
+            if (konamiActivated) {
+                // Already activated - just show message
+                showKonamiMessage('🎮 KONAMI MODE ALREADY ACTIVE! 🎮');
+                return;
+            }
+
+            konamiActivated = true;
+
+            // Grant rewards
+            lives = 99;
+            coins += 9999;
+            updateLivesDisplay();
+            saveCoins();
+
+            // Epic celebration
+            launchConfetti();
+            setTimeout(() => launchConfetti(), 500);
+            setTimeout(() => launchConfetti(), 1000);
+
+            // Play victory sound
+            playLevelUpSound();
+
+            // Show message
+            showKonamiMessage('🎮 KONAMI CODE ACTIVATED! 🎮\n+99 Lives | +9999 Coins | GOD MODE!');
+
+            // Unlock secret ship if not already owned
+            if (!ownedSkins.includes('konami')) {
+                // Add konami ship to SHIP_SKINS if it doesn't exist
+                if (!SHIP_SKINS.konami) {
+                    SHIP_SKINS.konami = {
+                        name: 'Konami Classic',
+                        rarity: 'legendary',
+                        price: 0,
+                        colors: { body: '#ff0', cockpit: '#f00', engine: '#0ff' },
+                        stats: { speed: 80, damage: 80, fireRate: 80, defense: 80 }
+                    };
+                }
+                ownedSkins.push('konami');
+                saveSkins();
+            }
+
+            console.log('🎮 KONAMI CODE ACTIVATED!');
+        }
+
+        function showKonamiMessage(text) {
+            // Create floating message
+            const msg = document.createElement('div');
+            msg.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #000 0%, #222 100%);
+                border: 3px solid #ff0;
+                border-radius: 15px;
+                padding: 30px 50px;
+                color: #ff0;
+                font-family: 'Press Start 2P', 'Orbitron', monospace;
+                font-size: 18px;
+                text-align: center;
+                white-space: pre-line;
+                z-index: 99999;
+                box-shadow: 0 0 30px #ff0, 0 0 60px rgba(255, 255, 0, 0.5);
+                animation: konamiPulse 0.5s ease-in-out infinite alternate;
+            `;
+            msg.textContent = text;
+            document.body.appendChild(msg);
+
+            // Add animation keyframes
+            if (!document.getElementById('konamiStyles')) {
+                const style = document.createElement('style');
+                style.id = 'konamiStyles';
+                style.textContent = `
+                    @keyframes konamiPulse {
+                        from { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 30px #ff0; }
+                        to { transform: translate(-50%, -50%) scale(1.05); box-shadow: 0 0 50px #ff0, 0 0 80px rgba(255, 255, 0, 0.5); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Remove after delay
+            setTimeout(() => {
+                msg.style.transition = 'opacity 0.5s';
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 500);
+            }, 3000);
+        }
+
+        // ==========================================
         // FIRST-TIME USER EXPERIENCE (FTUE) SYSTEM
         // ==========================================
         const FTUE_STORAGE_KEY = 'cosmicBlasterzFTUECompleted';
