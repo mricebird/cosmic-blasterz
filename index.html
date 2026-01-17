@@ -556,11 +556,27 @@
             background: rgba(0, 20, 40, 0.8);
             border: 1px solid rgba(0, 255, 255, 0.3);
             border-radius: 8px;
-            padding: 10px 14px;
+            padding: 8px 12px;
             color: #0ff;
-            font-size: 18px;
             cursor: pointer;
             transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            min-width: 60px;
+        }
+
+        .menu-quick-btn .btn-icon {
+            font-size: 18px;
+        }
+
+        .menu-quick-btn .btn-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .menu-quick-btn:hover {
@@ -2312,6 +2328,22 @@
         /* Screen base styles with proper z-index */
         .start-screen {
             z-index: 100;
+        }
+
+        /* 3D Starfield effect */
+        .starfield-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .start-screen > *:not(.starfield-canvas):not(.scanlines) {
+            position: relative;
+            z-index: 1;
         }
 
         .game-over-screen {
@@ -5270,25 +5302,27 @@
         .scroll-text-container {
             width: 100%;
             max-width: 600px;
-            height: 32px;
+            height: 36px;
             overflow: hidden;
             position: relative;
-            margin: 8px 0 15px 0;
-            background: rgba(0, 20, 40, 0.5);
-            border-radius: 6px;
-            border: 1px solid rgba(0, 255, 255, 0.2);
+            margin: 15px 0 20px 0;
+            background: linear-gradient(90deg, rgba(0, 20, 40, 0.8), rgba(0, 40, 60, 0.8), rgba(0, 20, 40, 0.8));
+            border-radius: 8px;
+            border: 2px solid rgba(0, 255, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         .scroll-text {
             position: absolute;
             white-space: nowrap;
             font-family: 'Share Tech Mono', monospace;
-            font-size: 16px;
-            letter-spacing: 0.08em;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
             color: #0ff;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
-            animation: scrollText 20s linear infinite;
-            line-height: 32px;
+            text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px rgba(255, 0, 255, 0.5);
+            animation: scrollText 25s linear infinite;
+            line-height: 36px;
             text-transform: uppercase;
         }
 
@@ -6048,6 +6082,7 @@
         </div>
 
         <div class="start-screen" id="startScreen">
+            <canvas id="starfieldCanvas" class="starfield-canvas"></canvas>
             <div class="scanlines"></div>
 
             <!-- Clean Title -->
@@ -6068,9 +6103,18 @@
                     <input type="text" id="playerName" placeholder="Enter pilot name..." maxlength="15" autocomplete="off" spellcheck="false">
                 </div>
                 <div class="menu-quick-settings">
-                    <button class="menu-quick-btn" id="menuMusicBtn" onclick="toggleMenuMusic()" title="Music">🎵</button>
-                    <button class="menu-quick-btn" id="menuSoundBtn" onclick="toggleSound()" title="Sound">🔊</button>
-                    <button class="menu-quick-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
+                    <button class="menu-quick-btn" id="menuMusicBtn" onclick="toggleMenuMusic()" title="Music">
+                        <span class="btn-icon">🎵</span>
+                        <span class="btn-label">Music</span>
+                    </button>
+                    <button class="menu-quick-btn" id="menuSoundBtn" onclick="toggleSound()" title="Sound">
+                        <span class="btn-icon">🔊</span>
+                        <span class="btn-label">Sound</span>
+                    </button>
+                    <button class="menu-quick-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Fullscreen">
+                        <span class="btn-icon">⛶</span>
+                        <span class="btn-label">Fullscreen</span>
+                    </button>
                 </div>
             </div>
 
@@ -10620,7 +10664,8 @@
             // Also update menu sound button
             const menuSoundBtn = document.getElementById('menuSoundBtn');
             if (menuSoundBtn) {
-                menuSoundBtn.textContent = soundMuted ? '🔇' : '🔊';
+                const iconSpan = menuSoundBtn.querySelector('.btn-icon');
+                if (iconSpan) iconSpan.textContent = soundMuted ? '🔇' : '🔊';
                 menuSoundBtn.classList.toggle('active', !soundMuted);
             }
         }
@@ -16596,9 +16641,18 @@
         }
 
         // Fullscreen toggle
+        function updateFullscreenBtn(isFullscreen) {
+            const btn = document.getElementById('fullscreenBtn');
+            if (btn) {
+                const iconSpan = btn.querySelector('.btn-icon');
+                const labelSpan = btn.querySelector('.btn-label');
+                if (iconSpan) iconSpan.textContent = isFullscreen ? '🔳' : '⛶';
+                if (labelSpan) labelSpan.textContent = isFullscreen ? 'Exit' : 'Fullscreen';
+            }
+        }
+
         function toggleFullscreen() {
             const elem = document.documentElement;
-            const btn = document.getElementById('fullscreenBtn');
 
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                 // Enter fullscreen
@@ -16607,7 +16661,7 @@
                 } else if (elem.webkitRequestFullscreen) {
                     elem.webkitRequestFullscreen(); // Safari
                 }
-                if (btn) btn.textContent = '🔳 Exit Fullscreen';
+                updateFullscreenBtn(true);
             } else {
                 // Exit fullscreen
                 if (document.exitFullscreen) {
@@ -16615,23 +16669,17 @@
                 } else if (document.webkitExitFullscreen) {
                     document.webkitExitFullscreen(); // Safari
                 }
-                if (btn) btn.textContent = '🔲 Fullscreen';
+                updateFullscreenBtn(false);
             }
         }
 
         // Update button text on fullscreen change
         document.addEventListener('fullscreenchange', () => {
-            const btn = document.getElementById('fullscreenBtn');
-            if (btn) {
-                btn.textContent = document.fullscreenElement ? '🔳 Exit Fullscreen' : '🔲 Fullscreen';
-            }
+            updateFullscreenBtn(!!document.fullscreenElement);
         });
 
         document.addEventListener('webkitfullscreenchange', () => {
-            const btn = document.getElementById('fullscreenBtn');
-            if (btn) {
-                btn.textContent = document.webkitFullscreenElement ? '🔳 Exit Fullscreen' : '🔲 Fullscreen';
-            }
+            updateFullscreenBtn(!!document.webkitFullscreenElement);
         });
 
         // F key for fullscreen during gameplay
@@ -16768,6 +16816,96 @@
                 flash.remove();
             }, 200);
         }
+
+        // 3D Starfield Effect
+        (function initStarfield() {
+            const canvas = document.getElementById('starfieldCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const stars = [];
+            const numStars = 200;
+            let animationId;
+
+            function resizeCanvas() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+
+            function createStar() {
+                return {
+                    x: Math.random() * canvas.width - canvas.width / 2,
+                    y: Math.random() * canvas.height - canvas.height / 2,
+                    z: Math.random() * canvas.width,
+                    color: Math.random() > 0.8 ?
+                        `hsl(${180 + Math.random() * 60}, 100%, 70%)` :
+                        `hsl(${Math.random() * 360}, 50%, ${70 + Math.random() * 30}%)`
+                };
+            }
+
+            function initStars() {
+                stars.length = 0;
+                for (let i = 0; i < numStars; i++) {
+                    stars.push(createStar());
+                }
+            }
+
+            function drawStars() {
+                ctx.fillStyle = 'rgba(0, 5, 15, 0.3)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+
+                for (let star of stars) {
+                    star.z -= 2;
+
+                    if (star.z <= 0) {
+                        star.x = Math.random() * canvas.width - centerX;
+                        star.y = Math.random() * canvas.height - centerY;
+                        star.z = canvas.width;
+                    }
+
+                    const factor = 200 / star.z;
+                    const x = star.x * factor + centerX;
+                    const y = star.y * factor + centerY;
+                    const size = Math.max(0.5, (1 - star.z / canvas.width) * 3);
+                    const brightness = 1 - star.z / canvas.width;
+
+                    if (x >= 0 && x <= canvas.width && y >= 0 && y <= canvas.height) {
+                        ctx.beginPath();
+                        ctx.arc(x, y, size, 0, Math.PI * 2);
+                        ctx.fillStyle = star.color;
+                        ctx.globalAlpha = brightness;
+                        ctx.fill();
+
+                        // Add glow for closer stars
+                        if (size > 1.5) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, size * 2, 0, Math.PI * 2);
+                            ctx.fillStyle = star.color;
+                            ctx.globalAlpha = brightness * 0.3;
+                            ctx.fill();
+                        }
+                    }
+                }
+                ctx.globalAlpha = 1;
+            }
+
+            function animate() {
+                drawStars();
+                animationId = requestAnimationFrame(animate);
+            }
+
+            resizeCanvas();
+            initStars();
+            animate();
+
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                initStars();
+            });
+        })();
     </script>
 </body>
 </html>
