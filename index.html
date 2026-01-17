@@ -18,16 +18,20 @@
     <!-- Open Graph Meta Tags (LinkedIn, Facebook) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Cosmic Blasterz - Retro Arcade Space Shooter">
-    <meta property="og:description" content="Defend Earth from the alien invasion! Classic arcade action with modern graphics, power-ups, boss battles, and global leaderboards.">
-    <meta property="og:image" content="https://mricebird.github.io/cosmic-blasterz/preview.png">
+    <meta property="og:description" content="I built this retro arcade game using AI as my co-pilot! Classic space shooter with boss battles, achievements, upgradeable ships, and global leaderboards. Try to beat my highscore!">
+    <meta property="og:image" content="https://mricebird.github.io/cosmic-blasterz/logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:url" content="https://mricebird.github.io/cosmic-blasterz/">
     <meta property="og:site_name" content="Cosmic Blasterz">
+    <meta property="og:locale" content="en_US">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Cosmic Blasterz - Retro Arcade Space Shooter">
-    <meta name="twitter:description" content="Defend Earth from the alien invasion! Classic arcade action with modern graphics, power-ups, boss battles, and global leaderboards.">
-    <meta name="twitter:image" content="https://mricebird.github.io/cosmic-blasterz/preview.png">
+    <meta name="twitter:description" content="I built this retro arcade game using AI as my co-pilot! Classic space shooter with boss battles, achievements, and global leaderboards.">
+    <meta name="twitter:image" content="https://mricebird.github.io/cosmic-blasterz/logo.png">
+    <meta name="twitter:creator" content="@mricebird">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://mricebird.github.io/cosmic-blasterz/">
@@ -13516,6 +13520,46 @@
             }
         }
 
+        // Confetti celebration for new highscore
+        function launchConfetti() {
+            const colors = ['#ff0', '#0ff', '#f0f', '#0f0', '#f80', '#08f', '#fff'];
+            const confettiCount = 150;
+            const container = document.body;
+
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+                confetti.style.cssText = `
+                    position: fixed;
+                    width: ${Math.random() * 10 + 5}px;
+                    height: ${Math.random() * 10 + 5}px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    left: ${Math.random() * 100}vw;
+                    top: -20px;
+                    opacity: 1;
+                    pointer-events: none;
+                    z-index: 10000;
+                    border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+                    transform: rotate(${Math.random() * 360}deg);
+                `;
+
+                container.appendChild(confetti);
+
+                // Animate falling
+                const duration = Math.random() * 3000 + 2000;
+                const endX = (Math.random() - 0.5) * 200;
+                const rotation = Math.random() * 720 - 360;
+
+                confetti.animate([
+                    { transform: `translateY(0) translateX(0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translateY(100vh) translateX(${endX}px) rotate(${rotation}deg)`, opacity: 0.7 }
+                ], {
+                    duration: duration,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).onfinish = () => confetti.remove();
+            }
+        }
+
         // Update and draw particles (optimized)
         function updateParticles() {
             particles = particles.filter(p => p.life > 0);
@@ -14093,6 +14137,8 @@
             if (isNew && score > 0) {
                 document.getElementById('newHighscoreMsg').classList.remove('hidden');
                 announce('newHighscore');
+                // Celebrate with confetti!
+                setTimeout(() => launchConfetti(), 300);
             } else if (isVictory) {
                 document.getElementById('newHighscoreMsg').classList.add('hidden');
                 // Victory doesn't need a specific announce - fanfare is already playing
