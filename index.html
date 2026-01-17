@@ -377,7 +377,7 @@
             font-family: 'Orbitron', monospace;
         }
 
-        .score, .lives, .level {
+        .score, .lives, .level, .rescued {
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
@@ -417,6 +417,12 @@
             color: #ffd93d;
             border-color: rgba(255, 217, 61, 0.3);
             text-shadow: 0 0 8px rgba(255, 217, 61, 0.5);
+        }
+
+        .rescued {
+            color: #00ff88;
+            border-color: rgba(0, 255, 136, 0.3);
+            text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
         }
 
         .speedrun-timer {
@@ -6922,6 +6928,7 @@
         <div class="ui-overlay">
             <div class="score">SCORE: <span id="scoreValue">0</span></div>
             <div class="level">LEVEL: <span id="levelValue">1</span></div>
+            <div class="rescued">👨‍🚀 <span id="rescuedValue">0</span></div>
             <div class="lives">P1: <span id="livesValue">❤️❤️❤️</span></div>
             <div class="lives player2-lives hidden" id="player2Lives">P2: <span id="lives2Value">💜💜💜</span></div>
             <div class="speedrun-timer" id="speedrunTimer">
@@ -11835,6 +11842,9 @@
                     decay: 0.025
                 });
             }
+
+            // Update rescue counter display
+            document.getElementById('rescuedValue').textContent = astronautsRescued;
 
             // Rewards
             const rescueBonus = 100 + (astronautsRescued * 25); // Increasing bonus
@@ -17809,6 +17819,7 @@
 
             document.getElementById('scoreValue').textContent = score;
             document.getElementById('levelValue').textContent = level;
+            document.getElementById('rescuedValue').textContent = 0;
             updateLivesDisplay();
 
             initEnemies();
