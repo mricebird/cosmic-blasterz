@@ -2608,27 +2608,19 @@
         }
 
         .highscore-scroll-wrapper {
-            height: 200px;
+            height: 220px;
             overflow: hidden;
             position: relative;
             margin-top: 10px;
+            mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
         }
 
         .highscore-entries {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            animation: scrollHighscores 20s ease-in-out infinite;
-            padding-bottom: 20px;
-        }
-
-        .highscore-scroll-wrapper:hover .highscore-entries {
-            animation-play-state: paused;
-        }
-
-        @keyframes scrollHighscores {
-            0%, 15% { transform: translateY(0); }
-            85%, 100% { transform: translateY(calc(-100% + 200px)); }
+            gap: 10px;
+            padding: 15px 0;
         }
 
         .highscore-list::-webkit-scrollbar {
@@ -16923,6 +16915,66 @@
                 resizeCanvas();
                 initStars();
             });
+        })();
+
+        // Auto-scroll highscore list
+        (function initHighscoreScroll() {
+            let scrollInterval;
+            let isPaused = false;
+            let scrollDirection = 1;
+            let currentScroll = 0;
+
+            function startAutoScroll() {
+                const wrapper = document.querySelector('#startHighscores .highscore-scroll-wrapper');
+                const entries = document.querySelector('#startHighscores .highscore-entries');
+
+                if (!wrapper || !entries) {
+                    setTimeout(startAutoScroll, 1000);
+                    return;
+                }
+
+                const maxScroll = Math.max(0, entries.scrollHeight - wrapper.clientHeight);
+
+                if (maxScroll <= 0) {
+                    setTimeout(startAutoScroll, 2000);
+                    return;
+                }
+
+                clearInterval(scrollInterval);
+                scrollInterval = setInterval(() => {
+                    if (isPaused) return;
+
+                    currentScroll += scrollDirection * 0.5;
+
+                    if (currentScroll >= maxScroll) {
+                        currentScroll = maxScroll;
+                        scrollDirection = -1;
+                    } else if (currentScroll <= 0) {
+                        currentScroll = 0;
+                        scrollDirection = 1;
+                    }
+
+                    entries.style.transform = `translateY(-${currentScroll}px)`;
+                }, 30);
+
+                wrapper.addEventListener('mouseenter', () => { isPaused = true; });
+                wrapper.addEventListener('mouseleave', () => { isPaused = false; });
+            }
+
+            // Start after highscores load
+            setTimeout(startAutoScroll, 2000);
+
+            // Restart when highscores update
+            const observer = new MutationObserver(() => {
+                currentScroll = 0;
+                scrollDirection = 1;
+                setTimeout(startAutoScroll, 500);
+            });
+
+            const container = document.getElementById('startHighscores');
+            if (container) {
+                observer.observe(container, { childList: true, subtree: true });
+            }
         })();
     </script>
 </body>
