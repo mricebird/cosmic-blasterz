@@ -2332,20 +2332,28 @@
         }
 
         .color-picker-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
             width: 50px;
             height: 35px;
             border: 2px solid rgba(139, 92, 246, 0.5);
             border-radius: 8px;
             cursor: pointer;
             background: transparent;
-            padding: 2px;
-        }
-
-        .color-picker-input::-webkit-color-swatch-wrapper {
             padding: 0;
         }
 
+        .color-picker-input::-webkit-color-swatch-wrapper {
+            padding: 2px;
+        }
+
         .color-picker-input::-webkit-color-swatch {
+            border: none;
+            border-radius: 5px;
+        }
+
+        .color-picker-input::-moz-color-swatch {
             border: none;
             border-radius: 5px;
         }
@@ -16539,10 +16547,15 @@
                 const scale = 4.5;
                 const tilt = Math.sin(time * 1.5) * 0.05;
 
-                // Use preview skin if previewing, otherwise use selected skin
-                const skinKey = (garagePreviewType === 'skin' && garagePreviewItem) ? garagePreviewItem : selectedSkin;
-                const skin = SHIP_SKINS[skinKey] || SHIP_SKINS.classic;
-                const colors = skin.colors;
+                // Use custom colors if on custom tab, preview skin if previewing, otherwise selected skin
+                let colors;
+                if (garageTab === 'custom') {
+                    colors = customShipColors;
+                } else {
+                    const skinKey = (garagePreviewType === 'skin' && garagePreviewItem) ? garagePreviewItem : selectedSkin;
+                    const skin = SHIP_SKINS[skinKey] || SHIP_SKINS.classic;
+                    colors = skin.colors;
+                }
                 const baseColor = colors.body || '#0ff';
 
                 ctx.save();
