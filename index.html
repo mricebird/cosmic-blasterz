@@ -645,6 +645,49 @@
             background: rgba(0, 255, 255, 0.1);
         }
 
+        .credits-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .credits-row .creator-link {
+            margin: 0;
+        }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(75, 0, 130, 0.4));
+            border: 1px solid rgba(138, 43, 226, 0.5);
+            border-radius: 8px;
+            color: #da70d6;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: default;
+            transition: all 0.3s;
+            animation: aiBadgePulse 3s ease-in-out infinite;
+        }
+
+        .ai-badge:hover {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.5), rgba(75, 0, 130, 0.6));
+            border-color: #da70d6;
+            transform: scale(1.05);
+        }
+
+        @keyframes aiBadgePulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(138, 43, 226, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(138, 43, 226, 0.6), 0 0 25px rgba(218, 112, 214, 0.3); }
+        }
+
         .game-over-screen h1, .start-screen h1 {
             font-family: 'Orbitron', sans-serif;
             font-size: 42px;
@@ -6195,7 +6238,7 @@
             <!-- Scroll text -->
             <div class="scroll-text-container">
                 <div class="scroll-text">
-                    ★★★ WELCOME TO COSMIC BLASTERZ ★★★ THE ULTIMATE RETRO SPACE SHOOTER ★★★ ARROWS/WASD TO MOVE ★★★ SPACE TO SHOOT ★★★ COLLECT POWER-UPS ★★★ DEFEAT EPIC BOSSES ★★★ CLIMB THE GLOBAL LEADERBOARD ★★★ GREETINGS TO ALL RETRO GAMERS ★★★ MADE WITH ♥ BY MRICEBIRD ★★★
+                    ★★★ WELCOME TO COSMIC BLASTERZ ★★★ THE ULTIMATE RETRO SPACE SHOOTER ★★★ ARROWS/WASD TO MOVE ★★★ SPACE TO SHOOT ★★★ COLLECT POWER-UPS ★★★ DEFEAT EPIC BOSSES ★★★ CLIMB THE GLOBAL LEADERBOARD ★★★ GREETINGS TO ALL RETRO GAMERS ★★★ MADE WITH ♥ BY MRICEBIRD ★★★ BUILT WITH AI AS CO-PILOT ★★★
                 </div>
             </div>
 
@@ -6272,7 +6315,10 @@
             <div class="highscore-list" id="startHighscores"></div>
 
             <!-- Creator credit -->
-            <a href="https://www.linkedin.com/in/mricebird/" target="_blank" class="creator-link">Made by @mricebird</a>
+            <div class="credits-row">
+                <a href="https://www.linkedin.com/in/mricebird/" target="_blank" class="creator-link">Made by @mricebird</a>
+                <span class="ai-badge" title="Built using Claude AI as co-pilot">🤖 Built with AI</span>
+            </div>
         </div>
 
         <!-- Invite Friend Modal -->
@@ -6340,6 +6386,7 @@
                 <button class="share-btn" onclick="shareScore()">📤 SHARE SCORE</button>
             </div>
             <div class="share-options hidden" id="shareOptions">
+                <button class="share-option-btn" onclick="shareToLinkedIn()">💼 LinkedIn</button>
                 <button class="share-option-btn" onclick="shareToTwitter()">🐦 Twitter</button>
                 <button class="share-option-btn" onclick="shareToFacebook()">📘 Facebook</button>
                 <button class="share-option-btn" onclick="copyShareLink()">📋 Copy</button>
@@ -8834,6 +8881,12 @@
         function shareToFacebook() {
             const text = encodeURIComponent(getShareText());
             const url = `https://www.facebook.com/sharer/sharer.php?quote=${text}`;
+            window.open(url, '_blank', 'width=550,height=420');
+        }
+
+        function shareToLinkedIn() {
+            const gameUrl = encodeURIComponent('https://mricebird.github.io/cosmic-blasterz/');
+            const url = `https://www.linkedin.com/sharing/share-offsite/?url=${gameUrl}`;
             window.open(url, '_blank', 'width=550,height=420');
         }
 
