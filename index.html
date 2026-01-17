@@ -15767,9 +15767,9 @@
             // Clear canvas
             scrollerCtx.clearRect(0, 0, width, height);
 
-            // Font settings - retro arcade style with Orbitron
-            const fontSize = Math.min(32, height * 0.5);
-            scrollerCtx.font = `600 ${fontSize}px "Orbitron", sans-serif`;
+            // Font settings - clean readable style
+            const fontSize = Math.min(28, height * 0.45);
+            scrollerCtx.font = `500 ${fontSize}px "Share Tech Mono", "Courier New", monospace`;
             scrollerCtx.textBaseline = 'middle';
 
             // Calculate text width for looping (wider for letter-spacing effect)
