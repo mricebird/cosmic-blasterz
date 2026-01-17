@@ -13338,11 +13338,150 @@
             eyeBlink: 0,
             tentaclePhase: 0,
             shootCooldown: 0,
-            active: true,
-            happiness: 0 // Increases when you rescue astronauts
+            active: false, // Starts inactive - must be collected!
+            happiness: 0
         };
 
+        // Floating pet eggs waiting to be collected
+        let floatingPets = [];
+        let petSpawnTimer = Date.now();
+        const PET_SPAWN_INTERVAL = 25000; // Every 25 seconds
+        const PET_SPAWN_CHANCE = 0.4; // 40% chance when timer triggers
+
+        function spawnFloatingPet() {
+            // Only spawn if player doesn't already have a pet
+            if (alienPet.active || floatingPets.length > 0) return;
+
+            // Spawn from left or right edge
+            const fromLeft = Math.random() < 0.5;
+            floatingPets.push({
+                x: fromLeft ? -30 : canvas.width + 30,
+                y: 100 + Math.random() * (canvas.height * 0.4),
+                vx: fromLeft ? 1.5 : -1.5,
+                vy: Math.sin(Date.now() / 500) * 0.5,
+                width: 40,
+                height: 40,
+                bobPhase: Math.random() * Math.PI * 2,
+                glowPhase: 0
+            });
+            announce('👾 ALIEN PET SPOTTED!');
+        }
+
+        function updateFloatingPets() {
+            // Spawn check
+            if (Date.now() - petSpawnTimer > PET_SPAWN_INTERVAL) {
+                petSpawnTimer = Date.now();
+                if (Math.random() < PET_SPAWN_CHANCE) {
+                    spawnFloatingPet();
+                }
+            }
+
+            // Update floating pets
+            floatingPets = floatingPets.filter(pet => {
+                pet.x += pet.vx;
+                pet.y += Math.sin(pet.bobPhase) * 0.8;
+                pet.bobPhase += 0.08;
+                pet.glowPhase += 0.1;
+
+                // Check collision with player
+                if (pet.x < player.x + player.width && pet.x + pet.width > player.x &&
+                    pet.y < player.y + player.height && pet.y + pet.height > player.y) {
+                    collectAlienPet(pet);
+                    return false;
+                }
+
+                // Remove if off screen
+                return pet.x > -50 && pet.x < canvas.width + 50;
+            });
+        }
+
+        function collectAlienPet(pet) {
+            alienPet.active = true;
+            alienPet.x = player.x - 40;
+            alienPet.y = player.y - 20;
+            alienPet.happiness = 1;
+            alienPet.shootCooldown = 30;
+
+            // Celebration particles
+            for (let i = 0; i < 20; i++) {
+                const angle = (Math.PI * 2 / 20) * i;
+                particles.push({
+                    x: pet.x + pet.width / 2,
+                    y: pet.y + pet.height / 2,
+                    vx: Math.cos(angle) * (3 + Math.random() * 2),
+                    vy: Math.sin(angle) * (3 + Math.random() * 2),
+                    life: 1,
+                    color: ['#f0f', '#0ff', '#ff0', '#0f0'][Math.floor(Math.random() * 4)],
+                    size: 4 + Math.random() * 3,
+                    type: 'powerup',
+                    decay: 0.03
+                });
+            }
+
+            playLevelUpSound();
+            announce('👾 ALIEN PET ADOPTED! It will help you fight!');
+            addScore(250);
+        }
+
+        function drawFloatingPets() {
+            floatingPets.forEach(pet => {
+                const x = pet.x + pet.width / 2;
+                const y = pet.y + pet.height / 2 + Math.sin(pet.bobPhase) * 5;
+
+                ctx.save();
+
+                // Glowing aura
+                const glowSize = 25 + Math.sin(pet.glowPhase) * 5;
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, glowSize);
+                gradient.addColorStop(0, 'rgba(255, 0, 255, 0.4)');
+                gradient.addColorStop(0.5, 'rgba(0, 255, 255, 0.2)');
+                gradient.addColorStop(1, 'rgba(255, 0, 255, 0)');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(x, y, glowSize, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Egg/pod shape
+                ctx.fillStyle = '#f0f';
+                ctx.shadowColor = '#f0f';
+                ctx.shadowBlur = 15;
+                ctx.beginPath();
+                ctx.ellipse(x, y, 15, 18, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Inner glow
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.ellipse(x - 3, y - 5, 5, 7, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Little alien eyes peeking out
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(x - 4, y - 2, 3, 0, Math.PI * 2);
+                ctx.arc(x + 4, y - 2, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(x - 4, y - 3, 1.5, 0, Math.PI * 2);
+                ctx.arc(x + 4, y - 3, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // "ADOPT ME!" text
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 10px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('ADOPT ME!', x, y - 30);
+
+                ctx.restore();
+            });
+        }
+
         function updateAlienPet() {
+            // Update floating pets first
+            updateFloatingPets();
+
             if (!alienPet.active) return;
 
             // Follow player with smooth lerp (offset to the side)
@@ -15110,6 +15249,28 @@
                     ctx.beginPath();
                     ctx.arc(bullet.x, bullet.y, 2, 0, Math.PI * 2);
                     ctx.fill();
+                } else if (bullet.type === 'wingman') {
+                    // Wingman: cyan energy bolt
+                    ctx.fillStyle = '#0ff';
+                    ctx.shadowColor = '#0ff';
+                    ctx.shadowBlur = 8;
+                    ctx.fillRect(bullet.x - 2, bullet.y, 4, 12);
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(bullet.x - 1, bullet.y + 2, 2, 8);
+                    ctx.shadowBlur = 0;
+                } else if (bullet.type === 'pet') {
+                    // Alien pet: pink homing heart
+                    ctx.fillStyle = '#f0f';
+                    ctx.shadowColor = '#f0f';
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.arc(bullet.x, bullet.y, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(bullet.x - 1, bullet.y - 1, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
                 } else {
                     // Laser: default
                     ctx.fillRect(bullet.x - 2, bullet.y, weapon.width, weapon.height);
@@ -16247,6 +16408,7 @@
                 drawPlayerTrail();
                 drawPlayer();
                 drawPlayer2();
+                drawFloatingPets();
                 drawAlienPet();
                 drawWingman();
                 drawShield();
@@ -18168,11 +18330,12 @@
             comboTimer = 0;
             document.getElementById('comboDisplay').classList.remove('active');
 
-            // Reset alien pet position
-            alienPet.x = player.x;
-            alienPet.y = player.y + 30;
+            // Reset alien pet (not active at start - must be collected!)
+            alienPet.active = false;
             alienPet.happiness = 0;
             alienPet.shootCooldown = 0;
+            floatingPets = [];
+            petSpawnTimer = Date.now() - 15000; // Spawn sooner in new game
 
             // Reset wingman
             wingman.active = false;
