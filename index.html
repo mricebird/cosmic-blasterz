@@ -5317,44 +5317,38 @@
 
         /* Epic Amiga-style scroll text */
         .scroll-text-container {
-            width: 100%;
+            width: 90%;
             max-width: 700px;
-            height: 45px;
+            height: 40px;
             overflow: hidden;
             position: relative;
-            margin: 5px 0 20px 0;
-            background: linear-gradient(180deg,
-                rgba(0, 10, 30, 0.95) 0%,
-                rgba(0, 30, 60, 0.9) 50%,
-                rgba(0, 10, 30, 0.95) 100%);
-            border-radius: 22px;
-            border: 2px solid rgba(0, 255, 255, 0.5);
+            margin: 10px auto 20px auto;
+            background: rgba(0, 20, 50, 0.9);
+            border-radius: 20px;
+            border: 2px solid #0ff;
             box-shadow:
-                0 0 15px rgba(0, 255, 255, 0.3),
-                0 0 30px rgba(255, 0, 255, 0.15),
-                inset 0 0 20px rgba(0, 0, 0, 0.6);
+                0 0 20px rgba(0, 255, 255, 0.5),
+                inset 0 0 15px rgba(0, 0, 0, 0.5);
         }
 
         .scroll-text {
-            position: absolute;
+            display: inline-block;
             white-space: nowrap;
-            font-family: 'Orbitron', 'Share Tech Mono', monospace;
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 0.12em;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
             color: #0ff;
             text-shadow:
                 0 0 10px #0ff,
-                0 0 20px #0ff,
-                0 0 30px #f0f;
-            animation: scrollText 25s linear infinite;
-            line-height: 45px;
+                0 0 20px #f0f;
+            animation: marqueeScroll 20s linear infinite;
+            line-height: 40px;
             text-transform: uppercase;
-            padding-left: 100%;
         }
 
-        @keyframes scrollText {
-            0% { transform: translateX(0); }
+        @keyframes marqueeScroll {
+            0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
         }
 
@@ -6189,6 +6183,7 @@
                 <button class="menu-footer-btn" onclick="openGarage()">🔧 Garage</button>
                 <button class="menu-footer-btn" onclick="openStats()">📊 Stats</button>
                 <button class="menu-footer-btn" onclick="startTutorial()">📖 Tutorial</button>
+                <button class="menu-footer-btn" onclick="startAIDemo()">🤖 Watch AI</button>
                 <button class="menu-footer-btn hidden" id="installPwaBtn" onclick="installPwa()">📲 Install</button>
             </div>
 
