@@ -433,128 +433,113 @@
             overflow-y: auto;
         }
 
-        /* Menu Tab Navigation */
-        .menu-tabs {
+        /* Clean game title */
+        .game-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            color: #0ff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(255, 0, 255, 0.3);
+            margin: 10px 0;
+            letter-spacing: 3px;
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(255, 0, 255, 0.3); }
+            50% { text-shadow: 0 0 30px rgba(0, 255, 255, 0.8), 0 0 60px rgba(255, 0, 255, 0.5); }
+        }
+
+        /* Settings bar */
+        .menu-settings-bar {
             display: flex;
-            gap: 0;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
             margin: 15px 0;
-            background: rgba(0, 20, 40, 0.6);
-            border-radius: 25px;
-            padding: 4px;
+            padding: 10px 20px;
+            background: rgba(0, 20, 40, 0.5);
+            border-radius: 12px;
             border: 1px solid rgba(0, 255, 255, 0.2);
         }
 
-        .menu-tab {
-            padding: 10px 24px;
-            background: transparent;
-            border: none;
-            color: rgba(0, 255, 255, 0.6);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 20px;
-            transition: all 0.2s ease;
-            letter-spacing: 1px;
-        }
-
-        .menu-tab:hover {
-            color: #0ff;
-            background: rgba(0, 255, 255, 0.1);
-        }
-
-        .menu-tab.active {
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(255, 0, 255, 0.2));
-            color: #fff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-        }
-
-        .menu-tab-content {
-            display: none;
-            width: 100%;
-            max-width: 900px;
-            padding: 0 20px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .menu-tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Compact name input for header */
-        .menu-name-input {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 10px 0;
-        }
-
-        .menu-name-input label {
-            color: rgba(0, 255, 255, 0.7);
-            font-size: 12px;
-            font-family: 'Orbitron', sans-serif;
-        }
-
+        /* Name input */
         .menu-name-input input {
-            background: rgba(0, 20, 40, 0.8);
+            background: rgba(0, 10, 20, 0.8);
             border: 1px solid rgba(0, 255, 255, 0.3);
             border-radius: 8px;
-            padding: 8px 14px;
+            padding: 10px 16px;
             color: #0ff;
             font-family: 'Orbitron', sans-serif;
             font-size: 14px;
-            width: 180px;
+            width: 200px;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
 
         .menu-name-input input:focus {
-            border-color: rgba(0, 255, 255, 0.6);
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            border-color: #0ff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
         }
 
-        /* Quick settings in header */
+        .menu-name-input input::placeholder {
+            color: rgba(0, 255, 255, 0.4);
+        }
+
+        /* Quick settings buttons */
         .menu-quick-settings {
             display: flex;
             gap: 8px;
-            margin-left: auto;
         }
 
         .menu-quick-btn {
-            background: rgba(0, 20, 40, 0.6);
-            border: 1px solid rgba(0, 255, 255, 0.2);
+            background: rgba(0, 20, 40, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
             border-radius: 8px;
-            padding: 8px 12px;
-            color: rgba(0, 255, 255, 0.7);
-            font-size: 16px;
+            padding: 10px 14px;
+            color: #0ff;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .menu-quick-btn:hover {
-            background: rgba(0, 255, 255, 0.1);
-            border-color: rgba(0, 255, 255, 0.4);
-            color: #0ff;
+            background: rgba(0, 255, 255, 0.15);
+            border-color: #0ff;
+            transform: scale(1.05);
         }
 
         .menu-quick-btn.active {
             background: rgba(0, 255, 255, 0.2);
-            color: #0ff;
         }
 
-        /* Compact header bar */
-        .menu-header-bar {
+        /* Menu footer buttons */
+        .menu-footer {
             display: flex;
-            align-items: center;
-            width: 100%;
-            max-width: 900px;
-            padding: 0 20px;
-            margin-bottom: 5px;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .menu-footer-btn {
+            background: rgba(0, 20, 40, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 10px 18px;
+            color: rgba(0, 255, 255, 0.8);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .menu-footer-btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: #0ff;
+            color: #0ff;
         }
 
         .game-over-screen h1, .start-screen h1 {
@@ -763,23 +748,22 @@
         }
 
         .mode-buttons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            display: flex;
+            gap: 15px;
             justify-content: center;
-            margin-bottom: 15px;
-            width: min(420px, 92vw);
-            padding: 0;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
 
         .mode-card {
             background: rgba(0, 20, 40, 0.85);
-            border: 1px solid rgba(100, 100, 120, 0.4);
-            border-radius: 10px;
-            padding: 12px 10px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 25px 35px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            min-width: 120px;
         }
 
         .mode-card:hover {
@@ -805,13 +789,13 @@
         }
 
         .mode-icon {
-            font-size: 28px;
-            margin-bottom: 6px;
+            font-size: 48px;
+            margin-bottom: 10px;
         }
 
         .mode-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
+            font-size: 14px;
             font-weight: 700;
             margin-bottom: 4px;
             color: #0ff;
@@ -1472,18 +1456,13 @@
 
         .difficulty-btn {
             flex: 1;
-            padding: 8px 10px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 10px;
-            font-weight: 600;
+            padding: 12px 8px;
+            font-size: 24px;
             border: 1px solid rgba(100, 100, 100, 0.4);
-            border-radius: 6px;
+            border-radius: 8px;
             background: rgba(0, 0, 0, 0.3);
-            color: rgba(255, 255, 255, 0.6);
             cursor: pointer;
             transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .difficulty-btn:hover {
@@ -5228,29 +5207,20 @@
         /* Sine wave text effect for title */
         .sine-text {
             display: inline-block;
-            animation: sineWave 2s ease-in-out infinite;
+            color: #0ff;
+            animation: subtleGlow 3s ease-in-out infinite;
         }
 
-        .sine-text:nth-child(1) { animation-delay: 0s; }
-        .sine-text:nth-child(2) { animation-delay: 0.1s; }
-        .sine-text:nth-child(3) { animation-delay: 0.2s; }
-        .sine-text:nth-child(4) { animation-delay: 0.3s; }
-        .sine-text:nth-child(5) { animation-delay: 0.4s; }
-        .sine-text:nth-child(6) { animation-delay: 0.5s; }
-        .sine-text:nth-child(7) { animation-delay: 0.6s; }
-        .sine-text:nth-child(8) { animation-delay: 0.7s; }
-        .sine-text:nth-child(9) { animation-delay: 0.8s; }
-        .sine-text:nth-child(10) { animation-delay: 0.9s; }
-        .sine-text:nth-child(11) { animation-delay: 1.0s; }
-        .sine-text:nth-child(12) { animation-delay: 1.1s; }
-        .sine-text:nth-child(13) { animation-delay: 1.2s; }
-        .sine-text:nth-child(14) { animation-delay: 1.3s; }
+        .sine-text:nth-child(odd) { animation-delay: 0s; }
+        .sine-text:nth-child(even) { animation-delay: 1.5s; }
 
-        @keyframes sineWave {
-            0%, 100% { transform: translateY(0); color: #0ff; }
-            25% { transform: translateY(-8px); color: #f0f; }
-            50% { transform: translateY(0); color: #ff0; }
-            75% { transform: translateY(8px); color: #0f0; }
+        @keyframes subtleGlow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.4);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 0, 255, 0.8), 0 0 40px rgba(255, 0, 255, 0.4);
+            }
         }
 
         /* Retro scanlines effect */
@@ -5966,196 +5936,64 @@
         </div>
 
         <div class="start-screen" id="startScreen">
-            <!-- Compact Header -->
             <div class="scanlines"></div>
 
-            <h1>
-                <span class="sine-text">🚀</span><span class="sine-text">&nbsp;</span><span class="sine-text">C</span><span class="sine-text">O</span><span class="sine-text">S</span><span class="sine-text">M</span><span class="sine-text">I</span><span class="sine-text">C</span><span class="sine-text">&nbsp;</span><span class="sine-text">B</span><span class="sine-text">L</span><span class="sine-text">A</span><span class="sine-text">S</span><span class="sine-text">T</span><span class="sine-text">E</span><span class="sine-text">R</span><span class="sine-text">Z</span><span class="sine-text">&nbsp;</span><span class="sine-text">👾</span>
-            </h1>
+            <!-- Clean Title -->
+            <h1 class="game-title">🚀 COSMIC BLASTERZ 👾</h1>
 
             <!-- Scroll text -->
             <div class="scroll-text-container">
                 <div class="scroll-text">
-                    ★★★ WELCOME TO COSMIC BLASTERZ ★★★ PROGRAMMED WITH ♥ IN 2025 ★★★ USE ARROW KEYS TO MOVE AND SPACE TO SHOOT ★★★ COLLECT POWER-UPS FOR SPECIAL ABILITIES ★★★ DEFEAT THE BOSS EVERY 5 LEVELS ★★★ CAN YOU BEAT THE HIGHSCORE? ★★★ GREETINGS TO ALL RETRO GAMERS ★★★
+                    ★ WELCOME TO COSMIC BLASTERZ ★ ARROWS TO MOVE ★ SPACE TO SHOOT ★ COLLECT POWER-UPS ★ DEFEAT THE BOSSES ★ CAN YOU BEAT THE HIGHSCORE? ★ GREETINGS TO ALL RETRO GAMERS ★
                 </div>
             </div>
 
-            <!-- Header Bar: Name input + Quick Settings -->
-            <div class="menu-header-bar">
+            <!-- Quick Settings Bar -->
+            <div class="menu-settings-bar">
                 <div class="menu-name-input">
-                    <label for="playerName">PILOT:</label>
-                    <input type="text" id="playerName" placeholder="Enter name" maxlength="15" autocomplete="off" spellcheck="false">
+                    <input type="text" id="playerName" placeholder="Enter pilot name..." maxlength="15" autocomplete="off" spellcheck="false">
                 </div>
                 <div class="menu-quick-settings">
-                    <button class="menu-quick-btn" id="menuMusicBtn" onclick="toggleMenuMusic()" title="Toggle Music">🎵</button>
-                    <button class="menu-quick-btn" id="menuSoundBtn" onclick="toggleSound()" title="Toggle Sound">🔊</button>
-                    <button class="menu-quick-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Fullscreen">🔲</button>
+                    <button class="menu-quick-btn" id="menuMusicBtn" onclick="toggleMenuMusic()" title="Music">🎵</button>
+                    <button class="menu-quick-btn" id="menuSoundBtn" onclick="toggleSound()" title="Sound">🔊</button>
+                    <button class="menu-quick-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
                 </div>
             </div>
 
-            <!-- Tab Navigation -->
-            <div class="menu-tabs">
-                <button class="menu-tab active" onclick="switchMenuTab('play')">🎮 PLAY</button>
-                <button class="menu-tab" onclick="switchMenuTab('profile')">👤 PROFILE</button>
-                <button class="menu-tab" onclick="switchMenuTab('more')">⚙️ MORE</button>
+            <!-- Difficulty -->
+            <div class="difficulty-selector">
+                <button class="difficulty-btn easy" onclick="setDifficulty('easy')">🌱</button>
+                <button class="difficulty-btn normal active" onclick="setDifficulty('normal')">⚔️</button>
+                <button class="difficulty-btn hard" onclick="setDifficulty('hard')">🔥</button>
+                <button class="difficulty-btn nightmare" onclick="setDifficulty('nightmare')">💀</button>
             </div>
 
-            <!-- TAB: PLAY -->
-            <div class="menu-tab-content active" id="tab-play">
-                <!-- Difficulty Selector -->
-                <p class="difficulty-label">Select Difficulty</p>
-                <div class="difficulty-selector">
-                    <button class="difficulty-btn easy" onclick="setDifficulty('easy')">
-                        <div>🌱 Easy</div>
-                        <div class="difficulty-desc">0.5x coins</div>
-                    </button>
-                    <button class="difficulty-btn normal active" onclick="setDifficulty('normal')">
-                        <div>⚔️ Normal</div>
-                        <div class="difficulty-desc">1x coins</div>
-                    </button>
-                    <button class="difficulty-btn hard" onclick="setDifficulty('hard')">
-                        <div>🔥 Hard</div>
-                        <div class="difficulty-desc">1.5x coins</div>
-                    </button>
-                    <button class="difficulty-btn nightmare" onclick="setDifficulty('nightmare')">
-                        <div>💀 Nightmare</div>
-                        <div class="difficulty-desc">2.5x coins</div>
-                    </button>
+            <!-- Game Modes -->
+            <div class="mode-buttons">
+                <div class="mode-card normal" onclick="startGame(false)">
+                    <div class="mode-icon">🎮</div>
+                    <div class="mode-title">PLAY</div>
                 </div>
-
-                <p class="select-mode-label">Select Game Mode</p>
-                <div class="mode-buttons">
-                    <div class="mode-card normal" onclick="startGame(false)">
-                        <div class="mode-icon">🎮</div>
-                        <div class="mode-title">CAMPAIGN</div>
-                        <div class="mode-desc">Beat all 25 waves and defeat the bosses!</div>
-                    </div>
-                    <div class="mode-card endless" onclick="startGame(true)">
-                        <div class="mode-icon">♾️</div>
-                        <div class="mode-title">ENDLESS</div>
-                        <div class="mode-desc">Survive infinite waves. How long can you last?</div>
-                    </div>
-                    <div class="mode-card twoplayer" onclick="startGame(false, true)">
-                        <div class="mode-icon">👥</div>
-                        <div class="mode-title">CO-OP</div>
-                        <div class="mode-desc">Play with a friend on the same keyboard!</div>
-                    </div>
-                    <div class="mode-card roguelike" onclick="startRoguelike()">
-                        <div class="mode-icon">🎲</div>
-                        <div class="mode-title">ROGUELIKE</div>
-                        <div class="mode-desc">Choose upgrades on level up!</div>
-                    </div>
-                    <div class="mode-card bossrush" onclick="startBossRush()">
-                        <div class="mode-icon">👹</div>
-                        <div class="mode-title">BOSS RUSH</div>
-                        <div class="mode-desc">Fight all bosses back-to-back!</div>
-                    </div>
+                <div class="mode-card endless" onclick="startGame(true)">
+                    <div class="mode-icon">♾️</div>
+                    <div class="mode-title">ENDLESS</div>
+                </div>
+                <div class="mode-card twoplayer" onclick="startGame(false, true)">
+                    <div class="mode-icon">👥</div>
+                    <div class="mode-title">CO-OP</div>
                 </div>
             </div>
 
-            <!-- TAB: PROFILE -->
-            <div class="menu-tab-content" id="tab-profile">
-                <!-- Pilot Profile Card -->
-                <div class="pilot-profile">
-                    <div class="pilot-header">
-                        <div class="pilot-avatar">👨‍🚀</div>
-                        <div class="pilot-info">
-                            <div class="pilot-title">Pilot Profile</div>
-                            <div class="pilot-rank">
-                                <span class="pilot-rank-badge">ROOKIE</span>
-                                <span id="pilotRankText">Ready for action</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pilot-stats-mini">
-                        <div class="pilot-stat-mini">
-                            <span class="pilot-stat-value" id="pilotGames">0</span>
-                            <span class="pilot-stat-label">Games</span>
-                        </div>
-                        <div class="pilot-stat-mini">
-                            <span class="pilot-stat-value" id="pilotBest">0</span>
-                            <span class="pilot-stat-label">Best Score</span>
-                        </div>
-                        <div class="pilot-stat-mini">
-                            <span class="pilot-stat-value" id="pilotKills">0</span>
-                            <span class="pilot-stat-label">Total Kills</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Daily Challenge -->
-                <div class="daily-challenge-panel" id="dailyChallenge">
-                    <div class="daily-challenge-header">
-                        <div class="daily-challenge-title">🎯 Daily Challenge</div>
-                        <div class="daily-challenge-timer" id="challengeTimer">Resets in: --:--:--</div>
-                    </div>
-                    <div class="daily-challenge-content">
-                        <div class="daily-challenge-icon" id="challengeIcon">🎯</div>
-                        <div class="daily-challenge-info">
-                            <div class="daily-challenge-name" id="challengeName">Loading...</div>
-                            <div class="daily-challenge-desc" id="challengeDesc">Check back soon!</div>
-                            <div class="daily-challenge-progress">
-                                <div class="daily-challenge-bar" id="challengeBar" style="width: 0%"></div>
-                            </div>
-                            <div class="daily-challenge-progress-text" id="challengeProgressText">0 / 0</div>
-                            <div class="daily-challenge-reward">🪙 <span id="challengeReward">0</span> Coins</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Leaderboard -->
-                <div class="highscore-list" id="startHighscores"></div>
+            <!-- Extra buttons -->
+            <div class="menu-footer">
+                <button class="menu-footer-btn" onclick="openGarage()">🔧 Garage</button>
+                <button class="menu-footer-btn" onclick="openStats()">📊 Stats</button>
+                <button class="menu-footer-btn" onclick="startTutorial()">📖 Tutorial</button>
+                <button class="menu-footer-btn hidden" id="installPwaBtn" onclick="installPwa()">📲 Install</button>
             </div>
 
-            <!-- TAB: MORE -->
-            <div class="menu-tab-content" id="tab-more">
-                <!-- Quick Actions -->
-                <div class="invite-friend-container" style="margin-bottom: 20px;">
-                    <button class="garage-btn" onclick="openGarage()">🔧 GARAGE</button>
-                    <button class="stats-btn" onclick="openStats()">📊 STATS</button>
-                    <button class="invite-friend-btn" onclick="openInviteModal()">👥 INVITE</button>
-                    <button class="install-pwa-btn hidden" id="installPwaBtn" onclick="installPwa()">📲 INSTALL</button>
-                </div>
-
-                <!-- Extra Game Modes -->
-                <p class="select-mode-label">Extra Modes</p>
-                <div class="mode-buttons">
-                    <div class="mode-card tutorial" onclick="startTutorial()">
-                        <div class="mode-icon">📖</div>
-                        <div class="mode-title">TUTORIAL</div>
-                        <div class="mode-desc">Learn the controls and mechanics.</div>
-                    </div>
-                    <div class="mode-card aidemo" onclick="startAIDemo()">
-                        <div class="mode-icon">🤖</div>
-                        <div class="mode-title">AI DEMO</div>
-                        <div class="mode-desc">Watch the AI play the game.</div>
-                    </div>
-                </div>
-
-                <!-- Controls -->
-                <div class="controls-info">
-                    <p class="controls-title">⌨️ Controls</p>
-                    <div class="controls-grid">
-                        <div class="control-player">
-                            <span class="player-label p1">PLAYER 1</span>
-                            <p>← ↑ ↓ → Move</p>
-                            <p>SPACE Shoot</p>
-                        </div>
-                        <div class="control-player">
-                            <span class="player-label p2">PLAYER 2</span>
-                            <p>W A S D Move</p>
-                            <p>Q Shoot</p>
-                        </div>
-                    </div>
-                    <p class="controls-extra">1-2-3 Switch weapon · P Pause · M Mute · F Fullscreen</p>
-                    <p class="controls-gamepad">🎮 Gamepads supported!</p>
-                </div>
-
-                <!-- Credits -->
-                <div style="margin-top: 20px;">
-                    <a href="https://www.linkedin.com/in/mricebird/" target="_blank" class="creator-btn">👨‍💻 Created by MrIceBird</a>
-                </div>
-            </div>
+            <!-- Highscores -->
+            <div class="highscore-list" id="startHighscores"></div>
         </div>
 
         <!-- Invite Friend Modal -->
