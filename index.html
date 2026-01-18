@@ -18027,19 +18027,18 @@
             if (!aiDemoMode || !gameRunning || gamePaused) return;
 
             const now = Date.now();
+            const playerCenterX = player.x + player.width / 2;
+            const playerCenterY = player.y + player.height / 2;
 
             // Find nearest threat (enemy bullet)
             let nearestThreat = null;
             let nearestThreatDist = Infinity;
-            const playerCenterX = player.x + player.width / 2;
-            const playerCenterY = player.y + player.height / 2;
 
             enemyBullets.forEach(b => {
-                // Only consider bullets that are heading towards player area
-                if (b.y > player.y - 150 && b.y < player.y + player.height) {
+                if (b.y > player.y - 200 && b.y < player.y + player.height + 50) {
                     const dx = b.x - playerCenterX;
                     const dist = Math.abs(dx);
-                    if (dist < nearestThreatDist && dist < 100) {
+                    if (dist < nearestThreatDist && dist < 120) {
                         nearestThreatDist = dist;
                         nearestThreat = b;
                     }
@@ -18058,81 +18057,115 @@
                 }
             });
 
-            // Check for powerups
+            // Check for powerups (higher priority in demo)
             let nearestPowerup = null;
             let powerupDist = Infinity;
             powerUps.forEach(p => {
                 const px = p.x + p.width / 2;
                 const py = p.y + p.height / 2;
                 const dist = Math.sqrt(Math.pow(px - playerCenterX, 2) + Math.pow(py - playerCenterY, 2));
-                if (dist < powerupDist && p.y > player.y - 200) {
+                if (dist < powerupDist) {
                     powerupDist = dist;
                     nearestPowerup = p;
                 }
             });
 
-            // AI Decision making
-            let targetX = canvas.width / 2; // Default to center
+            // Check for astronauts to rescue (looks impressive!)
+            let nearestAstronaut = null;
+            let astronautDist = Infinity;
+            if (typeof astronauts !== 'undefined') {
+                astronauts.forEach(a => {
+                    const ax = a.x + a.width / 2;
+                    const ay = a.y + a.height / 2;
+                    const dist = Math.sqrt(Math.pow(ax - playerCenterX, 2) + Math.pow(ay - playerCenterY, 2));
+                    if (dist < astronautDist && ay > canvas.height * 0.4) {
+                        astronautDist = dist;
+                        nearestAstronaut = a;
+                    }
+                });
+            }
 
-            // Priority 1: Dodge bullets
-            if (nearestThreat && nearestThreatDist < 80) {
+            // Check for floating pets to adopt
+            let nearestFloatingPet = null;
+            let floatingPetDist = Infinity;
+            if (typeof floatingPets !== 'undefined' && !alienPet.active) {
+                floatingPets.forEach(p => {
+                    const px = p.x + p.width / 2;
+                    const py = p.y + p.height / 2;
+                    const dist = Math.sqrt(Math.pow(px - playerCenterX, 2) + Math.pow(py - playerCenterY, 2));
+                    if (dist < floatingPetDist && px > 0 && px < canvas.width) {
+                        floatingPetDist = dist;
+                        nearestFloatingPet = p;
+                    }
+                });
+            }
+
+            // AI Decision making - prioritized for impressive gameplay
+            let targetX = canvas.width / 2;
+            let targetY = canvas.height - 100;
+
+            // Priority 1: Dodge bullets (dramatic dodging)
+            if (nearestThreat && nearestThreatDist < 100) {
                 const threatX = nearestThreat.x;
-                // Move away from threat
                 if (threatX < playerCenterX) {
-                    targetX = playerCenterX + 100;
+                    targetX = playerCenterX + 120;
                 } else {
-                    targetX = playerCenterX - 100;
+                    targetX = playerCenterX - 120;
                 }
                 aiDodgeDirection = threatX < playerCenterX ? 1 : -1;
             }
-            // Priority 2: Collect nearby powerups
-            else if (nearestPowerup && powerupDist < 150) {
+            // Priority 2: Collect floating pet (very impressive!)
+            else if (nearestFloatingPet && floatingPetDist < 300) {
+                targetX = nearestFloatingPet.x + nearestFloatingPet.width / 2;
+                targetY = nearestFloatingPet.y + nearestFloatingPet.height / 2;
+            }
+            // Priority 3: Rescue astronauts (looks heroic)
+            else if (nearestAstronaut && astronautDist < 250) {
+                targetX = nearestAstronaut.x + nearestAstronaut.width / 2;
+                targetY = nearestAstronaut.y + nearestAstronaut.height / 2;
+            }
+            // Priority 4: Collect powerups eagerly
+            else if (nearestPowerup && powerupDist < 250) {
                 targetX = nearestPowerup.x + nearestPowerup.width / 2;
+                targetY = Math.min(canvas.height - 60, nearestPowerup.y + 50);
             }
-            // Priority 3: Position under enemies to shoot
-            else if (targetEnemy) {
-                targetX = targetEnemy.x + targetEnemy.width / 2;
-                // Add some randomness
-                targetX += (Math.random() - 0.5) * 30;
-            }
-            // Priority 4: Handle boss
+            // Priority 5: Handle boss with dramatic weaving
             else if (currentBoss) {
                 targetX = currentBoss.x + currentBoss.width / 2;
-                // Weave side to side while shooting boss
-                targetX += Math.sin(now / 500) * 100;
+                targetX += Math.sin(now / 400) * 150; // Dramatic weaving
+                targetY = canvas.height - 80;
+            }
+            // Priority 6: Hunt enemies aggressively
+            else if (targetEnemy) {
+                targetX = targetEnemy.x + targetEnemy.width / 2;
+                targetX += Math.sin(now / 600) * 40; // Slight weaving
             }
 
-            // Clamp target
-            targetX = Math.max(player.width / 2, Math.min(canvas.width - player.width / 2, targetX));
+            // Clamp target position
+            targetX = Math.max(player.width, Math.min(canvas.width - player.width, targetX));
+            targetY = Math.max(canvas.height * 0.4, Math.min(canvas.height - 60, targetY));
             aiTargetX = targetX;
 
-            // Move towards target
-            const moveSpeed = 5;
+            // Smooth movement towards target
+            const moveSpeed = 6;
             const dx = targetX - playerCenterX;
+            const dy = targetY - playerCenterY;
 
             keys.left = dx < -moveSpeed;
             keys.right = dx > moveSpeed;
 
-            // Vertical movement - stay in lower area, dodge up when needed
-            const idealY = canvas.height - 100;
-            const dy = idealY - player.y;
-
-            // Move up if bullet is very close
-            if (nearestThreat && nearestThreat.y > player.y - 50) {
+            // Vertical movement - more dynamic
+            if (nearestThreat && nearestThreat.y > player.y - 80) {
                 keys.up = true;
                 keys.down = false;
             } else {
-                keys.up = player.y > idealY + 50;
-                keys.down = player.y < idealY - 30;
+                keys.up = dy < -moveSpeed;
+                keys.down = dy > moveSpeed;
             }
 
-            // Shooting logic - shoot when enemies are roughly above
-            const shouldShoot = enemies.some(e => {
-                const ex = e.x + e.width / 2;
-                return Math.abs(ex - playerCenterX) < 60;
-            }) || (currentBoss && Math.abs(currentBoss.x + currentBoss.width / 2 - playerCenterX) < 150);
-
-            keys.space = shouldShoot || enemies.length > 0 || currentBoss;
+            // Always shoot when there are targets (more action!)
+            keys.space = enemies.length > 0 || currentBoss ||
+                         (typeof astronauts !== 'undefined' && astronauts.length > 0);
         }
 
         // Exit demo mode on any input
