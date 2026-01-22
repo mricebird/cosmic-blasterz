@@ -15115,8 +15115,17 @@
             }
 
             // Body - use classic pixel-art sprites from logo
-            ctx.fillStyle = mainColor;
+            // Hit flash effect: Draw enemy white for 60ms after being hit
+            const isHitFlashing = enemy.hitTimer && (Date.now() - enemy.hitTimer < 60);
+            ctx.fillStyle = isHitFlashing ? '#fff' : mainColor;
+            if (isHitFlashing) {
+                ctx.shadowColor = '#fff';
+                ctx.shadowBlur = 15;
+            }
             const style = typeData.style || 'basic';
+
+            // Use white color for pixel art when hit flashing
+            const drawColor = isHitFlashing ? '#fff' : mainColor;
 
             if (style === 'squid' || enemy.type === 'boss' || enemy.type === 'medium') {
                 // Classic squid/octopus alien (red style from logo) - ANIMATED
@@ -15128,9 +15137,9 @@
                 const offsetY = enemy.y + (enemy.height - spriteHeight) / 2;
 
                 // Add glow effect
-                ctx.shadowColor = mainColor;
-                ctx.shadowBlur = 8;
-                drawPixelArt(offsetX, offsetY, pixelSize, sprite, mainColor);
+                ctx.shadowColor = drawColor;
+                ctx.shadowBlur = isHitFlashing ? 15 : 8;
+                drawPixelArt(offsetX, offsetY, pixelSize, sprite, drawColor);
                 ctx.shadowBlur = 0;
 
             } else if (style === 'crab' || enemy.type === 'basic' || enemy.type === 'zigzag') {
@@ -15143,9 +15152,9 @@
                 const offsetY = enemy.y + (enemy.height - spriteHeight) / 2;
 
                 // Add glow effect
-                ctx.shadowColor = mainColor;
-                ctx.shadowBlur = 8;
-                drawPixelArt(offsetX, offsetY, pixelSize, sprite, mainColor);
+                ctx.shadowColor = drawColor;
+                ctx.shadowBlur = isHitFlashing ? 15 : 8;
+                drawPixelArt(offsetX, offsetY, pixelSize, sprite, drawColor);
                 ctx.shadowBlur = 0;
 
             } else if (enemy.type === 'zigzag') {
@@ -15958,10 +15967,16 @@
                         const typeData = ENEMY_TYPES[enemy.type] || ENEMY_TYPES.basic;
                         const color = typeData.color;
 
+                        // Trigger hit flash on enemy sprite (canvas-based)
+                        enemy.hitTimer = Date.now();
+
                         if (enemy.health <= 0) {
                             // Enemy destroyed
                             createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, color, 8);
                             playExplosionSound(enemy.type === 'tank' ? 'boss' : enemy.type);
+
+                            // Micro screen shake for satisfying kill feedback
+                            triggerScreenShake(2, 50);
 
                             // Add combo bonus
                             const comboPoints = addComboKill(enemy.points * damage);
